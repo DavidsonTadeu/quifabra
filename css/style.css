@@ -211,7 +211,233 @@ section { padding: var(--section-padding); }
 .delay-6 { transition-delay: .6s !important; }
 
 /* =========================================================
-   NAVBAR
+   CARROSSEL INFINITO DE PRODUTOS
+   ========================================================= */
+
+/* Keyframe do marquee infinito */
+@keyframes marquee-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.products-carousel {
+  background: linear-gradient(180deg, #F4F5F7 0%, #EBEDF0 100%);
+  padding: 80px 0 64px;
+  overflow: hidden;
+}
+
+.products-carousel__header {
+  text-align: center;
+  padding: 0 24px;
+  margin-bottom: 56px;
+}
+
+.products-carousel__eyebrow {
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  background: rgba(30,150,200,.1);
+  border: 1px solid rgba(30,150,200,.2);
+  padding: 6px 16px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+}
+
+.products-carousel__title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 900;
+  color: var(--color-dark);
+  line-height: 1.15;
+  margin-bottom: 12px;
+}
+
+.products-carousel__title span {
+  color: var(--color-primary);
+}
+
+.products-carousel__subtitle {
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+/* Track wrapper: hides overflow, adds fade edges */
+.carousel-track-wrap {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  /* Fade suave nas bordas para efeito premium */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
+  cursor: grab;
+}
+
+.carousel-track-wrap:active { cursor: grabbing; }
+
+/* A track contém 2x os cards para o loop seamless */
+.carousel-track {
+  display: flex;
+  gap: 24px;
+  width: max-content;
+  animation: marquee-scroll 38s linear infinite;
+  padding: 12px 0 24px; /* espaço para sombras dos cards */
+}
+
+/* Pausa ao hover (desktop) */
+.carousel-track-wrap:hover .carousel-track {
+  animation-play-state: paused;
+}
+
+/* ── Card individual ── */
+.carousel-card {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  flex-shrink: 0;
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  text-decoration: none;
+  color: inherit;
+  transition: transform .3s cubic-bezier(.4,0,.2,1), box-shadow .3s cubic-bezier(.4,0,.2,1);
+  border: 1.5px solid transparent;
+}
+
+.carousel-card:hover {
+  transform: translateY(-8px) scale(1.015);
+  box-shadow: var(--shadow-xl);
+  border-color: rgba(30,150,200,.2);
+}
+
+/* Thumbnail da imagem */
+.carousel-card__thumb {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+.carousel-card__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .5s cubic-bezier(.4,0,.2,1);
+}
+
+.carousel-card:hover .carousel-card__thumb img {
+  transform: scale(1.08);
+}
+
+/* Overlay no hover */
+.carousel-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(30,150,200,.82), rgba(22,119,160,.88));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+
+.carousel-card:hover .carousel-card__overlay {
+  opacity: 1;
+}
+
+.carousel-card__overlay span {
+  color: white;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: .06em;
+  background: rgba(255,255,255,.15);
+  border: 1.5px solid rgba(255,255,255,.5);
+  backdrop-filter: blur(6px);
+  padding: 10px 22px;
+  border-radius: 40px;
+}
+
+/* Body do card */
+.carousel-card__body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.carousel-card__tag {
+  display: inline-block;
+  font-size: .7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--color-primary);
+  background: rgba(30,150,200,.08);
+  padding: 3px 10px;
+  border-radius: 10px;
+  width: fit-content;
+}
+
+.carousel-card__title {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--color-dark);
+  line-height: 1.25;
+}
+
+.carousel-card__desc {
+  font-size: .82rem;
+  color: var(--color-text-muted);
+  line-height: 1.55;
+}
+
+/* Hint de arrastar */
+.carousel-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 32px;
+  font-size: .8rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  letter-spacing: .04em;
+  opacity: .7;
+}
+
+.carousel-hint svg {
+  color: var(--color-primary);
+}
+
+/* Responsivo: reduz card em mobile */
+@media (max-width: 600px) {
+  .carousel-card { width: 240px; }
+  .carousel-track { gap: 16px; animation-duration: 26s; }
+  .products-carousel { padding: 60px 0 48px; }
+}
+
+
    ========================================================= */
 .navbar {
   position: fixed;
