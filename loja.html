@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loja — Quifabra | Andaimes e Escoramento para Compra Online</title>
+  <meta name="description" content="Compre andaimes tubulares, sapatas reguláveis e escoras metálicas diretamente da Quifabra. Entrega para todo Brasil. Parcele em até 12x." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%231E96C8'/><text y='24' x='4' font-size='22' font-family='Arial Black' font-weight='900' fill='white'>Q</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* ── Loja específico ── */
+    :root {
+      --store-card-radius: 16px;
+      --ml-yellow: #FFE600;
+      --ml-blue: #3483FA;
+    }
+
+    .store-hero {
+      padding-top: 80px;
+      background: linear-gradient(135deg, #1D2533 0%, #1a3d5c 60%, #1E96C8 100%);
+      min-height: 280px;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .store-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 70% 50%, rgba(30,150,200,.25) 0%, transparent 60%);
+    }
+    .store-hero__inner {
+      position: relative;
+      z-index: 1;
+      padding: 50px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+    }
+    .store-hero__text h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 900;
+      color: white;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+    .store-hero__text p {
+      color: rgba(255,255,255,.8);
+      font-size: 1rem;
+      max-width: 480px;
+      line-height: 1.6;
+    }
+    .store-hero__badges {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .store-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.25);
+      backdrop-filter: blur(8px);
+      border-radius: 20px;
+      padding: 7px 16px;
+      font-size: .82rem;
+      font-weight: 600;
+      color: white;
+    }
+    .store-hero__ml {
+      background: white;
+      border-radius: 16px;
+      padding: 20px 28px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,.3);
+      flex-shrink: 0;
+    }
+    .store-hero__ml svg { width: 120px; }
+    .store-hero__ml span {
+      font-size: .8rem;
+      color: #555;
+      display: block;
+      line-height: 1.4;
+    }
+
+    /* ── Filtros ── */
+    .store-filters {
+      background: var(--color-white);
+      border-bottom: 1.5px solid var(--color-gray-light);
+      padding: 16px 0;
+      position: sticky;
+      top: 73px;
+      z-index: 90;
+    }
+    .store-filters__inner {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .store-filters__label {
+      font-size: .82rem;
+      font-weight: 700;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-right: 4px;
+    }
+    .filter-chip {
+      padding: 7px 18px;
+      border-radius: 20px;
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 1.5px solid var(--color-gray-light);
+      background: white;
+      color: var(--color-text-muted);
+    }
+    .filter-chip.active, .filter-chip:hover {
+      background: var(--color-primary);
+      color: white;
+      border-color: var(--color-primary);
+    }
+
+    /* ── Grid de produtos ── */
+    .store-section { padding: 60px 0 90px; background: #f7f9fc; }
+    .store-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-top: 40px;
+    }
+    @media (max-width: 1024px) { .store-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { .store-grid { grid-template-columns: 1fr; } }
+
+    /* ── Product Card ── */
+    .product-card {
+      background: white;
+      border-radius: var(--store-card-radius);
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,.06);
+      transition: transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 48px rgba(30,150,200,.16);
+    }
+    .product-card__badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .badge-tag {
+      padding: 4px 12px;
+      border-radius: 10px;
+      font-size: .72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .badge-tag--frete { background: #00a650; color: white; }
+    .badge-tag--destaque { background: var(--color-accent); color: #1D2533; }
+    .badge-tag--estoque { background: rgba(255,255,255,.92); color: var(--color-dark); backdrop-filter: blur(4px); }
+
+    .product-card__image {
+      position: relative;
+      overflow: hidden;
+      background: #f3f4f6;
+      aspect-ratio: 4/3;
+    }
+    .product-card__image img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 20px;
+      transition: transform .5s ease;
+    }
+    .product-card:hover .product-card__image img { transform: scale(1.06); }
+
+    .product-card__ml-link {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: var(--ml-yellow);
+      border-radius: 8px;
+      padding: 5px 10px;
+      font-size: .7rem;
+      font-weight: 800;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      text-decoration: none;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .product-card__ml-link:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,.15); }
+    .product-card__ml-link svg { width: 56px; }
+
+    .product-card__body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+
+    .product-card__cat {
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--color-primary);
+      margin-bottom: 8px;
+    }
+    .product-card__title {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--color-dark);
+      line-height: 1.4;
+      margin-bottom: 10px;
+    }
+    .product-card__rating {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .stars {
+      display: flex;
+      gap: 2px;
+    }
+    .stars span { color: var(--color-accent); font-size: .9rem; }
+    .product-card__rating-count { font-size: .78rem; color: var(--color-text-muted); }
+
+    .product-card__highlights {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 16px;
+    }
+    .highlight-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .8rem;
+      color: var(--color-text-muted);
+    }
+    .highlight-item::before {
+      content: '✓';
+      width: 16px;
+      height: 16px;
+      background: rgba(30,150,200,.12);
+      color: var(--color-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .65rem;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .product-card__price-block { margin-top: auto; padding-top: 16px; border-top: 1.5px solid var(--color-gray-light); }
+    .product-card__installments {
+      font-size: .78rem;
+      color: var(--color-text-muted);
+      margin-bottom: 4px;
+    }
+    .product-card__price {
+      font-family: var(--font-heading);
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: var(--color-dark);
+      margin-bottom: 4px;
+    }
+    .product-card__price span { font-size: .9rem; font-weight: 500; }
+    .product-card__parcelas {
+      font-size: .82rem;
+      color: #00a650;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .product-card__actions { display: flex; gap: 10px; }
+    .btn-buy-ml {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      background: var(--ml-blue);
+      color: white;
+      font-weight: 700;
+      font-size: .88rem;
+      text-decoration: none;
+      transition: var(--transition);
+      border: none;
+      cursor: pointer;
+    }
+    .btn-buy-ml:hover { background: #2968c8; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(52,131,250,.35); }
+    .btn-whatsapp {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: #25D366;
+      color: white;
+      text-decoration: none;
+      transition: var(--transition);
+      flex-shrink: 0;
+    }
+    .btn-whatsapp:hover { background: #1eb356; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,211,102,.35); }
+    .btn-whatsapp svg { width: 22px; height: 22px; fill: white; }
+
+    /* ── Modal de produto ── */
+    .product-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,15,30,.7);
+      backdrop-filter: blur(6px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s ease;
+    }
+    .product-modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .product-modal {
+      background: white;
+      border-radius: 20px;
+      max-width: 900px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 40px 100px rgba(0,0,0,.4);
+      transform: translateY(30px) scale(.97);
+      transition: transform .35s cubic-bezier(.34,1.56,.64,1);
+    }
+    .product-modal-overlay.open .product-modal {
+      transform: translateY(0) scale(1);
+    }
+    .modal-close {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: flex-end;
+      padding: 16px 20px 0;
+      background: white;
+    }
+    .modal-close-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: none;
+      background: #f3f4f6;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: var(--color-dark);
+      transition: background .2s;
+    }
+    .modal-close-btn:hover { background: #e5e7eb; }
+    .modal-body { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+    .modal-img-col { padding: 20px 24px 32px; background: #f7f9fc; border-radius: 0 0 0 20px; }
+    .modal-img-main {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: contain;
+      border-radius: 12px;
+      background: white;
+      padding: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.06);
+    }
+    .modal-info-col { padding: 20px 32px 32px 24px; }
+    .modal-cat { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--color-primary); margin-bottom: 8px; }
+    .modal-title { font-family: var(--font-heading); font-size: 1.3rem; font-weight: 900; color: var(--color-dark); line-height: 1.3; margin-bottom: 8px; }
+    .modal-rating { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+    .modal-desc { font-size: .875rem; color: var(--color-text-muted); line-height: 1.7; margin-bottom: 20px; }
+    .modal-specs-title { font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--color-dark); margin-bottom: 10px; }
+    .modal-specs { display: flex; flex-direction: column; gap: 0; margin-bottom: 20px; }
+    .modal-spec-row { display: flex; font-size: .82rem; border-bottom: 1px solid #f0f0f0; padding: 7px 0; }
+    .modal-spec-row:last-child { border-bottom: none; }
+    .modal-spec-key { font-weight: 700; color: var(--color-dark); width: 50%; flex-shrink: 0; }
+    .modal-spec-val { color: var(--color-text-muted); }
+    .modal-price-block { background: #f7f9fc; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+    .modal-installments { font-size: .8rem; color: var(--color-text-muted); margin-bottom: 4px; }
+    .modal-price { font-family: var(--font-heading); font-size: 1.8rem; font-weight: 900; color: var(--color-dark); }
+    .modal-parcelas { font-size: .85rem; color: #00a650; font-weight: 700; margin-top: 4px; }
+    .modal-actions { display: flex; gap: 10px; }
+    .modal-actions .btn-buy-ml { font-size: .9rem; padding: 14px 20px; }
+    .modal-shipping { display: flex; align-items: center; gap: 8px; font-size: .8rem; color: #00a650; font-weight: 600; margin-top: 12px; }
+    @media (max-width: 700px) {
+      .modal-body { grid-template-columns: 1fr; }
+      .modal-img-col { border-radius: 0; }
+    }
+
+    /* ── Seção de confiança ── */
+    .trust-bar {
+      background: white;
+      border-top: 1.5px solid var(--color-gray-light);
+      border-bottom: 1.5px solid var(--color-gray-light);
+      padding: 28px 0;
+    }
+    .trust-bar__grid {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .trust-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+    .trust-icon--green { background: rgba(0,166,80,.1); }
+    .trust-icon--blue { background: rgba(30,150,200,.1); }
+    .trust-icon--yellow { background: rgba(240,165,0,.1); }
+    .trust-text strong { display: block; font-size: .88rem; font-weight: 700; color: var(--color-dark); }
+    .trust-text span { font-size: .78rem; color: var(--color-text-muted); }
+
+    /* ── CTA section ── */
+    .store-cta {
+      background: linear-gradient(135deg, #1D2533, #1677A0);
+      padding: 70px 0;
+      text-align: center;
+    }
+    .store-cta h2 { font-family: var(--font-heading); font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 900; color: white; margin-bottom: 12px; }
+    .store-cta p { color: rgba(255,255,255,.8); max-width: 480px; margin: 0 auto 28px; line-height: 1.6; }
+    .store-cta__actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<header class="navbar" id="navbar">
+  <div class="container">
+    <nav class="navbar__inner">
+      <a href="index.html" class="navbar__logo">
+        <svg viewBox="0 0 140 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="38" height="38" rx="8" fill="#1E96C8"/>
+          <text x="7" y="30" font-family="Arial Black" font-size="26" font-weight="900" fill="white">Q</text>
+          <text x="44" y="24" font-family="Arial Black" font-size="20" font-weight="900" fill="#1E96C8">UIFABRA</text>
+          <text x="44" y="38" font-family="Arial" font-size="8" fill="#6B7280">Escoramento Andaimes e Acessórios</text>
+        </svg>
+      </a>
+      <ul class="navbar__menu">
+        <li class="navbar__item"><a href="index.html#andaimes" class="navbar__link">Andaimes <span class="chevron">▾</span></a>
+          <div class="dropdown">
+            <a href="andaime-tubular.html" class="dropdown__link"><span class="icon">🏗️</span>Andaime Tubular</a>
+            <a href="andaime-fachadeiro.html" class="dropdown__link"><span class="icon">🔧</span>Andaime Fachadeiro</a>
+          </div>
+        </li>
+        <li class="navbar__item"><a href="index.html#escoramento" class="navbar__link">Escoramento <span class="chevron">▾</span></a>
+          <div class="dropdown">
+            <a href="escoras-metalicas.html" class="dropdown__link"><span class="icon">⚙️</span>Escoras Metálicas</a>
+            <a href="acessorios-para-escoramento.html" class="dropdown__link"><span class="icon">🔩</span>Acessórios</a>
+            <a href="torres-de-escoramento.html" class="dropdown__link"><span class="icon">🏛️</span>Torres de Escoramento</a>
+          </div>
+        </li>
+        <li class="navbar__item"><a href="vigas.html" class="navbar__link">Vigas</a></li>
+        <li class="navbar__item"><a href="travamento-de-pilares.html" class="navbar__link">Travamento de Pilares</a></li>
+        <li class="navbar__item active"><a href="loja.html" class="navbar__link">🛒 Loja</a></li>
+        <li class="navbar__item"><a href="blog.html" class="navbar__link">Blog</a></li>
+        <li class="navbar__item"><a href="index.html#contato" class="btn btn--primary">Fale Conosco</a></li>
+      </ul>
+      <button class="navbar__toggle" id="menuToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="andaime-tubular.html" class="mobile-nav-link">Andaime Tubular</a>
+  <a href="andaime-fachadeiro.html" class="mobile-nav-link">Andaime Fachadeiro</a>
+  <a href="escoras-metalicas.html" class="mobile-nav-link">Escoras Metálicas</a>
+  <a href="torres-de-escoramento.html" class="mobile-nav-link">Torres de Escoramento</a>
+  <a href="vigas.html" class="mobile-nav-link">Vigas</a>
+  <a href="travamento-de-pilares.html" class="mobile-nav-link">Travamento de Pilares</a>
+  <a href="loja.html" class="mobile-nav-link" style="color:var(--color-primary);font-weight:700;">🛒 Loja</a>
+  <a href="blog.html" class="mobile-nav-link">Blog</a>
+  <a href="index.html#contato" class="mobile-nav-link" style="color:var(--color-primary);font-weight:700;">Fale Conosco</a>
+</div>
+
+<!-- Store Hero -->
+<section class="store-hero">
+  <div class="container">
+    <div class="store-hero__inner">
+      <div class="store-hero__text">
+        <h1>Compre com<br>Segurança Direto da Quifabra</h1>
+        <p>Equipamentos de construção com a qualidade Quifabra. Parcele em até 12x pelo Mercado Livre com Compra Garantida.</p>
+        <div class="store-hero__badges">
+          <div class="store-badge">🚚 Frete Grátis em selecionados</div>
+          <div class="store-badge">🔒 Compra Garantida</div>
+          <div class="store-badge">💳 Parcele em 12x</div>
+          <div class="store-badge">⭐ +50 unidades em estoque</div>
+        </div>
+      </div>
+      <div class="store-hero__ml">
+        <svg viewBox="0 0 256 172" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h256v172H0z" fill="#FFE600"/><path d="M128 24c-33.6 0-62.2 18.6-77 46.1L22.3 86l28.7 15.9C65.8 129.4 94.4 148 128 148s62.2-18.6 77-46.1L233.7 86l-28.7-15.9C190.2 42.6 161.6 24 128 24z" fill="#3483FA"/><path d="M128 56c-16.6 0-30 13.4-30 30s13.4 30 30 30 30-13.4 30-30-13.4-30-30-30z" fill="#FFE600"/></svg>
+        <div>
+          <strong style="display:block;font-size:.88rem;color:#333;margin-bottom:2px;">Vendendo pelo</strong>
+          <span>Mercado Livre<br>Compra 100% segura</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Trust Bar -->
+<div class="trust-bar">
+  <div class="container">
+    <div class="trust-bar__grid">
+      <div class="trust-item">
+        <div class="trust-icon trust-icon--green">🚚</div>
+        <div class="trust-text">
+          <strong>Frete Grátis</strong>
+          <span>Em produtos selecionados</span>
+        </div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon trust-icon--blue">🔒</div>
+        <div class="trust-text">
+          <strong>Compra Garantida</strong>
+          <span>Via Mercado Livre</span>
+        </div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon trust-icon--yellow">💳</div>
+        <div class="trust-text">
+          <strong>Parcelamento</strong>
+          <span>Em até 12x sem juros</span>
+        </div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon trust-icon--green">🏭</div>
+        <div class="trust-text">
+          <strong>Direto da Fábrica</strong>
+          <span>Sem intermediários</span>
+        </div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon trust-icon--blue">📦</div>
+        <div class="trust-text">
+          <strong>+50 em Estoque</strong>
+          <span>Disponibilidade imediata</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Filters -->
+<div class="store-filters">
+  <div class="container">
+    <div class="store-filters__inner">
+      <span class="store-filters__label">Filtrar:</span>
+      <button class="filter-chip active" data-filter="all" id="filter-all">Todos os Produtos</button>
+      <button class="filter-chip" data-filter="andaimes" id="filter-andaimes">Andaimes</button>
+      <button class="filter-chip" data-filter="escoramento" id="filter-escoramento">Escoramento</button>
+      <button class="filter-chip" data-filter="acessorios" id="filter-acessorios">Acessórios</button>
+    </div>
+  </div>
+</div>
+
+<!-- Products Grid -->
+<section class="store-section" id="store-products">
+  <div class="container">
+    <div class="store-grid" id="storeGrid">
+
+      <!-- PRODUTO 1: Andaime Tubular Kit 8 Peças -->
+      <article class="product-card reveal" data-category="andaimes" data-product="1">
+        <div class="product-card__badge">
+          <span class="badge-tag badge-tag--frete">🚚 Frete Grátis</span>
+          <span class="badge-tag badge-tag--destaque">⭐ Mais Vendido</span>
+        </div>
+        <div class="product-card__image">
+          <img src="assets/images/prod-andaime-tubular-kit.jpg" alt="Andaime Tubular 1,00m Kit 8 Peças" loading="lazy" />
+          <a href="https://www.mercadolivre.com.br/andaime-tubular-100m-kit-8-pecas-p-montagem-ate-4-metros/p/MLB73113818" target="_blank" rel="noopener" class="product-card__ml-link" aria-label="Ver no Mercado Livre">
+            <svg viewBox="0 0 120 34" xmlns="http://www.w3.org/2000/svg"><rect width="120" height="34" rx="4" fill="#FFE600"/><text x="8" y="23" font-family="Arial" font-weight="900" font-size="14" fill="#333">mercado livre</text></svg>
+          </a>
+        </div>
+        <div class="product-card__body">
+          <div class="product-card__cat">Andaimes</div>
+          <h2 class="product-card__title">Andaime Tubular 1,00m — Kit 8 Peças P/ Montagem Até 4 Metros</h2>
+          <div class="product-card__rating">
+            <div class="stars">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <span class="product-card__rating-count">5.0 · (2 avaliações)</span>
+          </div>
+          <div class="product-card__highlights">
+            <div class="highlight-item">Kit com 8 módulos 100×100 cm — altura máx. 4m</div>
+            <div class="highlight-item">Aço com laudos técnicos Falcão Bauer</div>
+            <div class="highlight-item">Montagem modular rápida e reutilizável</div>
+            <div class="highlight-item">Tubo Ø 42,40mm — 9,6 kg por módulo</div>
+          </div>
+          <div class="product-card__price-block">
+            <div class="product-card__installments">Preço à vista</div>
+            <div class="product-card__price"><span>R$</span> 1.580</div>
+            <div class="product-card__parcelas">12x de R$ 151,86 no cartão</div>
+          </div>
+          <div class="product-card__actions">
+            <button class="btn-buy-ml" style="background:#00a650;border:none;cursor:pointer;" onclick="addToCart('prod1', 'Andaime Tubular 1,00m — Kit 8 Peças', 1580, 'assets/images/prod-andaime-tubular-kit.jpg')">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+              Adicionar ao Carrinho
+            </button>
+            <a href="https://wa.me/5531991790838?text=Olá!%20Tenho%20interesse%20no%20Andaime%20Tubular%20Kit%208%20Peças.%20Podem%20me%20passar%20mais%20detalhes?" target="_blank" rel="noopener" class="btn-whatsapp" aria-label="Perguntar no WhatsApp">
+              <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- PRODUTO 2: Sapata Regulável -->
+      <article class="product-card reveal delay-1" data-category="acessorios" data-product="2">
+        <div class="product-card__badge">
+          <span class="badge-tag badge-tag--frete">🚚 Frete Grátis</span>
+        </div>
+        <div class="product-card__image">
+          <img src="assets/images/prod-sapata-regulavel.jpg" alt="Sapata Regulável Para Andaime 45cm" loading="lazy" />
+          <a href="https://www.mercadolivre.com.br/sapata-regulavel-para-andaime-com-45-cm-1-peca/p/MLB28586045" target="_blank" rel="noopener" class="product-card__ml-link" aria-label="Ver no Mercado Livre">
+            <svg viewBox="0 0 120 34" xmlns="http://www.w3.org/2000/svg"><rect width="120" height="34" rx="4" fill="#FFE600"/><text x="8" y="23" font-family="Arial" font-weight="900" font-size="14" fill="#333">mercado livre</text></svg>
+          </a>
+        </div>
+        <div class="product-card__body">
+          <div class="product-card__cat">Acessórios</div>
+          <h2 class="product-card__title">Sapata Regulável Para Andaime Com 45 cm — 1 Peça</h2>
+          <div class="product-card__rating">
+            <div class="stars">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <span class="product-card__rating-count">4 vendidos</span>
+          </div>
+          <div class="product-card__highlights">
+            <div class="highlight-item">Suporta até 1.000 kg de carga</div>
+            <div class="highlight-item">Regulagem de até 30 cm de altura</div>
+            <div class="highlight-item">Base quadrada 12×12 cm, chapa 5mm</div>
+            <div class="highlight-item">Ferro preto, Ø tubo 31,5 mm (1 1/4")</div>
+          </div>
+          <div class="product-card__price-block">
+            <div class="product-card__installments">Preço à vista</div>
+            <div class="product-card__price"><span>R$</span> 450</div>
+            <div class="product-card__parcelas">12x de R$ 43,52 no cartão</div>
+          </div>
+          <div class="product-card__actions">
+            <button class="btn-buy-ml" style="background:#00a650;border:none;cursor:pointer;" onclick="addToCart('prod2', 'Sapata Regulável Para Andaime 45 cm', 450, 'assets/images/prod-sapata-regulavel.jpg')">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+              Adicionar ao Carrinho
+            </button>
+            <a href="https://wa.me/5531991790838?text=Olá!%20Tenho%20interesse%20na%20Sapata%20Regulável%20Para%20Andaime%2045cm.%20Podem%20me%20ajudar?" target="_blank" rel="noopener" class="btn-whatsapp" aria-label="Perguntar no WhatsApp">
+              <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- PRODUTO 3: Kit 10 Escoras Metálicas -->
+      <article class="product-card reveal delay-2" data-category="escoramento" data-product="3">
+        <div class="product-card__badge">
+          <span class="badge-tag badge-tag--destaque">🏭 Marca Quifabra</span>
+        </div>
+        <div class="product-card__image">
+          <img src="assets/images/prod-escoras-kit.jpg" alt="Kit 10 Escoras Metálicas Quifabra 2,00 a 3,10m" loading="lazy" />
+          <a href="https://produto.mercadolivre.com.br/MLB-4818980631-kit-10-escoras-metalicas-de-aco-quifabra-200-ate-310m-_JM" target="_blank" rel="noopener" class="product-card__ml-link" aria-label="Ver no Mercado Livre">
+            <svg viewBox="0 0 120 34" xmlns="http://www.w3.org/2000/svg"><rect width="120" height="34" rx="4" fill="#FFE600"/><text x="8" y="23" font-family="Arial" font-weight="900" font-size="14" fill="#333">mercado livre</text></svg>
+          </a>
+        </div>
+        <div class="product-card__body">
+          <div class="product-card__cat">Escoramento</div>
+          <h2 class="product-card__title">Kit 10 Escoras Metálicas de Aço Quifabra — 2,00 até 3,10m</h2>
+          <div class="product-card__rating">
+            <div class="stars">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <span class="product-card__rating-count">Marca Quifabra · +50 disponíveis</span>
+          </div>
+          <div class="product-card__highlights">
+            <div class="highlight-item">Kit com 10 escoras metálicas reguláveis</div>
+            <div class="highlight-item">Regulagem de 2,00m a 3,10m</div>
+            <div class="highlight-item">Aço de alta resistência — escoramento laje</div>
+            <div class="highlight-item">10x R$ 210 sem juros — Entrega combinada</div>
+          </div>
+          <div class="product-card__price-block">
+            <div class="product-card__installments">Preço à vista</div>
+            <div class="product-card__price"><span>R$</span> 2.100</div>
+            <div class="product-card__parcelas">10x de R$ 210,00 sem juros</div>
+          </div>
+          <div class="product-card__actions">
+            <button class="btn-buy-ml" style="background:#00a650;border:none;cursor:pointer;" onclick="addToCart('prod3', 'Kit 10 Escoras Metálicas de Aço', 2100, 'assets/images/prod-escoras-kit.jpg')">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+              Adicionar ao Carrinho
+            </button>
+            <a href="https://wa.me/5531991790838?text=Olá!%20Tenho%20interesse%20no%20Kit%2010%20Escoras%20Metálicas%20Quifabra.%20Gostaria%20de%20informações%20sobre%20entrega." target="_blank" rel="noopener" class="btn-whatsapp" aria-label="Perguntar no WhatsApp">
+              <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            </a>
+          </div>
+        </div>
+      </article>
+
+    </div><!-- /store-grid -->
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="store-cta">
+  <div class="container">
+    <h2>Precisa de um Pedido Maior ou Locação?</h2>
+    <p>Para kits personalizados, grandes volumes ou serviços de locação de equipamentos, fale diretamente com nossa equipe técnica.</p>
+    <div class="store-cta__actions">
+      <a href="https://wa.me/5531991790838?text=Olá!%20Gostaria%20de%20fazer%20um%20pedido%20maior%20ou%20consultar%20locação%20de%20equipamentos." class="btn btn--accent" target="_blank" rel="noopener">
+        💬 WhatsApp — Pedidos Especiais
+      </a>
+      <a href="index.html#contato" class="btn btn--outline">
+        📋 Formulário de Orçamento
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer role="contentinfo">
+  <div class="footer-info">
+    <div class="container">
+      <div class="footer-info__grid">
+        <div class="footer-contact">
+          <div class="footer-contact__icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1E96C8" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <h4>Escritório Central Savassi</h4>
+          <p>Av. Getúlio Vargas, 1420. 14° andar.<br>CEP 30112-021 – Belo Horizonte, MG.</p>
+        </div>
+        <div class="footer-contact">
+          <div class="footer-contact__icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1E96C8" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 12a19.79 19.79 0 01-3.07-8.67A2 2 0 012 1.18h3a2 2 0 012 1.72 12.05 12.05 0 00.7 2.81 2 2 0 01-.45 2.11L6.91 8.57a16 16 0 006.29 6.29l1.46-1.34a2 2 0 012.11-.45 12.05 12.05 0 002.81.7A2 2 0 0122 16.92z"/></svg></div>
+          <h4>Unidade Santa Luzia</h4>
+          <p><a href="tel:+553136911702">(31) 3691 1702</a></p>
+        </div>
+        <div class="footer-contact">
+          <div class="footer-contact__icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="#1E96C8"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div>
+          <h4>WhatsApp</h4>
+          <a href="https://wa.me/5531991790838" target="_blank" rel="noopener">(31) 9917-90838</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bar">
+    <div class="container">
+      <div class="footer-bar__inner">
+        <span class="footer-bar__logo-name">Quifabra</span>
+        <p class="footer-bar__copy">© 2025 Quifabra. Todos os direitos reservados.</p>
+        <div class="footer-bar__links"><a href="politica-de-privacidade.html">Política de Privacidade</a></div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/5531991790838" class="whatsapp-fab" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<!-- Overlay e Sidebar do Carrinho -->
+<div class="cart-overlay" id="cartOverlay"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <h2><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg> Seu Carrinho</h2>
+    <button class="cart-close" id="closeCart">&times;</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <!-- Itens via JS -->
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total">
+      <span>Subtotal</span>
+      <strong id="cartTotal">R$ 0,00</strong>
+    </div>
+    <button class="btn-checkout" onclick="checkoutWhatsApp()">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Finalizar no WhatsApp
+    </button>
+  </div>
+</div>
+
+<a href="javascript:void(0)" class="floating-cart open-cart-btn" aria-label="Abrir Carrinho">
+  <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+  <span class="cart-badge cart-badge-count">0</span>
+</a>
+
+<script src="js/main.js"></script>
+<script>
+  // Filtro da loja
+  const filterChips = document.querySelectorAll('.filter-chip');
+  const productCards = document.querySelectorAll('.product-card');
+  filterChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      filterChips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      const f = chip.dataset.filter;
+      productCards.forEach(card => {
+        card.style.display = (f === 'all' || card.dataset.category === f) ? '' : 'none';
+      });
+    });
+  });
+</script>
+</body>
+</html>

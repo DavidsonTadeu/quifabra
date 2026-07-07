@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quifabra — Escoramento, Andaimes e Acessórios para Construção Civil</title>
+  <meta name="description" content="Desde 2008, a Quifabra oferece soluções completas em andaimes, escoramento metálico, vigas de aço e travamento de pilares para obras industriais e civis em todo o Brasil." />
+  <meta name="keywords" content="andaimes, escoramento metálico, torres de escoramento, escoras, vigas de aço, travamento de pilares, construção civil, Belo Horizonte" />
+  <link rel="canonical" href="https://quifabra.com.br/" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Quifabra — Escoramento, Andaimes e Acessórios" />
+  <meta property="og:description" content="Solução completa em andaimes, escoramento e materiais para sua obra desde 2008." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://quifabra.com.br/" />
+
+  <!-- Favicon inline SVG -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%231E96C8'/><text y='24' x='4' font-size='22' font-family='Arial Black' font-weight='900' fill='white'>Q</text></svg>" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ========================================================
+     NAVBAR
+     ======================================================== -->
+<header class="navbar" id="navbar" role="banner">
+  <div class="container">
+    <nav class="navbar__inner" aria-label="Navegação principal">
+
+      <!-- Logo -->
+      <a href="index.html" class="navbar__logo" aria-label="Quifabra - Página inicial">
+        <svg viewBox="0 0 140 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <!-- Q estilizado -->
+          <rect x="2" y="2" width="38" height="38" rx="8" fill="#1E96C8"/>
+          <text x="7" y="30" font-family="Arial Black" font-size="26" font-weight="900" fill="white">Q</text>
+          <text x="44" y="24" font-family="Arial Black" font-size="20" font-weight="900" fill="#1E96C8">UIFABRA</text>
+          <text x="44" y="38" font-family="Arial" font-size="8" fill="#6B7280">Escoramento Andaimes e Acessórios</text>
+        </svg>
+      </a>
+
+      <!-- Desktop Menu -->
+      <ul class="navbar__menu" role="list">
+        <li class="navbar__item">
+          <a href="#andaimes" class="navbar__link" id="nav-andaimes">
+            Andaimes <span class="chevron" aria-hidden="true">▾</span>
+          </a>
+          <div class="dropdown" role="menu">
+            <a href="andaime-tubular.html" class="dropdown__link" role="menuitem">
+              <span class="icon" aria-hidden="true">🏗️</span>
+              Andaime Tubular
+            </a>
+            <a href="andaime-fachadeiro.html" class="dropdown__link" role="menuitem">
+              <span class="icon" aria-hidden="true">🔧</span>
+              Andaime Fachadeiro
+            </a>
+          </div>
+        </li>
+        <li class="navbar__item">
+          <a href="#escoramento" class="navbar__link" id="nav-escoramento">
+            Escoramento <span class="chevron" aria-hidden="true">▾</span>
+          </a>
+          <div class="dropdown" role="menu">
+            <a href="escoras-metalicas.html" class="dropdown__link" role="menuitem">
+              <span class="icon" aria-hidden="true">⚙️</span>
+              Escoras Metálicas
+            </a>
+            <a href="acessorios-para-escoramento.html" class="dropdown__link" role="menuitem">
+              <span class="icon" aria-hidden="true">🔩</span>
+              Acessórios e Equipamentos
+            </a>
+            <a href="torres-de-escoramento.html" class="dropdown__link" role="menuitem">
+              <span class="icon" aria-hidden="true">🏛️</span>
+              Torres de Escoramento
+            </a>
+          </div>
+        </li>
+        <li class="navbar__item">
+          <a href="vigas.html" class="navbar__link" id="nav-vigas">Vigas</a>
+        </li>
+        <li class="navbar__item">
+          <a href="travamento-de-pilares.html" class="navbar__link" id="nav-pilares">Travamento de Pilares</a>
+        </li>
+        <li class="navbar__item">
+          <a href="loja.html" class="navbar__link" id="nav-loja">🛒 Loja</a>
+        </li>
+        <li class="navbar__item">
+          <a href="blog.html" class="navbar__link" id="nav-blog">Blog</a>
+        </li>
+        <li class="navbar__item">
+          <a href="#contato" class="btn btn--primary" id="nav-cta">Fale Conosco</a>
+        </li>
+      </ul>
+
+      <!-- Hamburger -->
+      <button class="navbar__toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobileMenu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+    </nav>
+  </div>
+</header>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu" role="navigation" aria-label="Menu mobile">
+  <div>
+    <button class="mobile-nav-link" id="mob-andaimes-toggle" aria-expanded="false" style="width:100%;background:none;border:none;cursor:pointer;font-family:inherit;">
+      Andaimes <span aria-hidden="true">▾</span>
+    </button>
+    <div class="mobile-submenu" id="mob-andaimes">
+      <a href="andaime-tubular.html">Andaime Tubular</a>
+      <a href="andaime-fachadeiro.html">Andaime Fachadeiro</a>
+    </div>
+    <button class="mobile-nav-link" id="mob-esco-toggle" aria-expanded="false" style="width:100%;background:none;border:none;cursor:pointer;font-family:inherit;">
+      Escoramento <span aria-hidden="true">▾</span>
+    </button>
+    <div class="mobile-submenu" id="mob-esco">
+      <a href="escoras-metalicas.html">Escoras Metálicas</a>
+      <a href="acessorios-para-escoramento.html">Acessórios e Equipamentos</a>
+      <a href="torres-de-escoramento.html">Torres de Escoramento</a>
+    </div>
+    <a href="vigas.html" class="mobile-nav-link">Vigas</a>
+    <a href="travamento-de-pilares.html" class="mobile-nav-link">Travamento de Pilares</a>
+    <a href="loja.html" class="mobile-nav-link" style="color:var(--color-primary);font-weight:700;">🛒 Loja</a>
+    <a href="blog.html" class="mobile-nav-link">Blog</a>
+    <a href="#contato" class="mobile-nav-link" style="color:var(--color-primary);font-weight:700;">Fale Conosco</a>
+  </div>
+</div>
+
+<!-- ========================================================
+     HERO
+     ======================================================== -->
+<section class="hero" id="inicio" aria-label="Seção principal">
+
+  <!-- Imagem de fundo (lado esquerdo) -->
+  <div class="hero__image-wrap">
+    <img
+      src="assets/images/hero-obra.jpg"
+      alt="Trabalhadores em obra com andaimes e escoramento metálico"
+      id="heroImg"
+      loading="eager"
+    />
+    <div class="hero__overlay" aria-hidden="true"></div>
+
+    <!-- Conteúdo sobre a imagem -->
+    <div class="hero__content">
+      <p class="hero__pretitle reveal">Desde 2008 na construção civil</p>
+      <h1 class="hero__title reveal delay-1">
+        Solução completa em andaimes, escoramento e materiais para sua obra
+      </h1>
+      <p class="hero__desc reveal delay-2">
+        Produzindo equipamentos de alta qualidade para a construção industrial e civil. Fale agora com um especialista e receba atendimento imediato.
+      </p>
+      <div class="hero__actions reveal delay-3">
+        <a href="#contato" class="btn btn--primary" id="hero-cta-primary">
+          Converse com um consultor
+        </a>
+        <a href="#andaimes" class="btn btn--outline" id="hero-cta-secondary">
+          Ver produtos
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar direita -->
+  <aside class="hero__sidebar" aria-label="Equipamentos e serviços">
+    <h2 class="hero__sidebar-title reveal-right">Equipamentos e Serviços</h2>
+
+    <a href="#andaimes" class="service-card reveal-right delay-1">
+      <div class="service-card__icon" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8">
+          <rect x="3" y="3" width="18" height="18" rx="1"/>
+          <line x1="3" y1="9" x2="21" y2="9"/>
+          <line x1="3" y1="15" x2="21" y2="15"/>
+          <line x1="9" y1="3" x2="9" y2="21"/>
+          <line x1="15" y1="3" x2="15" y2="21"/>
+        </svg>
+      </div>
+      <div class="service-card__text">
+        <h4>Variedade de Andaimes</h4>
+        <p>Tubulares e fachadeiros para todo tipo de obra</p>
+      </div>
+    </a>
+
+    <a href="#escoramento" class="service-card reveal-right delay-2">
+      <div class="service-card__icon" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <div class="service-card__text">
+        <h4>Escoramento Metálico</h4>
+        <p>Escoras, torres e acessórios de alta resistência</p>
+      </div>
+    </a>
+
+    <a href="#servicos-especiais" class="service-card reveal-right delay-3">
+      <div class="service-card__icon" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+      </div>
+      <div class="service-card__text">
+        <h4>Serviços Especiais</h4>
+        <p>Travamento de pilares e vigas de aço sob demanda</p>
+      </div>
+    </a>
+  </aside>
+
+</section>
+
+<!-- ========================================================
+     QUALIDADE QUIFABRA
+     ======================================================== -->
+<section class="quality" id="qualidade" aria-labelledby="quality-heading">
+  <div class="container">
+    <div class="quality__grid">
+
+      <div class="reveal-left">
+        <h2 class="quality__heading" id="quality-heading">
+          Qualidade <span>Quifabra</span> em escoras e torres de escoramento
+        </h2>
+      </div>
+
+      <div class="reveal-right">
+        <div class="quality__bullet">
+          <span class="quality__bullet-arrow" aria-hidden="true">→</span>
+          <p class="quality__bullet-text">
+            O escoramento é feito juntamente de forma opcional com as torres Quifabra que suportam grandes cargas, atendem pé direito alto, são modulares e versáteis propiciando menor impacto ambiental, redução de custos devido a alta produtividade alcançados na obra.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     SETORES
+     ======================================================== -->
+<section class="sectors" id="setores" aria-labelledby="sectors-heading">
+  <div class="container">
+    <div class="sectors__grid">
+
+      <!-- Imagem -->
+      <div class="sectors__image reveal-left">
+        <img
+          src="assets/images/construcao-setores.jpg"
+          alt="Obra de construção civil com estrutura de andaimes"
+          loading="lazy"
+        />
+      </div>
+
+      <!-- Conteúdo -->
+      <div class="sectors__content reveal-right">
+        <h2 class="sectors__title" id="sectors-heading">
+          Da reforma à construção procuramos estar presentes em diferentes setores com qualidade e eficiência.
+        </h2>
+
+        <ul class="sectors__list" role="list">
+          <li class="sector-item">
+            <div class="sector-item__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#1E96C8" stroke-width="2.2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+              </svg>
+            </div>
+            <div>
+              <h4>Edifícios Comerciais e Residenciais</h4>
+              <p>Equipe pequena montando torres e escoras de forma rápida, reutilizando equipamentos em diferentes edifícios.</p>
+            </div>
+          </li>
+          <li class="sector-item">
+            <div class="sector-item__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#1E96C8" stroke-width="2.2">
+                <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
+              </svg>
+            </div>
+            <div>
+              <h4>Restauração Histórica</h4>
+              <p>Soluções sensíveis para preservação de patrimônios arquitetônicos.</p>
+            </div>
+          </li>
+          <li class="sector-item">
+            <div class="sector-item__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#1E96C8" stroke-width="2.2">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+              </svg>
+            </div>
+            <div>
+              <h4>Obras Hospitalares e Educacionais</h4>
+              <p>Escoramento e andaimes para construção e ampliação com prazos reduzidos e baixo custo.</p>
+            </div>
+          </li>
+          <li class="sector-item">
+            <div class="sector-item__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#1E96C8" stroke-width="2.2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+              </svg>
+            </div>
+            <div>
+              <h4>Projetos Residenciais</h4>
+              <p>Execução rápida com planejamento do uso de torres e escoras. Locação a partir de 3 toneladas.</p>
+            </div>
+          </li>
+          <li class="sector-item">
+            <div class="sector-item__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#1E96C8" stroke-width="2.2">
+                <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+              </svg>
+            </div>
+            <div>
+              <h4>Desenvolvimento Imobiliário</h4>
+              <p>Soluções versáteis para empreendimentos imobiliários de grande porte.</p>
+            </div>
+          </li>
+          <li class="sector-item">
+            <div class="sector-item__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#1E96C8" stroke-width="2.2">
+                <path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/>
+              </svg>
+            </div>
+            <div>
+              <h4>Infraestrutura e Petrolífera</h4>
+              <p>Tubos equipados e acessórios sob demanda para seu projeto.</p>
+            </div>
+          </li>
+          <li class="sector-item">
+            <div class="sector-item__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#1E96C8" stroke-width="2.2">
+                <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/>
+              </svg>
+            </div>
+            <div>
+              <h4>Construção Industrial</h4>
+              <p>Escoramento e andaimes para construção e ampliação de instalações com prazos pré-acordados.</p>
+            </div>
+          </li>
+          <li class="sector-item">
+            <div class="sector-item__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#1E96C8" stroke-width="2.2">
+                <path d="M17.5 19H9a7 7 0 11.9-13.95M17.5 19L15 22m2.5-3L20 22"/><circle cx="17.5" cy="11.5" r="5"/>
+              </svg>
+            </div>
+            <div>
+              <h4>Construção de Pontos Turísticos</h4>
+              <p>Escoramento e andaimes para a criação de atrações turísticas icônicas.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     STATS BANNER
+     ======================================================== -->
+<section class="stats" aria-label="Números da Quifabra">
+  <div class="stats__grid">
+    <div class="stat-block stat-block--accent">
+      <div class="stat-block__number" data-count="15" id="stat-anos">0</div>
+      <div class="stat-block__label">Anos de Experiência</div>
+    </div>
+    <div class="stat-block stat-block--dark">
+      <div class="stat-block__number" data-count="2000" id="stat-projetos">0</div>
+      <div class="stat-block__label">Participações em Projetos</div>
+    </div>
+    <div class="stat-block stat-block--primary">
+      <div class="stat-block__number" data-count="100" id="stat-clientes">0</div>
+      <div class="stat-block__label">de Comprometimento</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     ANDAIMES
+     ======================================================== -->
+<section class="products" id="andaimes" aria-labelledby="andaimes-heading">
+  <div class="container">
+
+    <div class="section-header reveal">
+      <h2 class="section-title" id="andaimes-heading">
+        Variedade de Andaimes para Soluções <span>Personalizadas</span> em Construção
+      </h2>
+      <div class="title-line"></div>
+      <p class="section-subtitle">
+        Fabricamos e locamos andaimes de alta qualidade para atender cada etapa da sua obra, com segurança e produtividade.
+      </p>
+    </div>
+
+    <div class="products__grid" style="margin-top: 48px;">
+
+      <article class="product-card reveal delay-1">
+        <div class="product-card__image">
+          <img src="assets/images/andaime-tubular.jpg" alt="Andaime tubular metálico" loading="lazy" />
+        </div>
+        <div class="product-card__body">
+          <h3 class="product-card__title">Andaime Tubular</h3>
+          <p class="product-card__desc">Sistema modular de andaimes tubulares para obras de médio e grande porte. Alta resistência, fácil montagem e reutilização em múltiplos projetos.</p>
+          <a href="andaime-tubular.html" class="product-card__link" id="link-andaime-tubular">
+            Ver detalhes <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </article>
+
+      <article class="product-card reveal delay-2">
+        <div class="product-card__image">
+          <img src="assets/images/andaime-fachadeiro.jpg" alt="Andaime fachadeiro vermelho e prata" loading="lazy" />
+        </div>
+        <div class="product-card__body">
+          <h3 class="product-card__title">Andaime Fachadeiro</h3>
+          <p class="product-card__desc">Ideal para trabalhos em fachadas, o andaime fachadeiro oferece plataformas seguras e praticidade de instalação em edifícios de qualquer altura.</p>
+          <a href="andaime-fachadeiro.html" class="product-card__link" id="link-andaime-fachadeiro">
+            Ver detalhes <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     ESCORAMENTO METÁLICO
+     ======================================================== -->
+<section class="products products--alt" id="escoramento" aria-labelledby="escoramento-heading">
+  <div class="container">
+
+    <div class="section-header reveal">
+      <h2 class="section-title" id="escoramento-heading">
+        Escoramento Metálico: Adaptando-se às Suas <span>Necessidades Construtivas</span>
+      </h2>
+      <div class="title-line"></div>
+      <p class="section-subtitle">
+        Escoras, torres e acessórios que suportam grandes cargas, atendem pé direito alto e reduzem os custos da sua obra.
+      </p>
+    </div>
+
+    <div class="products__grid" style="margin-top: 48px; grid-template-columns: repeat(3,1fr);">
+
+      <article class="product-card reveal delay-1">
+        <div class="product-card__image">
+          <img src="assets/images/escoras-metalicas.jpg" alt="Escoras metálicas em obra" loading="lazy" />
+        </div>
+        <div class="product-card__body">
+          <h3 class="product-card__title">Escoras Metálicas</h3>
+          <p class="product-card__desc">Escoras reguláveis de alta resistência para suporte de lajes, vigas e estruturas em concreto durante a cura.</p>
+          <a href="escoras-metalicas.html" class="product-card__link" id="link-escoras">
+            Ver detalhes <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </article>
+
+      <article class="product-card reveal delay-2">
+        <div class="product-card__image">
+          <img src="assets/images/acessorios-escoramento.jpg" alt="Acessórios e equipamentos de escoramento" loading="lazy" />
+        </div>
+        <div class="product-card__body">
+          <h3 class="product-card__title">Acessórios e Equipamentos</h3>
+          <p class="product-card__desc">Linha completa de suportes, sapatas, garfos e conectores para complementar e otimizar seus sistemas de escoramento.</p>
+          <a href="acessorios-para-escoramento.html" class="product-card__link" id="link-acessorios">
+            Ver detalhes <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </article>
+
+      <article class="product-card reveal delay-3">
+        <div class="product-card__image">
+          <img src="assets/images/torres-escoramento.jpg" alt="Torres de escoramento em estrutura de concreto" loading="lazy" />
+        </div>
+        <div class="product-card__body">
+          <h3 class="product-card__title">Torres de Escoramento</h3>
+          <p class="product-card__desc">Torres modulares para grandes cargas e pé-direito elevado. Menores impactos ambientais e alta produtividade na obra.</p>
+          <a href="torres-de-escoramento.html" class="product-card__link" id="link-torres">
+            Ver detalhes <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     SERVIÇOS ESPECIAIS
+     ======================================================== -->
+<section class="products" id="servicos-especiais" aria-labelledby="servicos-heading">
+  <div class="container">
+
+    <div class="section-header reveal">
+      <h2 class="section-title" id="servicos-heading">
+        Nossos <span>Serviços Especiais</span> na Construção Civil
+      </h2>
+      <div class="title-line"></div>
+    </div>
+
+    <div class="products__grid" style="margin-top: 48px; grid-template-columns: repeat(2,1fr);">
+
+      <article class="product-card reveal delay-1">
+        <div class="product-card__image">
+          <img src="assets/images/travamento-pilares.jpg" alt="Travamento de pilares em edifício" loading="lazy" />
+        </div>
+        <div class="product-card__body">
+          <h3 class="product-card__title">Travamento de Pilares</h3>
+          <p class="product-card__desc">Sistemas de travamento para pilares de concreto em fase de concretagem, garantindo alinhamento perfeito e segurança estrutural.</p>
+          <a href="travamento-de-pilares.html" class="product-card__link" id="link-pilares">
+            Ver detalhes <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </article>
+
+      <article class="product-card reveal delay-2">
+        <div class="product-card__image">
+          <img src="assets/images/vigas-aco.jpg" alt="Vigas de aço para escoramento" loading="lazy" />
+        </div>
+        <div class="product-card__body">
+          <h3 class="product-card__title">Vigas de Aço</h3>
+          <p class="product-card__desc">Vigas H20 e metálicas para escoramento de lajes e fôrmas. Alta resistência, leveza e compatibilidade com sistemas modulares.</p>
+          <a href="vigas.html" class="product-card__link" id="link-vigas">
+            Ver detalhes <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     MINI LOJA (MERCADO LIVRE)
+     ======================================================== -->
+<section class="store-section" id="loja" style="background: linear-gradient(to bottom, #fff, #f7f9fc); padding: 90px 0;">
+  <div class="container">
+    <div style="text-align: center; margin-bottom: 48px;" class="reveal">
+      <h2 style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 900; color: var(--color-dark); margin-bottom: 12px;">Compre Online no Mercado Livre</h2>
+      <p style="color: var(--color-text-muted); font-size: 1.05rem; max-width: 600px; margin: 0 auto;">Equipamentos originais Quifabra direto da fábrica. Parcele em até 12x com a Compra Garantida do Mercado Livre.</p>
+    </div>
+
+    <div class="store-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 28px; margin-bottom: 48px;">
+      
+      <!-- Sapata -->
+      <article class="product-card reveal" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,.08); display: flex; flex-direction: column; transition: transform .3s; position: relative;">
+        <div style="position: absolute; top: 12px; left: 12px; z-index: 2; background: #00a650; color: white; padding: 4px 10px; border-radius: 8px; font-size: .7rem; font-weight: 800;">🚚 FRETE GRÁTIS</div>
+        <div style="aspect-ratio: 4/3; background: #f8f9fa; padding: 20px; display: flex; align-items: center; justify-content: center; position: relative;">
+          <img src="assets/images/prod-sapata-regulavel.jpg" alt="Sapata Regulável Para Andaime 45cm" style="width: 100%; height: 100%; object-fit: contain;" loading="lazy" />
+        </div>
+        <div style="padding: 24px; flex: 1; display: flex; flex-direction: column;">
+          <h3 style="font-family: var(--font-heading); font-size: 1.1rem; font-weight: 800; color: var(--color-dark); margin-bottom: 8px;">Sapata Regulável Para Andaime 45 cm</h3>
+          <p style="font-size: .85rem; color: var(--color-text-muted); margin-bottom: 16px;">Base quadrada 12x12cm, rosca ajustável em até 30cm. Suporta até 1.000 kg.</p>
+          <div style="margin-top: auto;">
+            <div style="font-size: 1.4rem; font-weight: 900; color: var(--color-dark); margin-bottom: 4px; font-family: var(--font-heading);">R$ 450</div>
+            <div style="font-size: .8rem; color: #00a650; font-weight: 700; margin-bottom: 16px;">12x de R$ 43,52 no cartão</div>
+            <button class="btn btn--primary" style="width: 100%; justify-content: center; background: #00a650; border: none; cursor: pointer;" onclick="addToCart('prod2', 'Sapata Regulável Para Andaime 45 cm', 450, 'assets/images/prod-sapata-regulavel.jpg')">Adicionar ao Carrinho</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Kit Escoras -->
+      <article class="product-card reveal delay-1" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,.08); display: flex; flex-direction: column; transition: transform .3s; position: relative;">
+        <div style="position: absolute; top: 12px; left: 12px; z-index: 2; background: var(--color-accent); color: var(--color-dark); padding: 4px 10px; border-radius: 8px; font-size: .7rem; font-weight: 800;">⭐ MAIS VENDIDO</div>
+        <div style="aspect-ratio: 4/3; background: #f8f9fa; padding: 20px; display: flex; align-items: center; justify-content: center; position: relative;">
+          <img src="assets/images/prod-escoras-kit.jpg" alt="Kit 10 Escoras Metálicas Quifabra 2,00 a 3,10m" style="width: 100%; height: 100%; object-fit: contain;" loading="lazy" />
+        </div>
+        <div style="padding: 24px; flex: 1; display: flex; flex-direction: column;">
+          <h3 style="font-family: var(--font-heading); font-size: 1.1rem; font-weight: 800; color: var(--color-dark); margin-bottom: 8px;">Kit 10 Escoras Metálicas de Aço (2 a 3,10m)</h3>
+          <p style="font-size: .85rem; color: var(--color-text-muted); margin-bottom: 16px;">Alta resistência para lajes e vigas. Aço original Quifabra com garantia.</p>
+          <div style="margin-top: auto;">
+            <div style="font-size: 1.4rem; font-weight: 900; color: var(--color-dark); margin-bottom: 4px; font-family: var(--font-heading);">R$ 2.100</div>
+            <div style="font-size: .8rem; color: #00a650; font-weight: 700; margin-bottom: 16px;">10x de R$ 210 sem juros</div>
+            <button class="btn btn--primary" style="width: 100%; justify-content: center; background: #00a650; border: none; cursor: pointer;" onclick="addToCart('prod3', 'Kit 10 Escoras Metálicas de Aço (2 a 3,10m)', 2100, 'assets/images/prod-escoras-kit.jpg')">Adicionar ao Carrinho</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Kit Andaime -->
+      <article class="product-card reveal delay-2" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,.08); display: flex; flex-direction: column; transition: transform .3s; position: relative;">
+        <div style="position: absolute; top: 12px; left: 12px; z-index: 2; background: #00a650; color: white; padding: 4px 10px; border-radius: 8px; font-size: .7rem; font-weight: 800;">🚚 FRETE GRÁTIS</div>
+        <div style="aspect-ratio: 4/3; background: #f8f9fa; padding: 20px; display: flex; align-items: center; justify-content: center; position: relative;">
+          <img src="assets/images/prod-andaime-tubular-kit.jpg" alt="Andaime Tubular 1,00m Kit 8 Peças" style="width: 100%; height: 100%; object-fit: contain;" loading="lazy" />
+        </div>
+        <div style="padding: 24px; flex: 1; display: flex; flex-direction: column;">
+          <h3 style="font-family: var(--font-heading); font-size: 1.1rem; font-weight: 800; color: var(--color-dark); margin-bottom: 8px;">Andaime Tubular 1,00m — Kit 8 Peças</h3>
+          <p style="font-size: .85rem; color: var(--color-text-muted); margin-bottom: 16px;">Para montagem de até 4 metros. Aço Ø42,40mm, resistente e seguro.</p>
+          <div style="margin-top: auto;">
+            <div style="font-size: 1.4rem; font-weight: 900; color: var(--color-dark); margin-bottom: 4px; font-family: var(--font-heading);">R$ 1.580</div>
+            <div style="font-size: .8rem; color: #00a650; font-weight: 700; margin-bottom: 16px;">12x de R$ 151,86 no cartão</div>
+            <button class="btn btn--primary" style="width: 100%; justify-content: center; background: #00a650; border: none; cursor: pointer;" onclick="addToCart('prod1', 'Andaime Tubular 1,00m — Kit 8 Peças', 1580, 'assets/images/prod-andaime-tubular-kit.jpg')">Adicionar ao Carrinho</button>
+          </div>
+        </div>
+      </article>
+      
+    </div>
+    
+    <div style="text-align: center;" class="reveal">
+      <a href="loja.html" class="btn btn--outline" style="border-width: 2px;">Ver loja completa</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ========================================================
+     FAQ
+     ======================================================== -->
+<section class="faq" id="faq" aria-labelledby="faq-heading">
+  <div class="container">
+    <div class="faq__grid">
+
+      <!-- Esquerda -->
+      <div class="faq__left reveal-left">
+        <h2 id="faq-heading">Perguntas<br>Frequentes</h2>
+        <div class="title-line title-line--left"></div>
+        <p>
+          Descubra respostas às suas dúvidas: nossa seção de Perguntas Frequentes explora detalhes sobre
+          <a href="andaime-fachadeiro.html">andaimes fachadeiro</a>,
+          <a href="andaime-tubular.html">andaime tubular</a>,
+          <a href="torres-de-escoramento.html">torres de escoramento</a>,
+          <a href="escoras-metalicas.html">escoras metálicas</a> e
+          <a href="vigas.html">vigas de aço</a>,
+          ajudando você a tomar decisões informadas para seu projeto.
+        </p>
+        <a href="#contato" class="btn btn--primary" id="faq-cta" style="margin-top:8px;">Fale Conosco</a>
+      </div>
+
+      <!-- Accordion -->
+      <div class="faq__right reveal-right">
+
+        <div class="accordion-item open" id="faq-item-1">
+          <button class="accordion-trigger" aria-expanded="true" aria-controls="faq-body-1" id="faq-trigger-1">
+            Como dimensionar corretamente um sistema de escoramento para lajes e vigas?
+            <span class="accordion-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-body" id="faq-body-1" role="region" aria-labelledby="faq-trigger-1">
+            <p>
+              O dimensionamento deve considerar <strong>carga total da estrutura</strong>, vão livre, altura do pé-direito, tipo de concreto, tempo de cura e redistribuição de cargas. A escolha incorreta pode comprometer a segurança e gerar retrabalho. Nossa equipe técnica auxilia na definição do sistema ideal conforme projeto estrutural.
+            </p>
+          </div>
+        </div>
+
+        <div class="accordion-item" id="faq-item-2">
+          <button class="accordion-trigger" aria-expanded="false" aria-controls="faq-body-2" id="faq-trigger-2">
+            Qual a capacidade de carga das torres de escoramento e como calcular?
+            <span class="accordion-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-body" id="faq-body-2" role="region" aria-labelledby="faq-trigger-2">
+            <p>
+              As torres Quifabra possuem capacidade de carga que varia conforme a configuração, podendo suportar cargas de até várias toneladas por ponto. O cálculo leva em conta a altura total, as travessas utilizadas e o carregamento distribuído. Entre em contato conosco para um dimensionamento personalizado gratuito.
+            </p>
+          </div>
+        </div>
+
+        <div class="accordion-item" id="faq-item-3">
+          <button class="accordion-trigger" aria-expanded="false" aria-controls="faq-body-3" id="faq-trigger-3">
+            Quando utilizar torre de escoramento em vez de escoras metálicas individuais?
+            <span class="accordion-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-body" id="faq-body-3" role="region" aria-labelledby="faq-trigger-3">
+            <p>
+              Torres são indicadas quando há grandes cargas concentradas, pé-direito acima de 3m, ou necessidade de plataformas de trabalho elevadas. Escoras individuais são ideais para cargas menores e espaços com pé-direito padrão. Nossa equipe pode avaliar qual solução é mais econômica para o seu projeto.
+            </p>
+          </div>
+        </div>
+
+        <div class="accordion-item" id="faq-item-4">
+          <button class="accordion-trigger" aria-expanded="false" aria-controls="faq-body-4" id="faq-trigger-4">
+            É possível adaptar o sistema de andaime para diferentes tipos de fachada?
+            <span class="accordion-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-body" id="faq-body-4" role="region" aria-labelledby="faq-trigger-4">
+            <p>
+              Sim! Nossos sistemas de andaimes fachadeiros são modulares e flexíveis, adaptando-se a fachadas curvas, recuadas ou com elementos arquitetônicos complexos. A modularidade permite encaixar em praticamente qualquer geometria de edificação, mantendo total segurança.
+            </p>
+          </div>
+        </div>
+
+        <div class="accordion-item" id="faq-item-5">
+          <button class="accordion-trigger" aria-expanded="false" aria-controls="faq-body-5" id="faq-trigger-5">
+            A Quifabra faz locação de equipamentos? Quais são os prazos mínimos?
+            <span class="accordion-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-body" id="faq-body-5" role="region" aria-labelledby="faq-trigger-5">
+            <p>
+              Sim, realizamos locação de andaimes e equipamentos de escoramento. Atendemos locações a partir de 3 toneladas de material. Os prazos são flexíveis e negociáveis conforme a necessidade da obra. Entre em contato para um orçamento personalizado.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     BLOG
+     ======================================================== -->
+<section class="blog" id="blog" aria-labelledby="blog-heading">
+  <div class="container">
+
+    <div class="section-header reveal">
+      <h2 class="section-title" id="blog-heading">Nosso <span>Blog</span></h2>
+      <div class="title-line"></div>
+      <p class="section-subtitle">Conteúdos técnicos e dicas sobre escoramento, andaimes e construção civil para ajudar na sua obra.</p>
+    </div>
+
+    <div class="blog__grid" style="margin-top: 48px;">
+
+      <article class="blog-card reveal delay-1">
+        <div class="blog-card__image">
+          <img src="assets/images/blog-escoramento.jpg" alt="Trabalhador com EPI instalando escoras" loading="lazy" />
+          <span class="blog-card__cat">Escoramento</span>
+        </div>
+        <div class="blog-card__body">
+          <p class="blog-card__meta">9/10/25 · 5 min de leitura</p>
+          <h3 class="blog-card__title">Cuidados Essenciais na Instalação de Escoras para Construções de Edifícios Altos: A Importância dos EPIs</h3>
+          <a href="blog.html" class="blog-card__link" id="blog-link-1">
+            Ler artigo <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </article>
+
+      <article class="blog-card reveal delay-2">
+        <div class="blog-card__image">
+          <img src="assets/images/blog-andaimes.jpg" alt="Andaime em obra ao pôr do sol" loading="lazy" />
+          <span class="blog-card__cat">Andaimes</span>
+        </div>
+        <div class="blog-card__body">
+          <p class="blog-card__meta">9/10/25 · 4 min de leitura</p>
+          <h3 class="blog-card__title">Como Escolher o Tipo Certo de Andaime para Cada Etapa da Construção</h3>
+          <a href="blog.html" class="blog-card__link" id="blog-link-2">
+            Ler artigo <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </article>
+
+      <article class="blog-card reveal delay-3">
+        <div class="blog-card__image">
+          <img src="assets/images/blog-geral.jpg" alt="Operário trabalhando com ferramentas de construção" loading="lazy" />
+          <span class="blog-card__cat">Geral</span>
+        </div>
+        <div class="blog-card__body">
+          <p class="blog-card__meta">9/10/25 · 3 min de leitura</p>
+          <h3 class="blog-card__title">Torres de Escoramento vs. Escoras Individuais: Quando Usar Cada Sistema</h3>
+          <a href="blog.html" class="blog-card__link" id="blog-link-3">
+            Ler artigo <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     FORMULÁRIO DE CONTATO
+     ======================================================== -->
+<section class="contact" id="contato" aria-labelledby="contact-heading">
+  <div class="container">
+    <div class="contact__card">
+
+      <!-- Texto esquerdo -->
+      <div class="contact__left reveal-left">
+        <h2 class="contact__title" id="contact-heading">
+          Consulte os Equipamentos e Lotes de Produção sob Demanda
+        </h2>
+        <p class="contact__subtitle">
+          Estamos disponíveis para atender você via WhatsApp ou pelo formulário ao lado. Resposta imediata!
+        </p>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;">
+          <a href="https://wa.me/5531991790838" class="btn btn--outline" id="contact-whatsapp" target="_blank" rel="noopener">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="white" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+            WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <!-- Formulário direito -->
+      <form class="contact__form reveal-right" id="contactForm" novalidate aria-label="Formulário de contato">
+        <div class="form-row">
+          <div class="form-field">
+            <input type="text" id="field-nome" name="nome" placeholder="Nome *" required autocomplete="given-name" />
+          </div>
+          <div class="form-field">
+            <input type="email" id="field-email" name="email" placeholder="E-mail *" required autocomplete="email" />
+          </div>
+        </div>
+        <div class="form-row form-row--full">
+          <div class="form-field">
+            <input type="tel" id="field-celular" name="celular" placeholder="Celular / WhatsApp *" required autocomplete="tel" />
+          </div>
+        </div>
+        <div class="form-row form-row--full">
+          <div class="form-field">
+            <input type="text" id="field-empresa" name="empresa" placeholder="Empresa" autocomplete="organization" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <input type="text" id="field-cep" name="cep" placeholder="CEP" autocomplete="postal-code" maxlength="9" />
+          </div>
+          <div class="form-field form-select-wrap">
+            <select id="field-estado" name="estado" aria-label="Estado">
+              <option value="">Estado</option>
+              <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
+              <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
+              <option>GO</option><option>MA</option><option>MT</option><option>MS</option>
+              <option selected>MG</option><option>PA</option><option>PB</option><option>PR</option>
+              <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
+              <option>RS</option><option>RO</option><option>RR</option><option>SC</option>
+              <option>SP</option><option>SE</option><option>TO</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row form-row--full">
+          <div class="form-field form-select-wrap">
+            <select id="field-atuacao" name="atuacao" aria-label="Qual atuação da sua empresa?">
+              <option value="">Qual atuação da sua empresa?</option>
+              <option>Construtora</option>
+              <option>Empreiteira</option>
+              <option>Engenharia / Projetos</option>
+              <option>Incorporadora</option>
+              <option>Locação de Equipamentos</option>
+              <option>Pessoa Física / Reforma</option>
+              <option>Outro</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row form-row--full">
+          <div class="form-field">
+            <textarea id="field-mensagem" name="mensagem" placeholder="Como podemos ajudar?" rows="4"></textarea>
+          </div>
+        </div>
+        <button type="submit" class="form__submit" id="form-submit">
+          Converse com um consultor
+        </button>
+        <div id="form-feedback" role="alert" aria-live="polite" style="margin-top:12px;font-size:.85rem;color:rgba(255,255,255,.9);display:none;"></div>
+      </form>
+
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     FOOTER INFO
+     ======================================================== -->
+<footer role="contentinfo">
+  <div class="footer-info">
+    <div class="container">
+      <div class="footer-info__grid">
+
+        <div class="footer-contact reveal">
+          <div class="footer-contact__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1E96C8" stroke-width="2" aria-hidden="true">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
+          <h4>Escritório Central Savassi</h4>
+          <p>Av. Getúlio Vargas, 1420. 14° andar.<br>CEP 30112-021 – Belo Horizonte, MG.</p>
+        </div>
+
+        <div class="footer-contact reveal delay-2">
+          <div class="footer-contact__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1E96C8" stroke-width="2" aria-hidden="true">
+              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 12a19.79 19.79 0 01-3.07-8.67A2 2 0 012 1.18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.57a16 16 0 006.29 6.29l1.46-1.34a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+            </svg>
+          </div>
+          <h4>Unidade Santa Luzia</h4>
+          <p><a href="tel:+553136911702">(31) 3691 1702</a></p>
+        </div>
+
+        <div class="footer-contact reveal delay-4">
+          <div class="footer-contact__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="#1E96C8" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+          </div>
+          <h4>WhatsApp</h4>
+          <a href="https://wa.me/5531991790838" target="_blank" rel="noopener">(31) 9917-90838</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer bar -->
+  <div class="footer-bar">
+    <div class="container">
+      <div class="footer-bar__inner">
+        <div class="footer-bar__logo">
+          <span class="footer-bar__logo-name">Quifabra</span>
+        </div>
+        <p class="footer-bar__copy">© 2025 Quifabra. Todos os direitos reservados.</p>
+        <div class="footer-bar__links">
+          <a href="politica-de-privacidade.html">Política de Privacidade</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ========================================================
+     WHATSAPP FAB
+     ======================================================== -->
+<a
+  href="https://wa.me/5531991790838"
+  class="whatsapp-fab"
+  id="whatsapp-fab"
+  target="_blank"
+  rel="noopener"
+  aria-label="Fale conosco pelo WhatsApp"
+>
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</a>
+
+<!-- JS -->
+<!-- Overlay e Sidebar do Carrinho -->
+<div class="cart-overlay" id="cartOverlay"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <h2><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg> Seu Carrinho</h2>
+    <button class="cart-close" id="closeCart">&times;</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <!-- Itens via JS -->
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total">
+      <span>Subtotal</span>
+      <strong id="cartTotal">R$ 0,00</strong>
+    </div>
+    <button class="btn-checkout" onclick="checkoutWhatsApp()">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Finalizar no WhatsApp
+    </button>
+  </div>
+</div>
+
+<a href="javascript:void(0)" class="floating-cart open-cart-btn" aria-label="Abrir Carrinho">
+  <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+  <span class="cart-badge cart-badge-count">0</span>
+</a>
+
+<script src="js/main.js"></script>
+</body>
+</html>
