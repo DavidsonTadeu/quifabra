@@ -1,12 +1,12 @@
-/* =========================================================
-   QUIFABRA — Design System
-   Escoramento Andaimes e Acessórios
+﻿/* =========================================================
+   QUIFABRA â€” Design System
+   Escoramento Andaimes e AcessÃ³rios
    ========================================================= */
 
-/* ─── Google Fonts ─── */
+/* â”€â”€â”€ Google Fonts â”€â”€â”€ */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@600;700;800;900&display=swap');
 
-/* ─── CSS Custom Properties (fácil edição) ─── */
+/* â”€â”€â”€ CSS Custom Properties (fÃ¡cil ediÃ§Ã£o) â”€â”€â”€ */
 :root {
   /* Cores principais */
   --color-primary:       #1E96C8;
@@ -32,7 +32,7 @@
   --font-body:      'Inter', sans-serif;
   --font-heading:   'Montserrat', sans-serif;
 
-  /* Espaçamentos */
+  /* EspaÃ§amentos */
   --section-padding: 90px 0;
   --container-max:   1200px;
   --radius:          8px;
@@ -45,12 +45,12 @@
   --shadow-lg:  0 12px 40px rgba(0,0,0,.15);
   --shadow-xl:  0 20px 60px rgba(0,0,0,.20);
 
-  /* Transições */
+  /* TransiÃ§Ãµes */
   --transition: .3s cubic-bezier(.4,0,.2,1);
   --transition-slow: .6s cubic-bezier(.4,0,.2,1);
 }
 
-/* ─── Reset & Base ─── */
+/* â”€â”€â”€ Reset & Base â”€â”€â”€ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { scroll-behavior: smooth; font-size: 16px; }
@@ -68,17 +68,17 @@ a  { text-decoration: none; color: inherit; }
 ul { list-style: none; }
 button { border: none; cursor: pointer; font-family: inherit; }
 
-/* ─── Container ─── */
+/* â”€â”€â”€ Container â”€â”€â”€ */
 .container {
   max-width: var(--container-max);
   margin: 0 auto;
   padding: 0 24px;
 }
 
-/* ─── Seção ─── */
+/* â”€â”€â”€ SeÃ§Ã£o â”€â”€â”€ */
 section { padding: var(--section-padding); }
 
-/* ─── Headings decorativos ─── */
+/* â”€â”€â”€ Headings decorativos â”€â”€â”€ */
 .section-title {
   font-family: var(--font-heading);
   font-size: clamp(1.6rem, 3vw, 2.4rem);
@@ -110,7 +110,7 @@ section { padding: var(--section-padding); }
 
 .section-header { text-align: center; }
 
-/* ─── Botões ─── */
+/* â”€â”€â”€ BotÃµes â”€â”€â”€ */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -173,7 +173,7 @@ section { padding: var(--section-padding); }
   border-color: var(--color-white);
 }
 
-/* ─── Animações de entrada ─── */
+/* â”€â”€â”€ AnimaÃ§Ãµes de entrada â”€â”€â”€ */
 .reveal {
   opacity: 0;
   transform: translateY(40px);
@@ -292,13 +292,13 @@ section { padding: var(--section-padding); }
 
 .carousel-track-wrap:active { cursor: grabbing; }
 
-/* A track contém 2x os cards para o loop seamless */
+/* A track contÃ©m 2x os cards para o loop seamless */
 .carousel-track {
   display: flex;
   gap: 24px;
   width: max-content;
   animation: marquee-scroll 38s linear infinite;
-  padding: 12px 0 24px; /* espaço para sombras dos cards */
+  padding: 12px 0 24px; /* espaÃ§o para sombras dos cards */
 }
 
 /* Pausa ao hover (desktop) */
@@ -306,7 +306,7 @@ section { padding: var(--section-padding); }
   animation-play-state: paused;
 }
 
-/* ── Card individual ── */
+/* â”€â”€ Card individual â”€â”€ */
 .carousel-card {
   display: flex;
   flex-direction: column;
@@ -652,7 +652,7 @@ section { padding: var(--section-padding); }
   );
 }
 
-/* Conteúdo sobre a imagem */
+/* ConteÃºdo sobre a imagem */
 .hero__content {
   position: absolute;
   bottom: 0;
@@ -1001,7 +1001,7 @@ section { padding: var(--section-padding); }
 .stat-block--accent .stat-block__label { color: rgba(29,37,51,.7); }
 
 /* =========================================================
-   PRODUTOS (Andaimes, Escoramento, Serviços)
+   PRODUTOS (Andaimes, Escoramento, ServiÃ§os)
    ========================================================= */
 .products {
   background: var(--color-white);
@@ -1292,7 +1292,7 @@ section { padding: var(--section-padding); }
 .blog-card__link:hover { gap: 10px; }
 
 /* =========================================================
-   CONTACT / FORMULÁRIO
+   CONTACT / FORMULÃRIO
    ========================================================= */
 .contact {
   background: var(--color-bg);
@@ -1348,7 +1348,7 @@ section { padding: var(--section-padding); }
   margin-bottom: 28px;
 }
 
-/* Formulário */
+/* FormulÃ¡rio */
 .contact__form { position: relative; z-index: 1; }
 
 .form-row {
@@ -1403,7 +1403,7 @@ section { padding: var(--section-padding); }
 .form-select-wrap { position: relative; }
 
 .form-select-wrap::after {
-  content: '▾';
+  content: 'â–¾';
   position: absolute;
   right: 14px;
   top: 50%;
@@ -1703,7 +1703,7 @@ section { padding: var(--section-padding); }
   .whatsapp-fab { bottom: 20px; right: 20px; width: 52px; height: 52px; }
 }
 
-/* ─── CARRINHO DE COMPRAS ─── */
+/* â”€â”€â”€ CARRINHO DE COMPRAS â”€â”€â”€ */
 .cart-overlay { position: fixed; inset: 0; background: rgba(10,15,30,.7); backdrop-filter: blur(4px); z-index: 9999; opacity: 0; pointer-events: none; transition: opacity .3s ease; }
 .cart-overlay.open { opacity: 1; pointer-events: all; }
 
@@ -1741,7 +1741,7 @@ section { padding: var(--section-padding); }
 
 .cart-shipping-badge { display: flex; align-items: center; gap: 8px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px 12px; margin-bottom: 14px; font-size: .82rem; font-weight: 600; color: #15803d; }
 
-/* Floating Cart Icon — button (fixed) */
+/* Floating Cart Icon â€” button (fixed) */
 .floating-cart {
   position: fixed; bottom: 90px; right: 24px;
   width: 60px; height: 60px;
@@ -1771,33 +1771,27 @@ section { padding: var(--section-padding); }
   pointer-events: none;
 }
 
+/* =========================================================
+   ESTILOS MERCADO LIVRE (LOGIN/CADASTRO)
+   ========================================================= */
+.ml-card { background: white; width: 100%; max-width: 420px; margin: 0 auto; padding: 32px 40px; border-radius: 8px; box-shadow: 0 1px 2px 0 rgba(0,0,0,.15); box-sizing: border-box; }
+.ml-title { font-family: var(--font-body); font-size: 1.5rem; font-weight: 600; color: #333; margin-bottom: 24px; text-align: center; }
+.ml-field { margin-bottom: 16px; text-align: left; }
+.ml-label { display: block; font-family: var(--font-body); font-size: .875rem; color: #333; margin-bottom: 8px; }
+.ml-input { width: 100%; padding: 14px 16px; font-family: var(--font-body); font-size: 1rem; color: #333; background: #fff; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; outline: none; transition: border-color .2s; }
+.ml-input:focus { border-color: #3483fa; box-shadow: inset 0 0 0 1px #3483fa; }
+.ml-btn { width: 100%; padding: 16px; font-family: var(--font-body); font-size: 1rem; font-weight: 600; text-align: center; border: none; border-radius: 6px; cursor: pointer; transition: background .2s; }
+.ml-btn-primary { background: #3483fa; color: white; }
+.ml-btn-primary:hover { background: #2968c8; }
+.ml-link { display: block; text-align: center; font-family: var(--font-body); font-size: .875rem; color: #3483fa; font-weight: 600; text-decoration: none; margin-top: 16px; cursor: pointer; transition: color .2s; }
+.ml-link:hover { color: #2968c8; }
+.ml-divider { display: flex; align-items: center; text-align: center; margin: 24px 0; color: #999; font-size: .875rem; font-family: var(--font-body); }
+.ml-divider::before, .ml-divider::after { content: ''; flex: 1; border-bottom: 1px solid #e6e6e6; }
+.ml-divider::before { margin-right: 10px; }
+.ml-divider::after { margin-left: 10px; }
+.ml-google-btn { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; padding: 14px; background: white; border: 1px solid #ccc; border-radius: 6px; font-family: var(--font-body); font-size: .95rem; font-weight: 600; color: #333; cursor: pointer; transition: background .2s; }
+.ml-google-btn:hover { background: #f5f5f5; }
+.ml-error { color: #dc2626; font-size: .85rem; margin-top: 8px; display: none; font-family: var(--font-body); text-align: left; }
 
- 
- / *   = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
-       E S T I L O S   M E R C A D O   L I V R E   ( L O G I N / C A D A S T R O ) 
-       = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =   * / 
- . m l - c a r d   {   b a c k g r o u n d :   w h i t e ;   w i d t h :   1 0 0 % ;   m a x - w i d t h :   4 2 0 p x ;   m a r g i n :   0   a u t o ;   p a d d i n g :   3 2 p x   4 0 p x ;   b o r d e r - r a d i u s :   8 p x ;   b o x - s h a d o w :   0   1 p x   2 p x   0   r g b a ( 0 , 0 , 0 , . 1 5 ) ;   b o x - s i z i n g :   b o r d e r - b o x ;   } 
- . m l - t i t l e   {   f o n t - f a m i l y :   v a r ( - - f o n t - b o d y ) ;   f o n t - s i z e :   1 . 5 r e m ;   f o n t - w e i g h t :   6 0 0 ;   c o l o r :   # 3 3 3 ;   m a r g i n - b o t t o m :   2 4 p x ;   t e x t - a l i g n :   c e n t e r ;   } 
- . m l - f i e l d   {   m a r g i n - b o t t o m :   1 6 p x ;   t e x t - a l i g n :   l e f t ;   } 
- . m l - l a b e l   {   d i s p l a y :   b l o c k ;   f o n t - f a m i l y :   v a r ( - - f o n t - b o d y ) ;   f o n t - s i z e :   . 8 7 5 r e m ;   c o l o r :   # 3 3 3 ;   m a r g i n - b o t t o m :   8 p x ;   } 
- . m l - i n p u t   {   w i d t h :   1 0 0 % ;   p a d d i n g :   1 4 p x   1 6 p x ;   f o n t - f a m i l y :   v a r ( - - f o n t - b o d y ) ;   f o n t - s i z e :   1 r e m ;   c o l o r :   # 3 3 3 ;   b a c k g r o u n d :   # f f f ;   b o r d e r :   1 p x   s o l i d   # c c c ;   b o r d e r - r a d i u s :   6 p x ;   b o x - s i z i n g :   b o r d e r - b o x ;   o u t l i n e :   n o n e ;   t r a n s i t i o n :   b o r d e r - c o l o r   . 2 s ;   } 
- . m l - i n p u t : f o c u s   {   b o r d e r - c o l o r :   # 3 4 8 3 f a ;   b o x - s h a d o w :   i n s e t   0   0   0   1 p x   # 3 4 8 3 f a ;   } 
- . m l - b t n   {   w i d t h :   1 0 0 % ;   p a d d i n g :   1 6 p x ;   f o n t - f a m i l y :   v a r ( - - f o n t - b o d y ) ;   f o n t - s i z e :   1 r e m ;   f o n t - w e i g h t :   6 0 0 ;   t e x t - a l i g n :   c e n t e r ;   b o r d e r :   n o n e ;   b o r d e r - r a d i u s :   6 p x ;   c u r s o r :   p o i n t e r ;   t r a n s i t i o n :   b a c k g r o u n d   . 2 s ;   } 
- . m l - b t n - p r i m a r y   {   b a c k g r o u n d :   # 3 4 8 3 f a ;   c o l o r :   w h i t e ;   } 
- . m l - b t n - p r i m a r y : h o v e r   {   b a c k g r o u n d :   # 2 9 6 8 c 8 ;   } 
- . m l - l i n k   {   d i s p l a y :   b l o c k ;   t e x t - a l i g n :   c e n t e r ;   f o n t - f a m i l y :   v a r ( - - f o n t - b o d y ) ;   f o n t - s i z e :   . 8 7 5 r e m ;   c o l o r :   # 3 4 8 3 f a ;   f o n t - w e i g h t :   6 0 0 ;   t e x t - d e c o r a t i o n :   n o n e ;   m a r g i n - t o p :   1 6 p x ;   c u r s o r :   p o i n t e r ;   t r a n s i t i o n :   c o l o r   . 2 s ;   } 
- . m l - l i n k : h o v e r   {   c o l o r :   # 2 9 6 8 c 8 ;   } 
- . m l - d i v i d e r   {   d i s p l a y :   f l e x ;   a l i g n - i t e m s :   c e n t e r ;   t e x t - a l i g n :   c e n t e r ;   m a r g i n :   2 4 p x   0 ;   c o l o r :   # 9 9 9 ;   f o n t - s i z e :   . 8 7 5 r e m ;   f o n t - f a m i l y :   v a r ( - - f o n t - b o d y ) ;   } 
- . m l - d i v i d e r : : b e f o r e ,   . m l - d i v i d e r : : a f t e r   {   c o n t e n t :   " " ;   f l e x :   1 ;   b o r d e r - b o t t o m :   1 p x   s o l i d   # e 6 e 6 e 6 ;   } 
- . m l - d i v i d e r : : b e f o r e   {   m a r g i n - r i g h t :   1 0 p x ;   } 
- . m l - d i v i d e r : : a f t e r   {   m a r g i n - l e f t :   1 0 p x ;   } 
- . m l - g o o g l e - b t n   {   d i s p l a y :   f l e x ;   a l i g n - i t e m s :   c e n t e r ;   j u s t i f y - c o n t e n t :   c e n t e r ;   g a p :   1 2 p x ;   w i d t h :   1 0 0 % ;   p a d d i n g :   1 4 p x ;   b a c k g r o u n d :   w h i t e ;   b o r d e r :   1 p x   s o l i d   # c c c ;   b o r d e r - r a d i u s :   6 p x ;   f o n t - f a m i l y :   v a r ( - - f o n t - b o d y ) ;   f o n t - s i z e :   . 9 5 r e m ;   f o n t - w e i g h t :   6 0 0 ;   c o l o r :   # 3 3 3 ;   c u r s o r :   p o i n t e r ;   t r a n s i t i o n :   b a c k g r o u n d   . 2 s ;   } 
- . m l - g o o g l e - b t n : h o v e r   {   b a c k g r o u n d :   # f 5 f 5 f 5 ;   } 
- . m l - e r r o r   {   c o l o r :   # d c 2 6 2 6 ;   f o n t - s i z e :   . 8 5 r e m ;   m a r g i n - t o p :   8 p x ;   d i s p l a y :   n o n e ;   f o n t - f a m i l y :   v a r ( - - f o n t - b o d y ) ;   t e x t - a l i g n :   l e f t ;   } 
-  
- 
- 
- . e m p t y - s t a t e   {   t e x t - a l i g n :   c e n t e r ;   p a d d i n g :   4 0 p x   0 ;   c o l o r :   # 6 b 7 2 8 0 ;   } 
- . e m p t y - s t a t e   s v g   {   c o l o r :   # d 1 d 5 d b ;   m a r g i n - b o t t o m :   1 6 p x ;   } 
-  
- 
+.empty-state { text-align: center; padding: 40px 0; color: #6b7280; }
+.empty-state svg { color: #d1d5db; margin-bottom: 16px; }
