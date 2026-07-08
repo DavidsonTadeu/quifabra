@@ -1,7 +1,6 @@
 import { db, collection, getDocs, doc, updateDoc, onSnapshot } from './firebase-config.js';
 import { escapeHtml } from './sanitize.js';
 
-
 let allOrders = [];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -50,17 +49,15 @@ window.adminLogin = async function() {
   const ADMIN_PASS  = 'Quifabra@2024!';
 
   if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
-    loginAttempts = 0;
     sessionStorage.setItem('qf_admin_logged', 'true');
     window.location.reload();
   } else {
     loginAttempts++;
     if (loginAttempts >= MAX_ATTEMPTS) {
-      lockUntil = Date.now() + 2 * 60 * 1000; // 2 minutos
-      loginAttempts = 0;
-      err.textContent = 'Conta bloqueada por 2 minutos por múltiplas tentativas incorretas.';
+      lockUntil = Date.now() + 120000; // Bloqueia por 2 min
+      err.textContent = 'Muitas tentativas. Bloqueado por 2 minutos.';
     } else {
-      err.textContent = `E-mail ou senha incorretos. (${loginAttempts}/${MAX_ATTEMPTS} tentativas)`;
+      err.textContent = `E-mail ou senha incorretos. Tentativas restantes: ${MAX_ATTEMPTS - loginAttempts}`;
     }
     err.style.display = 'block';
   }
@@ -71,10 +68,16 @@ window.adminLogout = function() {
   window.location.reload();
 };
 
+window.filterOrders = function(status, btn) {
+  document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderOrders(status);
+};
+
 function updateStats() {
-  const totalGeral = allOrders.reduce((acc, o) => acc + (o.total || 0), 0);
-  const pendentes  = allOrders.filter(o => o.status === 'Pendente').length;
-  const enviados   = allOrders.filter(o => o.status === 'Enviado' || o.status === 'Entregue').length;
+  const pendentes = allOrders.filter(o => o.status === 'Pendente').length;
+  const enviados  = allOrders.filter(o => o.status === 'Enviado' || o.status === 'Entregue').length;
+  const totalGeral = allOrders.reduce((acc, o) => acc + (Number(o.total) || 0), 0);
 
   const statTotal    = document.getElementById('stat-total');
   const statPendente = document.getElementById('stat-pendente');
@@ -87,54 +90,78 @@ function updateStats() {
   if (statReceita)  statReceita.textContent  = 'R$ ' + totalGeral.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 }
 
-function renderOrders() {
+function renderOrders(filterStatus = 'all') {
   const wrap = document.getElementById('orders-table-wrap');
   if (!wrap) return;
 
-  if (allOrders.length === 0) {
-    wrap.innerHTML = `<div class="empty-state"><h3>Nenhum pedido encontrado.</h3></div>`;
+  const filtered = filterStatus === 'all' 
+    ? allOrders 
+    : allOrders.filter(o => o.status?.toLowerCase() === filterStatus.toLowerCase());
+
+  if (filtered.length === 0) {
+    wrap.innerHTML = `<div class="empty-state">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+      <h3>Nenhum pedido encontrado</h3>
+      <p>Não há transações que correspondam a esse filtro.</p>
+    </div>`;
     return;
   }
 
   wrap.innerHTML = `
+    <div style="overflow-x:auto;">
     <table class="orders-table">
       <thead>
         <tr>
-          <th>Pedido</th>
+          <th>ID Transação</th>
           <th>Data</th>
           <th>Cliente</th>
-          <th>Total</th>
+          <th>Valor</th>
           <th>Status</th>
           <th>Ações</th>
         </tr>
       </thead>
       <tbody>
-        ${allOrders.map(o => `
-          <tr>
-            <td style="font-weight:800;font-family:monospace;color:#1E96C8;">${escapeHtml(o.id)}</td>
-            <td style="font-size:.82rem;color:#6b7280;">${escapeHtml(o.date)}</td>
+        ${filtered.map(o => {
+          let badgeClass = 'status-badge--pendente';
+          if(o.status === 'Em Separação') badgeClass = 'status-badge--separacao';
+          if(o.status === 'Enviado') badgeClass = 'status-badge--enviado';
+          if(o.status === 'Entregue') badgeClass = 'status-badge--entregue';
+          if(o.status === 'Cancelado') badgeClass = 'status-badge--cancelado';
+          
+          return `
+          <tr onclick="viewOrder('${escapeHtml(o.id)}')" style="cursor:pointer;">
+            <td style="font-weight:600;font-family:monospace;color:var(--color-primary);">${escapeHtml(o.id.substring(0,8))}...</td>
+            <td style="font-size:0.8rem;color:var(--color-text-muted);">${escapeHtml(o.date)}</td>
             <td>
-              <div style="font-weight:700;">${escapeHtml(o.customer?.nome || '—')}</div>
-              <div style="font-size:.75rem;color:#9ca3af;">${escapeHtml(o.customer?.email || '')}</div>
+              <div class="customer-info">
+                <span class="customer-name">${escapeHtml(o.customer?.nome || '—')}</span>
+                <span class="customer-email">${escapeHtml(o.customer?.email || '')}</span>
+              </div>
             </td>
-            <td style="font-weight:800;">R$ ${(o.total || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-            <td>
-              <select class="status-select" onchange="updateStatus('${escapeHtml(o.id)}', this.value)">
-                <option value="Pendente" ${o.status === 'Pendente' ? 'selected' : ''}>⏳ Pendente</option>
-                <option value="Pago" ${o.status === 'Pago' ? 'selected' : ''}>✅ Pago</option>
-                <option value="Em Separação" ${o.status === 'Em Separação' ? 'selected' : ''}>📦 Em Separação</option>
-                <option value="Enviado" ${o.status === 'Enviado' ? 'selected' : ''}>🚚 Enviado</option>
-                <option value="Entregue" ${o.status === 'Entregue' ? 'selected' : ''}>🎉 Entregue</option>
-                <option value="Cancelado" ${o.status === 'Cancelado' ? 'selected' : ''}>❌ Cancelado</option>
-              </select>
+            <td style="font-weight:600;">R$ ${(o.total || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+            <td onclick="event.stopPropagation()">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span class="status-badge ${badgeClass}" style="margin-right:4px;">${escapeHtml(o.status)}</span>
+                <select class="status-select" style="padding:4px; font-size:0.75rem;" onchange="updateStatus('${escapeHtml(o.id)}', this.value)">
+                  <option value="Pendente" ${o.status === 'Pendente' ? 'selected' : ''}>Pendente</option>
+                  <option value="Pago" ${o.status === 'Pago' ? 'selected' : ''}>Pago</option>
+                  <option value="Em Separação" ${o.status === 'Em Separação' ? 'selected' : ''}>Separação</option>
+                  <option value="Enviado" ${o.status === 'Enviado' ? 'selected' : ''}>Enviado</option>
+                  <option value="Entregue" ${o.status === 'Entregue' ? 'selected' : ''}>Entregue</option>
+                  <option value="Cancelado" ${o.status === 'Cancelado' ? 'selected' : ''}>Cancelado</option>
+                </select>
+              </div>
             </td>
             <td>
-              <button class="btn btn--secondary" style="padding:6px 12px;font-size:.75rem;" onclick="viewOrder('${escapeHtml(o.id)}')">Ver Detalhes</button>
+              <button style="padding:6px 12px; font-size:0.75rem; background:white; border:1px solid var(--border-color); border-radius:6px; cursor:pointer;" onclick="event.stopPropagation(); viewOrder('${escapeHtml(o.id)}')">
+                Detalhes
+              </button>
             </td>
           </tr>
-        `).join('')}
+        `}).join('')}
       </tbody>
     </table>
+    </div>
   `;
 }
 
@@ -153,70 +180,74 @@ window.viewOrder = function(orderId) {
   const order = allOrders.find(o => o.id === orderId);
   if (!order) return;
 
-  document.getElementById('modal-order-id').textContent = 'Pedido ' + orderId;
+  document.getElementById('modal-title').textContent = 'Pedido #' + orderId.substring(0,8);
   const addr = order.address || {};
 
   document.getElementById('modal-body').innerHTML = `
-    <div class="modal-section">
-      <h4>Cliente</h4>
-      <div class="modal-info-grid">
-        <div class="info-row"><div class="key">Nome</div><div class="val">${escapeHtml(order.customer?.nome || '—')}</div></div>
-        <div class="info-row"><div class="key">CPF</div><div class="val">${escapeHtml(order.customer?.cpf || '—')}</div></div>
-        <div class="info-row"><div class="key">E-mail</div><div class="val">${escapeHtml(order.customer?.email || '—')}</div></div>
-        <div class="info-row"><div class="key">Celular</div><div class="val">${escapeHtml(order.customer?.cel || '—')}</div></div>
+    <div class="slide-section">
+      <h4>Detalhes do Cliente</h4>
+      <div class="info-grid">
+        <div class="info-item"><span class="key">Nome</span><span class="val">${escapeHtml(order.customer?.nome || '—')}</span></div>
+        <div class="info-item"><span class="key">CPF</span><span class="val">${escapeHtml(order.customer?.cpf || '—')}</span></div>
+        <div class="info-item"><span class="key">E-mail</span><span class="val">${escapeHtml(order.customer?.email || '—')}</span></div>
+        <div class="info-item"><span class="key">Celular</span><span class="val">${escapeHtml(order.customer?.cel || '—')}</span></div>
       </div>
     </div>
-    <div class="modal-section">
+    
+    <div class="slide-section">
       <h4>Endereço de Entrega</h4>
-      <div class="modal-info-grid">
-        <div class="info-row full"><div class="key">Logradouro</div><div class="val">${escapeHtml(addr.rua || '—')}, ${escapeHtml(addr.numero || '')} ${addr.comp ? '(' + escapeHtml(addr.comp) + ')' : ''}</div></div>
-        <div class="info-row"><div class="key">Bairro</div><div class="val">${escapeHtml(addr.bairro || '—')}</div></div>
-        <div class="info-row"><div class="key">Cidade/UF</div><div class="val">${escapeHtml(addr.cidade || '—')}/${escapeHtml(addr.estado || '—')}</div></div>
-        <div class="info-row"><div class="key">CEP</div><div class="val">${escapeHtml(addr.cep || '—')}</div></div>
-        <div class="info-row"><div class="key">Frete</div><div class="val" style="color:#16a34a;font-weight:800;">GRÁTIS 🚚</div></div>
+      <div class="info-grid">
+        <div class="info-item full"><span class="key">Logradouro</span><span class="val">${escapeHtml(addr.rua || '—')}, ${escapeHtml(addr.numero || '')} ${addr.comp ? '(' + escapeHtml(addr.comp) + ')' : ''}</span></div>
+        <div class="info-item"><span class="key">Bairro</span><span class="val">${escapeHtml(addr.bairro || '—')}</span></div>
+        <div class="info-item"><span class="key">Cidade/UF</span><span class="val">${escapeHtml(addr.cidade || '—')} / ${escapeHtml(addr.estado || '—')}</span></div>
+        <div class="info-item"><span class="key">CEP</span><span class="val">${escapeHtml(addr.cep || '—')}</span></div>
+        <div class="info-item"><span class="key">Custo de Frete</span><span class="val" style="color:#10B981;">Gratuito</span></div>
       </div>
     </div>
-    <div class="modal-section">
-      <h4>Itens do Pedido</h4>
+    
+    <div class="slide-section">
+      <h4>Itens Comprados</h4>
       <div style="display:flex;flex-direction:column;gap:8px;">
         ${(order.items || []).map(i => `
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:#fafafa;border-radius:8px;">
-            <div>
-              <div style="font-weight:700;font-size:.88rem;">${escapeHtml(i.title)}</div>
-              <div style="font-size:.75rem;color:#9ca3af;">Qtd: ${Number(i.qty)} × R$ ${Number(i.price).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+          <div class="item-row">
+            <div class="item-img"></div>
+            <div class="item-details">
+              <div class="item-name">${escapeHtml(i.title)}</div>
+              <div class="item-qtd">Qtd: ${Number(i.qty)} × R$ ${Number(i.price).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
             </div>
-            <div style="font-weight:800;font-family:'Montserrat',sans-serif;">R$ ${(Number(i.price) * Number(i.qty)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+            <div class="item-price">
+              R$ ${(Number(i.price) * Number(i.qty)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+            </div>
           </div>
         `).join('')}
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 10px;border-top:2px solid #1D2533;margin-top:4px;">
-          <span style="font-weight:800;">TOTAL</span>
-          <span style="font-family:'Montserrat',sans-serif;font-size:1.2rem;font-weight:900;">R$ ${(order.total || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding-top:16px;border-top:1px dashed var(--border-color);margin-top:8px;">
+          <span style="font-weight:600;color:var(--color-text-muted);">Total do Pedido</span>
+          <span style="font-size:1.25rem;font-weight:700;color:var(--color-brand);">R$ ${(order.total || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
         </div>
       </div>
     </div>
-    <div style="display:flex;gap:10px;margin-top:8px;">
+    
+    <div style="display:flex;gap:12px;margin-top:16px;">
       <a href="https://wa.me/55${escapeHtml((order.customer?.cel || '').replace(/\D/g, ''))}" target="_blank" rel="noopener noreferrer"
-         style="flex:1;padding:12px;background:#25D366;color:white;border:none;border-radius:10px;font-weight:700;font-size:.88rem;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;">
-        💬 WhatsApp do Cliente
+         style="flex:1;padding:12px;background:#10B981;color:white;border-radius:8px;font-weight:600;font-size:0.875rem;text-align:center;text-decoration:none;">
+        Falar no WhatsApp
       </a>
       <a href="mailto:${escapeHtml(order.customer?.email || '')}"
-         style="padding:12px 16px;background:#f0f9ff;color:#1E96C8;border:none;border-radius:10px;font-weight:700;font-size:.88rem;text-decoration:none;display:flex;align-items:center;justify-content:center;">
-        ✉️ E-mail
+         style="padding:12px 20px;background:#F3F4F6;color:var(--color-brand);border-radius:8px;font-weight:600;font-size:0.875rem;text-decoration:none;">
+        E-mail
       </a>
     </div>
   `;
-  document.getElementById('orderModal').classList.add('open');
+  document.getElementById('order-modal').classList.add('open');
+  document.getElementById('modal-overlay').classList.add('open');
 };
 
-window.closeOrderModal = function() {
-  document.getElementById('orderModal').classList.remove('open');
+window.closeOrderModal = function(e) {
+  if (e && e.target !== document.getElementById('modal-overlay') && !e.target.closest('.slide-over__close')) return;
+  document.getElementById('order-modal').classList.remove('open');
+  document.getElementById('modal-overlay').classList.remove('open');
 };
 
-window.closeModal = function(e) {
-  if (e.target === document.getElementById('orderModal')) closeOrderModal();
-};
-
-// CORRIGIDO: evitar uso do evento global `event`
 window.showSection = function(name, clickedEl) {
   document.querySelectorAll('.admin-main > div').forEach(d => d.style.display = 'none');
   const section = document.getElementById('section-' + name);
@@ -238,19 +269,24 @@ function loadCustomers() {
   if (!wrap) return;
 
   if (!users.length) {
-    wrap.innerHTML = `<div class="empty-state"><h3>Nenhum cliente com pedidos ainda.</h3></div>`;
+    wrap.innerHTML = `<div class="empty-state">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="7" r="4"></circle><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path></svg>
+      <h3>Nenhum cliente cadastrado</h3>
+      <p>Os clientes aparecerão aqui após fazerem uma compra.</p>
+    </div>`;
     return;
   }
 
   wrap.innerHTML = `
+    <div style="overflow-x:auto;">
     <table class="orders-table">
       <thead>
         <tr>
-          <th>Nome</th>
-          <th>E-mail</th>
+          <th>Nome do Cliente</th>
+          <th>E-mail de Contato</th>
           <th>Celular</th>
           <th>CPF</th>
-          <th>Pedidos</th>
+          <th>Total Pedidos</th>
         </tr>
       </thead>
       <tbody>
@@ -258,15 +294,16 @@ function loadCustomers() {
           const numPedidos = allOrders.filter(o => o.customer?.email === u.email).length;
           return `
             <tr>
-              <td style="font-weight:700;">${u.nome}</td>
-              <td>${u.email}</td>
-              <td>${u.cel || '—'}</td>
-              <td style="font-size:.82rem;color:#9ca3af;">${u.cpf || '—'}</td>
-              <td><span style="background:#f0f9ff;color:#1E96C8;padding:3px 10px;border-radius:12px;font-weight:700;font-size:.78rem;">${numPedidos}</span></td>
+              <td style="font-weight:600;color:var(--color-brand);">${escapeHtml(u.nome)}</td>
+              <td style="color:var(--color-text-muted);">${escapeHtml(u.email)}</td>
+              <td>${escapeHtml(u.cel || '—')}</td>
+              <td style="font-size:0.85rem;color:var(--color-text-faint);">${escapeHtml(u.cpf || '—')}</td>
+              <td><span style="background:#E0F2FE;color:#0369A1;padding:4px 12px;border-radius:20px;font-weight:600;font-size:0.75rem;">${numPedidos}</span></td>
             </tr>
           `;
         }).join('')}
       </tbody>
     </table>
+    </div>
   `;
 }

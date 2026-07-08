@@ -6,282 +6,284 @@
   <title>Admin — Quifabra</title>
   <meta name="robots" content="noindex, nofollow" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%231E96C8'/><text y='24' x='4' font-size='22' font-family='Arial Black' font-weight='900' fill='white'>Q</text></svg>" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css" />
+  <!-- Usando Inter para tudo no Admin para um look de software -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  
   <style>
-    body { background: #f0f2f5; font-family: 'Inter', sans-serif; }
+    /* ── CSS Custom Properties ── */
+    :root {
+      --bg-body: #F7F9FA;
+      --bg-surface: #FFFFFF;
+      --bg-sidebar: #F7F9FA;
+      
+      --color-text-main: #111827;
+      --color-text-muted: #6B7280;
+      --color-text-faint: #9CA3AF;
+      
+      --color-brand: #0F172A; /* Um azul quase preto, muito premium */
+      --color-primary: #1E96C8;
+      
+      --border-color: #E5E7EB;
+      --border-color-light: #F3F4F6;
+      
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-slide: -10px 0 30px rgba(0,0,0,0.1);
+      
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+      
+      --transition: .2s ease;
+    }
 
-    /* ── Admin Layout ── */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg-body); font-family: 'Inter', sans-serif; color: var(--color-text-main); -webkit-font-smoothing: antialiased; }
+
+    /* ── Layout ── */
     .admin-wrap { display: flex; min-height: 100vh; }
 
-    /* Sidebar */
+    /* ── Sidebar (Light Premium) ── */
     .admin-sidebar {
-      width: 240px;
-      background: #1D2533;
+      width: 260px;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border-color);
       flex-shrink: 0;
       display: flex;
       flex-direction: column;
-      padding: 24px 0;
       position: fixed;
       left: 0; top: 0; bottom: 0;
       z-index: 100;
     }
+    
     .admin-sidebar__logo {
-      padding: 0 24px 24px;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      margin-bottom: 16px;
+      padding: 24px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .admin-sidebar__logo-icon {
+      width: 32px; height: 32px; background: var(--color-primary);
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: 800; font-size: 1.2rem;
     }
     .admin-sidebar__logo span {
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 900;
-      font-size: 1.3rem;
-      color: #1E96C8;
+      font-weight: 700; font-size: 1.1rem; color: var(--color-brand); letter-spacing: -0.02em;
     }
-    .admin-sidebar__logo small { display: block; font-size: .65rem; color: rgba(255,255,255,.4); text-transform: uppercase; letter-spacing: .08em; margin-top: 2px; }
+
+    .sidebar-nav { padding: 0 12px; flex: 1; margin-top: 12px; }
+    
+    .nav-label {
+      font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+      color: var(--color-text-faint); margin: 16px 12px 8px;
+    }
 
     .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 24px;
-      color: rgba(255,255,255,.6);
-      font-size: .88rem;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      background: none;
-      width: 100%;
-      text-align: left;
-      font-family: inherit;
-      transition: all .2s;
-      text-decoration: none;
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 12px; margin-bottom: 4px;
+      color: var(--color-text-muted);
+      font-size: 0.875rem; font-weight: 500;
+      border-radius: var(--radius-md);
+      cursor: pointer; border: none; background: none; width: 100%; text-align: left;
+      font-family: inherit; transition: var(--transition); text-decoration: none;
     }
-    .nav-item:hover, .nav-item.active {
-      background: rgba(30,150,200,.12);
-      color: #1E96C8;
+    .nav-item:hover { background: var(--border-color-light); color: var(--color-text-main); }
+    .nav-item.active { background: #E0F2FE; color: #0284C7; font-weight: 600; }
+    .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; stroke-width: 2px; }
+
+    .admin-sidebar__bottom { padding: 16px; border-top: 1px solid var(--border-color); }
+    .admin-user { display: flex; align-items: center; gap: 12px; }
+    .admin-user-avatar {
+      width: 36px; height: 36px; border-radius: 50%; background: #E5E7EB;
+      display: flex; align-items: center; justify-content: center; font-weight: 600; color: #4B5563;
     }
-    .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .admin-user-info strong { display: block; font-size: 0.875rem; color: var(--color-text-main); }
+    .admin-user-info span { font-size: 0.75rem; color: var(--color-text-muted); }
+    
+    .btn-logout {
+      margin-top: 16px; width: 100%; padding: 8px;
+      background: white; border: 1px solid var(--border-color); border-radius: var(--radius-md);
+      color: var(--color-text-main); font-size: 0.85rem; font-weight: 500; cursor: pointer;
+      transition: var(--transition); box-shadow: var(--shadow-sm);
+    }
+    .btn-logout:hover { background: #F9FAFB; }
 
-    .admin-sidebar__bottom { margin-top: auto; padding: 16px 24px; border-top: 1px solid rgba(255,255,255,.08); }
-    .admin-user { font-size: .78rem; color: rgba(255,255,255,.5); }
-    .admin-user strong { display: block; color: rgba(255,255,255,.9); font-size: .85rem; margin-bottom: 2px; }
-
-    /* Main content */
+    /* ── Main Content ── */
     .admin-main {
-      margin-left: 240px;
-      flex: 1;
-      padding: 32px;
-      min-height: 100vh;
+      margin-left: 260px; flex: 1;
+      padding: 40px; min-height: 100vh;
+      max-width: 1200px; /* Limita a largura para melhor legibilidade em monitores ultrawide */
     }
 
-    /* Header */
-    .admin-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 32px;
-    }
-    .admin-title { font-family: 'Montserrat', sans-serif; font-size: 1.5rem; font-weight: 900; color: #1D2533; }
-    .admin-subtitle { font-size: .85rem; color: #9ca3af; margin-top: 2px; }
+    .admin-header { margin-bottom: 32px; }
+    .admin-title { font-size: 1.75rem; font-weight: 700; color: var(--color-brand); letter-spacing: -0.02em; }
+    .admin-subtitle { font-size: 0.875rem; color: var(--color-text-muted); margin-top: 4px; }
 
-    /* Stats grid */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-      margin-bottom: 32px;
-    }
-    @media (max-width: 900px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 500px) { .stats-grid { grid-template-columns: 1fr; } }
-
+    /* ── Stats Grid (Premium look) ── */
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 32px; }
+    @media (max-width: 1024px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+    
     .stat-card {
-      background: white;
-      border-radius: 14px;
-      padding: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,.05);
-      border-left: 4px solid transparent;
+      background: var(--bg-surface); border-radius: var(--radius-lg); padding: 24px;
+      border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);
+      display: flex; flex-direction: column; position: relative; overflow: hidden;
     }
-    .stat-card--blue   { border-color: #1E96C8; }
-    .stat-card--green  { border-color: #16a34a; }
-    .stat-card--amber  { border-color: #d97706; }
-    .stat-card--purple { border-color: #7c3aed; }
+    .stat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .stat-title { font-size: 0.875rem; font-weight: 500; color: var(--color-text-muted); }
+    .stat-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+    .icon-blue { background: #E0F2FE; color: #0284C7; }
+    .icon-amber { background: #FEF3C7; color: #D97706; }
+    .icon-purple { background: #EDE9FE; color: #7C3AED; }
+    .icon-green { background: #DCFCE7; color: #16A34A; }
+    
+    .stat-value { font-size: 2rem; font-weight: 700; color: var(--color-brand); letter-spacing: -0.02em; }
+    .stat-trend { margin-top: 8px; font-size: 0.75rem; font-weight: 500; display: flex; align-items: center; gap: 4px; }
+    .trend-up { color: #10B981; }
 
-    .stat-label { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #9ca3af; margin-bottom: 8px; }
-    .stat-value { font-family: 'Montserrat', sans-serif; font-size: 2rem; font-weight: 900; color: #1D2533; }
-    .stat-sub   { font-size: .75rem; color: #9ca3af; margin-top: 4px; }
-
-    /* Orders panel */
+    /* ── Orders Panel ── */
     .orders-panel {
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 2px 10px rgba(0,0,0,.05);
+      background: var(--bg-surface); border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);
       overflow: hidden;
     }
     .orders-panel__header {
-      padding: 20px 24px;
-      border-bottom: 1px solid #f0f1f3;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
+      padding: 20px 24px; border-bottom: 1px solid var(--border-color);
+      display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;
     }
-    .orders-panel__header h2 { font-family: 'Montserrat', sans-serif; font-weight: 800; color: #1D2533; font-size: 1.1rem; }
+    .orders-panel__header h2 { font-size: 1.125rem; font-weight: 600; color: var(--color-brand); }
 
-    /* Filters */
+    /* Filters (Pills) */
     .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; }
     .filter-pill {
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: .78rem;
-      font-weight: 700;
-      border: 1.5px solid #e8eaed;
-      background: white;
-      color: #6b7280;
-      cursor: pointer;
-      transition: all .2s;
-      font-family: inherit;
+      padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;
+      border: 1px solid var(--border-color); background: var(--bg-surface); color: var(--color-text-muted);
+      cursor: pointer; transition: var(--transition);
     }
-    .filter-pill.active, .filter-pill:hover { background: #1E96C8; color: white; border-color: #1E96C8; }
+    .filter-pill.active, .filter-pill:hover { background: #F3F4F6; color: var(--color-brand); border-color: #D1D5DB; }
+    .filter-pill.active { background: var(--color-brand); color: white; border-color: var(--color-brand); }
 
     /* Table */
     .orders-table { width: 100%; border-collapse: collapse; }
     .orders-table th {
-      text-align: left;
-      padding: 12px 20px;
-      font-size: .72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-      color: #9ca3af;
-      background: #fafafa;
-      border-bottom: 1px solid #f0f1f3;
+      text-align: left; padding: 12px 24px; font-size: 0.75rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-muted);
+      background: #F9FAFB; border-bottom: 1px solid var(--border-color);
     }
     .orders-table td {
-      padding: 16px 20px;
-      border-bottom: 1px solid #f0f1f3;
-      font-size: .88rem;
-      color: #1D2533;
-      vertical-align: middle;
+      padding: 16px 24px; border-bottom: 1px solid var(--border-color-light);
+      font-size: 0.875rem; color: var(--color-text-main); vertical-align: middle;
     }
     .orders-table tr:last-child td { border-bottom: none; }
-    .orders-table tr:hover td { background: #fafbff; }
+    .orders-table tr:hover td { background: #F9FAFB; cursor: pointer; }
+    
+    .customer-info { display: flex; flex-direction: column; }
+    .customer-name { font-weight: 500; color: var(--color-brand); }
+    .customer-email { font-size: 0.75rem; color: var(--color-text-muted); }
 
-    /* Status badge */
+    /* Modern Badges */
     .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 4px 12px;
-      border-radius: 12px;
-      font-size: .72rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .04em;
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 10px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 0.02em;
     }
-    .status-badge--pendente   { background: #fff7ed; color: #c2410c; }
-    .status-badge--separacao  { background: #eff6ff; color: #1d4ed8; }
-    .status-badge--enviado    { background: #f0fdf4; color: #16a34a; }
-    .status-badge--entregue   { background: #f3f4f6; color: #374151; }
-    .status-badge--cancelado  { background: #fef2f2; color: #dc2626; }
+    .status-badge::before { content: ''; display: block; width: 6px; height: 6px; border-radius: 50%; }
+    
+    .status-badge--pendente { background: #FEF3C7; color: #B45309; }
+    .status-badge--pendente::before { background: #F59E0B; }
+    
+    .status-badge--separacao { background: #E0F2FE; color: #0369A1; }
+    .status-badge--separacao::before { background: #0EA5E9; }
+    
+    .status-badge--enviado { background: #DCFCE7; color: #15803D; }
+    .status-badge--enviado::before { background: #22C55E; }
+    
+    .status-badge--entregue { background: #F3F4F6; color: #374151; }
+    .status-badge--entregue::before { background: #6B7280; }
+    
+    .status-badge--cancelado { background: #FEE2E2; color: #B91C1C; }
+    .status-badge--cancelado::before { background: #EF4444; }
 
-    /* Status select */
     .status-select {
-      padding: 6px 10px;
-      border: 1.5px solid #e8eaed;
-      border-radius: 8px;
-      font-size: .8rem;
-      font-family: inherit;
-      color: #1D2533;
-      cursor: pointer;
-      background: white;
+      padding: 6px 12px; border: 1px solid var(--border-color); border-radius: 6px;
+      font-size: 0.85rem; font-weight: 500; color: var(--color-text-main);
+      background: white; cursor: pointer; transition: border-color .2s; outline: none;
     }
+    .status-select:focus { border-color: var(--color-primary); box-shadow: 0 0 0 1px var(--color-primary); }
 
     /* Empty state */
-    .empty-state {
-      text-align: center;
-      padding: 60px 24px;
-      color: #9ca3af;
+    .empty-state { text-align: center; padding: 80px 24px; color: var(--color-text-muted); }
+    .empty-state svg { margin: 0 auto 16px; color: #D1D5DB; }
+    .empty-state h3 { font-size: 1.125rem; font-weight: 600; color: var(--color-brand); margin-bottom: 8px; }
+    
+    /* ── Slide-Over Modal (Premium drawer) ── */
+    .slide-over-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(2px);
+      z-index: 1000; opacity: 0; pointer-events: none; transition: opacity .3s ease;
     }
-    .empty-state svg { margin: 0 auto 16px; color: #e8eaed; }
-    .empty-state h3 { font-size: 1.1rem; font-weight: 700; color: #6b7280; margin-bottom: 8px; }
-
-    /* Order detail modal */
-    .modal-overlay {
-      position: fixed; inset: 0;
-      background: rgba(10,15,30,.6);
-      backdrop-filter: blur(4px);
-      z-index: 1000;
-      display: flex; align-items: center; justify-content: center;
-      padding: 20px;
-      opacity: 0; pointer-events: none;
-      transition: opacity .2s;
+    .slide-over-overlay.open { opacity: 1; pointer-events: all; }
+    
+    .slide-over {
+      position: fixed; top: 0; right: -500px; bottom: 0; width: 100%; max-width: 500px;
+      background: var(--bg-surface); box-shadow: var(--shadow-slide); z-index: 1001;
+      display: flex; flex-direction: column; transition: right .4s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .modal-overlay.open { opacity: 1; pointer-events: all; }
-    .modal {
-      background: white;
-      border-radius: 16px;
-      width: 100%;
-      max-width: 560px;
-      max-height: 80vh;
-      overflow-y: auto;
-      box-shadow: 0 20px 60px rgba(0,0,0,.2);
-    }
-    .modal__header {
-      padding: 20px 24px;
-      border-bottom: 1px solid #f0f1f3;
+    .slide-over.open { right: 0; }
+    
+    .slide-over__header {
+      padding: 24px; border-bottom: 1px solid var(--border-color);
       display: flex; justify-content: space-between; align-items: center;
-      position: sticky; top: 0; background: white; z-index: 1;
     }
-    .modal__header h3 { font-family: 'Montserrat', sans-serif; font-weight: 800; color: #1D2533; }
-    .modal__close { background: none; border: none; font-size: 1.4rem; color: #9ca3af; cursor: pointer; line-height: 1; }
-    .modal__body { padding: 24px; }
-    .modal-section { margin-bottom: 20px; }
-    .modal-section h4 { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #9ca3af; margin-bottom: 10px; }
-    .modal-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .info-row { background: #fafafa; border-radius: 8px; padding: 10px; }
-    .info-row .key { font-size: .72rem; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: .04em; }
-    .info-row .val { font-size: .88rem; font-weight: 600; color: #1D2533; margin-top: 2px; }
-    .info-row.full { grid-column: span 2; }
+    .slide-over__header h3 { font-size: 1.25rem; font-weight: 600; color: var(--color-brand); }
+    .slide-over__close { background: #F3F4F6; border: none; width: 32px; height: 32px; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: var(--color-text-muted); cursor: pointer; transition: background .2s; }
+    .slide-over__close:hover { background: #E5E7EB; color: var(--color-brand); }
+    
+    .slide-over__body { padding: 24px; overflow-y: auto; flex: 1; }
+    .slide-section { margin-bottom: 32px; }
+    .slide-section h4 { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-muted); margin-bottom: 16px; border-bottom: 1px solid var(--border-color-light); padding-bottom: 8px; }
+    
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .info-item { display: flex; flex-direction: column; gap: 4px; }
+    .info-item .key { font-size: 0.75rem; color: var(--color-text-muted); }
+    .info-item .val { font-size: 0.875rem; font-weight: 500; color: var(--color-brand); }
+    .info-item.full { grid-column: span 2; }
+    
+    .item-row { display: flex; gap: 12px; padding: 12px; border: 1px solid var(--border-color-light); border-radius: var(--radius-md); margin-bottom: 8px; }
+    .item-img { width: 48px; height: 48px; border-radius: 6px; object-fit: cover; background: #f9f9f9; }
+    .item-details { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+    .item-name { font-size: 0.875rem; font-weight: 500; color: var(--color-brand); }
+    .item-qtd { font-size: 0.75rem; color: var(--color-text-muted); }
+    .item-price { font-size: 0.875rem; font-weight: 600; color: var(--color-brand); }
 
-    /* Login screen */
+    /* ── Login Screen ── */
     .admin-login {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #1D2533 0%, #1a3d5c 100%);
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      background: var(--bg-body);
     }
     .login-box {
-      background: white;
-      border-radius: 20px;
-      padding: 40px;
-      width: 100%;
-      max-width: 400px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.3);
+      background: white; border-radius: var(--radius-xl); padding: 48px 40px;
+      width: 100%; max-width: 440px; border: 1px solid var(--border-color); box-shadow: var(--shadow-md);
+      text-align: center;
     }
-    .login-box h1 { font-family: 'Montserrat', sans-serif; font-size: 1.5rem; font-weight: 900; color: #1D2533; margin-bottom: 6px; }
-    .login-box p  { color: #9ca3af; font-size: .88rem; margin-bottom: 24px; }
-    .login-field { margin-bottom: 16px; }
-    .login-field label { display: block; font-size: .78rem; font-weight: 700; color: #1D2533; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .04em; }
+    .login-logo { width: 48px; height: 48px; background: var(--color-brand); color: white; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; margin-bottom: 24px; }
+    .login-box h1 { font-size: 1.5rem; font-weight: 700; color: var(--color-brand); margin-bottom: 8px; letter-spacing: -0.02em; }
+    .login-box p  { color: var(--color-text-muted); font-size: 0.9rem; margin-bottom: 32px; }
+    .login-field { margin-bottom: 20px; text-align: left; }
+    .login-field label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--color-text-main); margin-bottom: 8px; }
     .login-field input {
-      width: 100%; padding: 12px 14px; border: 1.5px solid #e8eaed; border-radius: 10px;
-      font-family: 'Inter', sans-serif; font-size: .95rem; color: #1D2533; background: #fafafa;
-      transition: border-color .2s; outline: none;
+      width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: var(--radius-md);
+      font-family: inherit; font-size: 1rem; color: var(--color-text-main); transition: var(--transition); outline: none;
     }
-    .login-field input:focus { border-color: #1E96C8; background: white; }
+    .login-field input:focus { border-color: var(--color-primary); box-shadow: 0 0 0 1px var(--color-primary); }
     .btn-login {
-      width: 100%; padding: 14px; background: #1E96C8; color: white; border: none;
-      border-radius: 10px; font-family: 'Montserrat', sans-serif; font-size: .95rem; font-weight: 800;
-      cursor: pointer; transition: background .2s;
+      width: 100%; padding: 14px; background: var(--color-brand); color: white; border: none;
+      border-radius: var(--radius-md); font-family: inherit; font-size: 1rem; font-weight: 600;
+      cursor: pointer; transition: var(--transition); margin-top: 8px;
     }
-    .btn-login:hover { background: #1677A0; }
-    .login-error { display: none; margin-top: 12px; padding: 10px; background: #fef2f2; border-radius: 8px; font-size: .82rem; color: #dc2626; }
+    .btn-login:hover { background: #000; box-shadow: var(--shadow-md); }
+    .login-error { display: none; margin-top: 16px; padding: 12px; background: #FEF2F2; border: 1px solid #FCA5A5; border-radius: var(--radius-md); font-size: 0.85rem; font-weight: 500; color: #B91C1C; text-align: left; }
 
     @media (max-width: 768px) {
       .admin-sidebar { display: none; }
       .admin-main { margin-left: 0; padding: 20px; }
-      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .stats-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -290,7 +292,8 @@
 <!-- Login Screen -->
 <div id="admin-login-screen" class="admin-login">
   <div class="login-box">
-    <h1>🔐 Quifabra Admin</h1>
+    <div class="login-logo">Q</div>
+    <h1>Quifabra Workspace</h1>
     <p>Acesso restrito para administradores</p>
     <div class="login-field">
       <label for="admin-email">E-mail</label>
@@ -298,46 +301,56 @@
     </div>
     <div class="login-field">
       <label for="admin-pass">Senha</label>
-      <input type="password" id="admin-pass" placeholder="Sua senha de administrador" />
+      <input type="password" id="admin-pass" placeholder="Sua senha" />
     </div>
     <div class="login-error" id="admin-error">E-mail ou senha incorretos.</div>
-    <button class="btn-login" onclick="adminLogin()">Entrar no Painel</button>
-    <div style="text-align:center;margin-top:16px;">
-      <a href="index.html" style="font-size:.8rem;color:#9ca3af;text-decoration:none;">← Voltar ao site</a>
+    <button class="btn-login" onclick="adminLogin()">Entrar</button>
+    <div style="margin-top:24px;">
+      <a href="index.html" style="font-size:0.85rem; font-weight:500; color:var(--color-text-muted); text-decoration:none;">← Voltar à loja</a>
     </div>
   </div>
 </div>
 
-<!-- Admin Dashboard (shown after login) -->
+<!-- Admin Dashboard -->
 <div id="admin-dashboard" style="display:none;">
   <div class="admin-wrap">
 
     <!-- Sidebar -->
     <aside class="admin-sidebar">
       <div class="admin-sidebar__logo">
+        <div class="admin-sidebar__logo-icon">Q</div>
         <span>Quifabra</span>
-        <small>Painel Administrativo</small>
       </div>
-      <nav>
+      
+      <div class="nav-label">Gerenciamento</div>
+      <nav class="sidebar-nav">
         <button class="nav-item active" onclick="showSection('orders', this)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
           Pedidos
         </button>
         <button class="nav-item" onclick="showSection('customers', this)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
           Clientes
         </button>
+      </nav>
+      
+      <div class="nav-label">Loja</div>
+      <nav class="sidebar-nav" style="flex:0;">
         <a href="index.html" class="nav-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          Ver Site
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          Ver Loja Online
         </a>
       </nav>
+      
       <div class="admin-sidebar__bottom">
         <div class="admin-user">
-          <strong id="admin-name-display">Admin</strong>
-          ecal7450@gmail.com
+          <div class="admin-user-avatar">AD</div>
+          <div class="admin-user-info">
+            <strong id="admin-name-display">Administrador</strong>
+            <span>ecal7450@gmail.com</span>
+          </div>
         </div>
-        <button onclick="adminLogout()" style="margin-top:10px;width:100%;padding:8px;background:rgba(255,255,255,.08);border:none;border-radius:8px;color:rgba(255,255,255,.5);font-size:.78rem;cursor:pointer;font-family:inherit;">Sair</button>
+        <button class="btn-logout" onclick="adminLogout()">Encerrar sessão</button>
       </div>
     </aside>
 
@@ -347,43 +360,72 @@
       <!-- SECTION: ORDERS -->
       <div id="section-orders">
         <div class="admin-header">
-          <div>
-            <div class="admin-title">Pedidos</div>
-            <div class="admin-subtitle" id="orders-count-sub">Atualizado em tempo real</div>
-          </div>
+          <h1 class="admin-title">Pedidos</h1>
+          <p class="admin-subtitle" id="orders-count-sub">Visão geral e processamento de vendas.</p>
         </div>
 
-        <!-- Stats -->
+        <!-- Stats Grid -->
         <div class="stats-grid" id="admin-stats">
-          <div class="stat-card stat-card--blue">
-            <div class="stat-label">Total de Pedidos</div>
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Total de Pedidos</span>
+              <div class="stat-icon icon-blue">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+              </div>
+            </div>
             <div class="stat-value" id="stat-total">—</div>
+            <div class="stat-trend"><span class="trend-up">↑ Ativo</span> desde o lançamento</div>
           </div>
-          <div class="stat-card stat-card--amber">
-            <div class="stat-label">Pendentes</div>
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Aguardando Envio</span>
+              <div class="stat-icon icon-amber">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              </div>
+            </div>
             <div class="stat-value" id="stat-pendente">—</div>
+            <div class="stat-trend" style="color:var(--color-text-faint);">Requer ação</div>
           </div>
-          <div class="stat-card stat-card--purple">
-            <div class="stat-label">Enviados</div>
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Enviados</span>
+              <div class="stat-icon icon-purple">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+              </div>
+            </div>
             <div class="stat-value" id="stat-enviado">—</div>
+            <div class="stat-trend" style="color:var(--color-text-faint);">Em trânsito</div>
           </div>
-          <div class="stat-card stat-card--green">
-            <div class="stat-label">Receita Total</div>
-            <div class="stat-value" id="stat-receita" style="font-size:1.3rem;">—</div>
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Receita Total</span>
+              <div class="stat-icon icon-green">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+              </div>
+            </div>
+            <div class="stat-value" id="stat-receita" style="font-size:1.75rem;">—</div>
+            <div class="stat-trend"><span class="trend-up">↑ Receita processada</span></div>
           </div>
         </div>
 
-        <!-- Orders Table -->
+        <!-- Orders Table Panel -->
         <div class="orders-panel">
           <div class="orders-panel__header">
-            <h2>📋 Lista de Pedidos</h2>
+            <h2>Transações Recentes</h2>
+            <div class="filter-bar">
+              <button class="filter-pill active" onclick="filterOrders('all', this)">Todos</button>
+              <button class="filter-pill" onclick="filterOrders('pendente', this)">Pendente</button>
+              <button class="filter-pill" onclick="filterOrders('separacao', this)">Separação</button>
+              <button class="filter-pill" onclick="filterOrders('enviado', this)">Enviado</button>
+              <button class="filter-pill" onclick="filterOrders('entregue', this)">Entregue</button>
+            </div>
           </div>
 
           <div id="orders-table-wrap">
             <div class="empty-state">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
-              <h3>Nenhum pedido ainda</h3>
-              <p>Quando clientes finalizarem compras, eles aparecerão aqui.</p>
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+              <h3>Nenhum pedido encontrado</h3>
+              <p>Os dados aparecerão assim que as vendas começarem.</p>
             </div>
           </div>
         </div>
@@ -392,13 +434,16 @@
       <!-- SECTION: CUSTOMERS -->
       <div id="section-customers" style="display:none;">
         <div class="admin-header">
-          <div>
-            <div class="admin-title">Clientes</div>
-            <div class="admin-subtitle">Todos os clientes cadastrados</div>
-          </div>
+          <h1 class="admin-title">Clientes</h1>
+          <p class="admin-subtitle">Lista de clientes que realizaram compras.</p>
         </div>
         <div class="orders-panel">
-          <div id="customers-table-wrap"></div>
+          <div class="orders-panel__header">
+            <h2>Diretório de Clientes</h2>
+          </div>
+          <div id="customers-table-wrap">
+             <!-- Renderizado via JS -->
+          </div>
         </div>
       </div>
 
@@ -406,18 +451,22 @@
   </div>
 </div>
 
-<!-- Order Detail Modal -->
-<div class="modal-overlay" id="orderModal" onclick="closeModal(event)">
-  <div class="modal">
-    <div class="modal__header">
-      <h3 id="modal-order-id">Pedido</h3>
-      <button class="modal__close" onclick="closeOrderModal()">×</button>
-    </div>
-    <div class="modal__body" id="modal-body"></div>
+<!-- Slide-Over Drawer (Order Details) -->
+<div class="slide-over-overlay" id="modal-overlay" onclick="closeOrderModal(event)"></div>
+<div class="slide-over" id="order-modal">
+  <div class="slide-over__header">
+    <h3 id="modal-title">Pedido #---</h3>
+    <button class="slide-over__close" onclick="closeOrderModal(event)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+  </div>
+  <div class="slide-over__body" id="modal-body">
+    <!-- Populated by JS -->
   </div>
 </div>
 
-
+<!-- Script como Module -->
 <script type="module" src="js/admin.js"></script>
+
 </body>
 </html>
