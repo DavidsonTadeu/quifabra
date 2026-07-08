@@ -10,7 +10,7 @@ import { db, doc, setDoc, getDocs, collection } from './firebase-config.js';
 // CONFIGURAÇÕES
 // ══════════════════════════════════════════════════════════════
 // Substitua pela sua Public Key do Mercado Pago
-const MP_PUBLIC_KEY = 'YOUR_MP_PUBLIC_KEY';
+const MP_PUBLIC_KEY = 'APP_USR-46665582-ebe2-4655-8fc1-bb0256c82f4b';
 const mp = typeof MercadoPago !== 'undefined' ? new MercadoPago(MP_PUBLIC_KEY) : null;
 
 // Para ativar os emails:
