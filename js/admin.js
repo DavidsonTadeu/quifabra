@@ -150,37 +150,37 @@ function renderOrders(filterStatus = 'all') {
           if(o.status === 'Entregue') badgeClass = 'status-badge--entregue';
           if(o.status === 'Cancelado') badgeClass = 'status-badge--cancelado';
           
-          return \`
-          <tr onclick="viewOrder('\${escapeHtml(o.id)}')" style="cursor:pointer;">
-            <td style="font-weight:600;font-family:monospace;color:var(--color-primary);">\${escapeHtml(o.id.substring(0,8))}...</td>
-            <td style="font-size:0.8rem;color:var(--color-text-muted);">\${escapeHtml(o.date)}</td>
+          return `
+          <tr onclick="viewOrder('${escapeHtml(o.id)}')" style="cursor:pointer;">
+            <td style="font-weight:600;font-family:monospace;color:var(--color-primary);">${escapeHtml(o.id.substring(0,8))}...</td>
+            <td style="font-size:0.8rem;color:var(--color-text-muted);">${escapeHtml(o.date)}</td>
             <td>
               <div class="customer-info">
-                <span class="customer-name">\${escapeHtml(o.customer?.nome || '—')}</span>
-                <span class="customer-email">\${escapeHtml(o.customer?.email || '')}</span>
+                <span class="customer-name">${escapeHtml(o.customer?.nome || '—')}</span>
+                <span class="customer-email">${escapeHtml(o.customer?.email || '')}</span>
               </div>
             </td>
-            <td style="font-weight:600;">R$ \${(o.total || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+            <td style="font-weight:600;">R$ ${(o.total || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
             <td onclick="event.stopPropagation()">
               <div style="display:flex; align-items:center; gap:8px;">
-                <span class="status-badge \${badgeClass}" style="margin-right:4px;">\${escapeHtml(o.status)}</span>
-                <select class="status-select" style="padding:4px; font-size:0.75rem;" onchange="updateStatus('\${escapeHtml(o.id)}', this.value)">
-                  <option value="Pendente" \${o.status === 'Pendente' ? 'selected' : ''}>Pendente</option>
-                  <option value="Pago" \${o.status === 'Pago' ? 'selected' : ''}>Pago</option>
-                  <option value="Em Separação" \${o.status === 'Em Separação' ? 'selected' : ''}>Separação</option>
-                  <option value="Enviado" \${o.status === 'Enviado' ? 'selected' : ''}>Enviado</option>
-                  <option value="Entregue" \${o.status === 'Entregue' ? 'selected' : ''}>Entregue</option>
-                  <option value="Cancelado" \${o.status === 'Cancelado' ? 'selected' : ''}>Cancelado</option>
+                <span class="status-badge ${badgeClass}" style="margin-right:4px;">${escapeHtml(o.status)}</span>
+                <select class="status-select" style="padding:4px; font-size:0.75rem;" onchange="updateStatus('${escapeHtml(o.id)}', this.value)">
+                  <option value="Pendente" ${o.status === 'Pendente' ? 'selected' : ''}>Pendente</option>
+                  <option value="Pago" ${o.status === 'Pago' ? 'selected' : ''}>Pago</option>
+                  <option value="Em Separação" ${o.status === 'Em Separação' ? 'selected' : ''}>Separação</option>
+                  <option value="Enviado" ${o.status === 'Enviado' ? 'selected' : ''}>Enviado</option>
+                  <option value="Entregue" ${o.status === 'Entregue' ? 'selected' : ''}>Entregue</option>
+                  <option value="Cancelado" ${o.status === 'Cancelado' ? 'selected' : ''}>Cancelado</option>
                 </select>
               </div>
             </td>
             <td>
-              <button style="padding:6px 12px; font-size:0.75rem; background:white; border:1px solid var(--border-color); border-radius:6px; cursor:pointer;" onclick="event.stopPropagation(); viewOrder('\${escapeHtml(o.id)}')">
+              <button style="padding:6px 12px; font-size:0.75rem; background:white; border:1px solid var(--border-color); border-radius:6px; cursor:pointer;" onclick="event.stopPropagation(); viewOrder('${escapeHtml(o.id)}')">
                 Detalhes
               </button>
             </td>
           </tr>
-        \`}).join('')}
+        `}).join('')}
       </tbody>
     </table>
     </div>
@@ -319,15 +319,15 @@ function loadCustomers() {
       <tbody>
         ${users.map(u => {
           const numPedidos = allOrders.filter(o => o.customer?.email === u.email).length;
-          return \`
+          return `
             <tr>
-              <td style="font-weight:600;color:var(--color-brand);">\${escapeHtml(u.nome)}</td>
-              <td style="color:var(--color-text-muted);">\${escapeHtml(u.email)}</td>
-              <td>\${escapeHtml(u.cel || '—')}</td>
-              <td style="font-size:0.85rem;color:var(--color-text-faint);">\${escapeHtml(u.cpf || '—')}</td>
-              <td><span style="background:#E0F2FE;color:#0369A1;padding:4px 12px;border-radius:20px;font-weight:600;font-size:0.75rem;">\${numPedidos}</span></td>
+              <td style="font-weight:600;color:var(--color-brand);">${escapeHtml(u.nome)}</td>
+              <td style="color:var(--color-text-muted);">${escapeHtml(u.email)}</td>
+              <td>${escapeHtml(u.cel || '—')}</td>
+              <td style="font-size:0.85rem;color:var(--color-text-faint);">${escapeHtml(u.cpf || '—')}</td>
+              <td><span style="background:#E0F2FE;color:#0369A1;padding:4px 12px;border-radius:20px;font-weight:600;font-size:0.75rem;">${numPedidos}</span></td>
             </tr>
-          \`;
+          `;
         }).join('')}
       </tbody>
     </table>
@@ -368,30 +368,30 @@ function renderProducts() {
         ${allProducts.map(p => {
           let isPromo = p.promo_price && Number(p.promo_price) > 0 && Number(p.promo_price) < Number(p.price);
           let displayPrice = isPromo 
-            ? \`<span style="text-decoration:line-through; color:var(--color-text-faint); font-size:0.75rem; margin-right:4px;">R$ \${Number(p.price).toLocaleString('pt-BR',{minimumFractionDigits:2})}</span> <span style="color:#10B981;">R$ \${Number(p.promo_price).toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>\`
-            : \`R$ \${Number(p.price).toLocaleString('pt-BR',{minimumFractionDigits:2})}\`;
+            ? `<span style="text-decoration:line-through; color:var(--color-text-faint); font-size:0.75rem; margin-right:4px;">R$ ${Number(p.price).toLocaleString('pt-BR',{minimumFractionDigits:2})}</span> <span style="color:#10B981;">R$ ${Number(p.promo_price).toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>`
+            : `R$ ${Number(p.price).toLocaleString('pt-BR',{minimumFractionDigits:2})}`;
             
           let statusBadge = p.status === 'Ativo' 
-            ? \`<span class="status-badge status-badge--entregue">Ativo</span>\` 
-            : \`<span class="status-badge status-badge--cancelado">Inativo</span>\`;
+            ? `<span class="status-badge status-badge--entregue">Ativo</span>` 
+            : `<span class="status-badge status-badge--cancelado">Inativo</span>`;
 
-          return \`
+          return `
             <tr>
               <td>
                 <div style="display:flex; align-items:center; gap:12px;">
-                  <img src="\${escapeHtml(p.image_url)}" style="width:40px; height:40px; border-radius:6px; object-fit:cover; border:1px solid var(--border-color);" />
-                  <span style="font-weight:600; color:var(--color-brand); max-width:250px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${escapeHtml(p.title)}</span>
+                  <img src="${escapeHtml(p.image_url)}" style="width:40px; height:40px; border-radius:6px; object-fit:cover; border:1px solid var(--border-color);" />
+                  <span style="font-weight:600; color:var(--color-brand); max-width:250px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(p.title)}</span>
                 </div>
               </td>
-              <td>\${escapeHtml(p.category || 'Sem Categoria')}</td>
-              <td style="font-weight:600;">\${displayPrice}</td>
-              <td>\${statusBadge}</td>
+              <td>${escapeHtml(p.category || 'Sem Categoria')}</td>
+              <td style="font-weight:600;">${displayPrice}</td>
+              <td>${statusBadge}</td>
               <td>
-                <button style="padding:6px 12px; font-size:0.75rem; background:white; border:1px solid var(--border-color); border-radius:6px; cursor:pointer;" onclick="editProduct('\${escapeHtml(p.id)}')">Editar</button>
-                <button style="padding:6px 12px; font-size:0.75rem; background:#FEF2F2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; cursor:pointer; margin-left:4px;" onclick="deleteProduct('\${escapeHtml(p.id)}')">Deletar</button>
+                <button style="padding:6px 12px; font-size:0.75rem; background:white; border:1px solid var(--border-color); border-radius:6px; cursor:pointer;" onclick="editProduct('${escapeHtml(p.id)}')">Editar</button>
+                <button style="padding:6px 12px; font-size:0.75rem; background:#FEF2F2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; cursor:pointer; margin-left:4px;" onclick="deleteProduct('${escapeHtml(p.id)}')">Deletar</button>
               </td>
             </tr>
-          \`;
+          `;
         }).join('')}
       </tbody>
     </table>
