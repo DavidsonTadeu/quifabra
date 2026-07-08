@@ -4,13 +4,13 @@ import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, query, where
 
 // TODO: Cole aqui as configurações do seu projeto Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyCKWuPwtuIzx4qerSVSGAs82TLGcEe0DU4",
-  authDomain: "quifabra-loja.firebaseapp.com",
-  projectId: "quifabra-loja",
-  storageBucket: "quifabra-loja.firebasestorage.app",
-  messagingSenderId: "868652267408",
-  appId: "1:868652267408:web:ef369c8441729c33cca515",
-  measurementId: "G-R4MVEH63K8"
+  apiKey: "AIzaSyApEIAZnP0vY90FB6lgeqHfLK29xmbRbEI",
+  authDomain: "quifabraloja.firebaseapp.com",
+  projectId: "quifabraloja",
+  storageBucket: "quifabraloja.firebasestorage.app",
+  messagingSenderId: "1080972695767",
+  appId: "1:1080972695767:web:66afdf99dbee15122ef892",
+  measurementId: "G-1MDVV7PKDX"
 };
 
 // Inicializa Firebase
