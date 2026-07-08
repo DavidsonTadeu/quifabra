@@ -1723,12 +1723,40 @@ section { padding: var(--section-padding); }
 .cart-total { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
 .cart-total span { font-size: 1rem; color: var(--color-text-muted); font-weight: 600; }
 .cart-total strong { font-size: 1.5rem; font-weight: 900; color: var(--color-dark); font-family: var(--font-heading); }
-.btn-checkout { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 16px; border-radius: 12px; background: #25D366; color: white; font-weight: 800; font-size: 1.05rem; cursor: pointer; border: none; transition: transform .2s, box-shadow .2s; }
-.btn-checkout:hover { background: #1eb356; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(37,211,102,.35); }
-.btn-checkout svg { width: 24px; height: 24px; fill: white; }
+.btn-checkout { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 16px; border-radius: 12px; background: var(--color-primary); color: white; font-weight: 800; font-size: 1rem; cursor: pointer; border: none; transition: background .2s, transform .2s, box-shadow .2s; font-family: var(--font-body); }
+.btn-checkout:hover { background: var(--color-primary-dark); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(30,150,200,.35); }
+.btn-checkout svg { width: 20px; height: 20px; flex-shrink: 0; }
+.btn-checkout--secondary { font-size: .85rem; }
 
-/* Floating Cart Icon */
-.floating-cart { position: fixed; bottom: 90px; right: 24px; width: 60px; height: 60px; background: var(--color-primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(30,150,200,.4); z-index: 9998; cursor: pointer; transition: transform .3s; text-decoration: none; }
-.floating-cart:hover { transform: scale(1.1); }
-.floating-cart svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.cart-badge { position: absolute; top: -5px; right: -5px; background: #ff4d4f; color: white; font-size: .75rem; font-weight: 800; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; display: none; }
+.cart-shipping-badge { display: flex; align-items: center; gap: 8px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px 12px; margin-bottom: 14px; font-size: .82rem; font-weight: 600; color: #15803d; }
+
+/* Floating Cart Icon — button (fixed) */
+.floating-cart {
+  position: fixed; bottom: 90px; right: 24px;
+  width: 60px; height: 60px;
+  background: var(--color-primary);
+  color: white;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 10px 25px rgba(30,150,200,.4);
+  z-index: 9998;
+  cursor: pointer;
+  transition: transform .3s, box-shadow .3s;
+  border: none;
+  font-family: inherit;
+  text-decoration: none;
+}
+.floating-cart:hover { transform: scale(1.1); box-shadow: 0 14px 32px rgba(30,150,200,.5); }
+.floating-cart svg { width: 26px; height: 26px; }
+.cart-badge {
+  position: absolute; top: -5px; right: -5px;
+  background: #ff4d4f; color: white;
+  font-size: .72rem; font-weight: 800;
+  min-width: 22px; height: 22px;
+  border-radius: 11px;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid white;
+  padding: 0 4px;
+  pointer-events: none;
+}
+

@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Finalizar Compra — Quifabra</title>
+  <meta name="description" content="Finalize sua compra na Quifabra. Frete grátis para todo o Brasil." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%231E96C8'/><text y='24' x='4' font-size='22' font-family='Arial Black' font-weight='900' fill='white'>Q</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* ── Checkout Page ── */
+    .checkout-page {
+      min-height: 100vh;
+      background: #f4f5f7;
+      padding-top: 80px;
+    }
+
+    .checkout-hero {
+      background: linear-gradient(135deg, #1D2533 0%, #1a3d5c 60%, #1E96C8 100%);
+      padding: 40px 0;
+      text-align: center;
+    }
+    .checkout-hero h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 900;
+      color: white;
+      margin-bottom: 8px;
+    }
+    .checkout-hero p { color: rgba(255,255,255,.8); font-size: .95rem; }
+
+    /* ── Steps ── */
+    .checkout-steps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      padding: 24px 0;
+      background: white;
+      border-bottom: 1px solid #e8eaed;
+    }
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px;
+      font-size: .85rem;
+      font-weight: 600;
+      color: #9ca3af;
+    }
+    .step.active { color: var(--color-primary); }
+    .step.done { color: #00a650; }
+    .step__num {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: #e8eaed;
+      color: #9ca3af;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .78rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .step.active .step__num { background: var(--color-primary); color: white; }
+    .step.done .step__num { background: #00a650; color: white; }
+    .step-divider { width: 40px; height: 2px; background: #e8eaed; }
+    .step-divider.done { background: #00a650; }
+
+    /* ── Main layout ── */
+    .checkout-layout {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 32px;
+      align-items: start;
+    }
+    @media (max-width: 860px) {
+      .checkout-layout { grid-template-columns: 1fr; }
+      .checkout-summary { order: -1; }
+    }
+
+    /* ── Form Panel ── */
+    .checkout-panel {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.06);
+      overflow: hidden;
+    }
+    .checkout-panel__header {
+      padding: 24px 28px;
+      border-bottom: 1px solid #f0f1f3;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .checkout-panel__header h2 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--color-dark);
+    }
+    .panel-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: rgba(30,150,200,.1);
+      color: var(--color-primary);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .checkout-panel__body { padding: 28px; }
+
+    /* ── Auth tabs ── */
+    .auth-tabs {
+      display: flex;
+      border-radius: 10px;
+      background: #f4f5f7;
+      padding: 4px;
+      margin-bottom: 24px;
+    }
+    .auth-tab {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: none;
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: .9rem;
+      font-weight: 600;
+      color: #6b7280;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .auth-tab.active {
+      background: white;
+      color: var(--color-primary);
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    }
+
+    /* ── Form fields ── */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-grid--full { grid-template-columns: 1fr; }
+    @media (max-width: 500px) { .form-grid { grid-template-columns: 1fr; } }
+
+    .field-group { display: flex; flex-direction: column; gap: 6px; }
+    .field-group.col-span-2 { grid-column: span 2; }
+    @media (max-width: 500px) { .field-group.col-span-2 { grid-column: span 1; } }
+
+    .field-label {
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--color-dark);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .field-label span { color: #ef4444; }
+
+    .field-input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #e8eaed;
+      border-radius: 10px;
+      font-family: var(--font-body);
+      font-size: .95rem;
+      color: var(--color-dark);
+      background: #fafafa;
+      transition: border-color .2s, box-shadow .2s;
+      outline: none;
+    }
+    .field-input:focus {
+      border-color: var(--color-primary);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(30,150,200,.1);
+    }
+    .field-input.error { border-color: #ef4444; }
+    .field-input.success { border-color: #00a650; }
+
+    .field-hint {
+      font-size: .75rem;
+      color: #9ca3af;
+    }
+    .field-error {
+      font-size: .75rem;
+      color: #ef4444;
+      display: none;
+    }
+    .field-error.show { display: block; }
+
+    /* ── Shipping badge ── */
+    .shipping-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #f0fdf4;
+      border: 1.5px solid #bbf7d0;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-top: 12px;
+    }
+    .shipping-badge svg { color: #16a34a; flex-shrink: 0; }
+    .shipping-badge span { font-size: .88rem; font-weight: 600; color: #15803d; }
+
+    /* ── CEP info ── */
+    .cep-info {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: .82rem;
+      color: #0369a1;
+      margin-top: 8px;
+      display: none;
+    }
+    .cep-info.show { display: block; }
+
+    /* ── Summary card ── */
+    .checkout-summary {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.06);
+      overflow: hidden;
+      position: sticky;
+      top: 100px;
+    }
+    .summary-header {
+      background: var(--color-dark);
+      padding: 20px 24px;
+      color: white;
+    }
+    .summary-header h3 {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 800;
+    }
+    .summary-body { padding: 20px 24px; }
+    .summary-items { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+    .summary-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .summary-item__img {
+      width: 56px; height: 56px;
+      object-fit: contain;
+      background: #f4f5f7;
+      border-radius: 8px;
+      padding: 6px;
+      flex-shrink: 0;
+    }
+    .summary-item__info { flex: 1; }
+    .summary-item__name {
+      font-size: .85rem;
+      font-weight: 700;
+      color: var(--color-dark);
+      line-height: 1.3;
+    }
+    .summary-item__qty { font-size: .75rem; color: #9ca3af; margin-top: 2px; }
+    .summary-item__price {
+      font-weight: 800;
+      font-family: var(--font-heading);
+      color: var(--color-dark);
+      font-size: .95rem;
+    }
+    .summary-divider { border: none; border-top: 1px solid #f0f1f3; margin: 16px 0; }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: .88rem;
+    }
+    .summary-row .label { color: #6b7280; }
+    .summary-row .value { font-weight: 700; color: var(--color-dark); }
+    .summary-row.shipping .value { color: #16a34a; font-weight: 800; }
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0 0;
+      border-top: 2px solid var(--color-dark);
+    }
+    .summary-total .label { font-weight: 700; font-size: 1rem; }
+    .summary-total .value {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--color-dark);
+    }
+
+    /* ── Buttons ── */
+    .btn-proceed {
+      width: 100%;
+      padding: 16px;
+      background: var(--color-primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background .2s, transform .2s, box-shadow .2s;
+      margin-top: 16px;
+    }
+    .btn-proceed:hover {
+      background: var(--color-primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(30,150,200,.35);
+    }
+    .btn-proceed:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Security badge */
+    .security-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 12px;
+      font-size: .75rem;
+      color: #9ca3af;
+    }
+
+    /* ── Order Success Screen ── */
+    .order-success {
+      display: none;
+      text-align: center;
+      padding: 48px 28px;
+    }
+    .order-success.show { display: block; }
+    .success-icon {
+      width: 80px; height: 80px;
+      background: #f0fdf4;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+    }
+    .success-icon svg { color: #16a34a; }
+    .order-success h2 {
+      font-family: var(--font-heading);
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: var(--color-dark);
+      margin-bottom: 12px;
+    }
+    .order-success p { color: #6b7280; font-size: .95rem; line-height: 1.6; }
+    .order-number {
+      display: inline-block;
+      background: #f0f9ff;
+      border: 1.5px solid #bae6fd;
+      border-radius: 8px;
+      padding: 8px 20px;
+      font-family: monospace;
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: var(--color-primary);
+      margin: 16px 0;
+    }
+
+    /* ── Loading spinner ── */
+    .spinner {
+      display: inline-block;
+      width: 18px; height: 18px;
+      border: 2.5px solid rgba(255,255,255,.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Tab panels ── */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+  </style>
+</head>
+<body>
+
+<!-- Navbar simplificado -->
+<header class="navbar" id="navbar" style="background:white;">
+  <div class="container">
+    <nav class="navbar__inner">
+      <a href="index.html" class="navbar__logo" aria-label="Quifabra - Voltar à loja">
+        <svg viewBox="0 0 140 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="38" height="38" rx="8" fill="#1E96C8"/>
+          <text x="7" y="30" font-family="Arial Black" font-size="26" font-weight="900" fill="white">Q</text>
+          <text x="44" y="24" font-family="Arial Black" font-size="20" font-weight="900" fill="#1E96C8">UIFABRA</text>
+          <text x="44" y="38" font-family="Arial" font-size="8" fill="#6B7280">Escoramento Andaimes e Acessórios</text>
+        </svg>
+      </a>
+      <a href="index.html#loja" style="font-size:.85rem;color:var(--color-primary);font-weight:600;display:flex;align-items:center;gap:6px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Voltar à Loja
+      </a>
+    </nav>
+  </div>
+</header>
+
+<div class="checkout-page">
+
+  <!-- Hero -->
+  <div class="checkout-hero">
+    <h1>Finalizar Compra</h1>
+    <p>Frete grátis para todo o Brasil 🚚</p>
+  </div>
+
+  <!-- Steps -->
+  <div class="checkout-steps">
+    <div class="step active" id="step-1">
+      <span class="step__num">1</span>
+      <span>Dados Pessoais</span>
+    </div>
+    <div class="step-divider" id="divider-1"></div>
+    <div class="step" id="step-2">
+      <span class="step__num">2</span>
+      <span>Endereço</span>
+    </div>
+    <div class="step-divider" id="divider-2"></div>
+    <div class="step" id="step-3">
+      <span class="step__num">3</span>
+      <span>Confirmação</span>
+    </div>
+  </div>
+
+  <div class="checkout-layout">
+
+    <!-- Left: Form -->
+    <div>
+
+      <!-- STEP 1: Dados Pessoais / Auth -->
+      <div class="checkout-panel" id="panel-step1">
+        <div class="checkout-panel__header">
+          <div class="panel-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <h2>Dados Pessoais</h2>
+        </div>
+        <div class="checkout-panel__body">
+
+          <!-- Auth Tabs -->
+          <div class="auth-tabs">
+            <button class="auth-tab active" id="tab-register" onclick="switchAuthTab('register')">Criar Conta</button>
+            <button class="auth-tab" id="tab-login" onclick="switchAuthTab('login')">Já tenho conta</button>
+          </div>
+
+          <!-- Register Form -->
+          <div class="tab-panel active" id="panel-register">
+            <div class="form-grid">
+              <div class="field-group">
+                <label class="field-label" for="reg-nome">Nome <span>*</span></label>
+                <input class="field-input" type="text" id="reg-nome" placeholder="Seu nome completo" autocomplete="name" />
+                <span class="field-error" id="err-reg-nome">Nome é obrigatório</span>
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="reg-cpf">CPF <span>*</span></label>
+                <input class="field-input" type="text" id="reg-cpf" placeholder="000.000.000-00" maxlength="14" />
+                <span class="field-error" id="err-reg-cpf">CPF inválido</span>
+              </div>
+              <div class="field-group col-span-2">
+                <label class="field-label" for="reg-email">E-mail <span>*</span></label>
+                <input class="field-input" type="email" id="reg-email" placeholder="seu@email.com.br" autocomplete="email" />
+                <span class="field-error" id="err-reg-email">E-mail inválido</span>
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="reg-celular">Celular <span>*</span></label>
+                <input class="field-input" type="tel" id="reg-celular" placeholder="(31) 99999-9999" maxlength="15" />
+                <span class="field-error" id="err-reg-cel">Celular inválido</span>
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="reg-senha">Senha <span>*</span></label>
+                <input class="field-input" type="password" id="reg-senha" placeholder="Mínimo 6 caracteres" />
+                <span class="field-error" id="err-reg-senha">Mínimo 6 caracteres</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Login Form -->
+          <div class="tab-panel" id="panel-login">
+            <div class="form-grid form-grid--full">
+              <div class="field-group">
+                <label class="field-label" for="login-email">E-mail <span>*</span></label>
+                <input class="field-input" type="email" id="login-email" placeholder="seu@email.com.br" autocomplete="email" />
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="login-senha">Senha <span>*</span></label>
+                <input class="field-input" type="password" id="login-senha" placeholder="Sua senha" />
+              </div>
+            </div>
+            <div id="login-error" style="display:none;margin-top:10px;padding:10px;background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;font-size:.85rem;color:#dc2626;"></div>
+          </div>
+
+          <button class="btn-proceed" id="btn-step1" onclick="proceedStep1()">
+            Continuar para Endereço
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+
+        </div>
+      </div>
+
+      <!-- STEP 2: Endereço -->
+      <div class="checkout-panel" id="panel-step2" style="display:none; margin-top: 24px;">
+        <div class="checkout-panel__header">
+          <div class="panel-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <h2>Endereço de Entrega</h2>
+        </div>
+        <div class="checkout-panel__body">
+          <div class="form-grid">
+            <div class="field-group">
+              <label class="field-label" for="addr-cep">CEP <span>*</span></label>
+              <input class="field-input" type="text" id="addr-cep" placeholder="00000-000" maxlength="9" oninput="onCepInput(this)" />
+              <span class="field-hint">Digite o CEP para busca automática</span>
+              <span class="field-error" id="err-cep">CEP inválido</span>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="addr-estado">Estado</label>
+              <input class="field-input" type="text" id="addr-estado" placeholder="MG" readonly style="background:#f0f1f3;" />
+            </div>
+            <div class="field-group col-span-2">
+              <label class="field-label" for="addr-rua">Rua / Logradouro <span>*</span></label>
+              <input class="field-input" type="text" id="addr-rua" placeholder="Rua das Flores" />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="addr-numero">Número <span>*</span></label>
+              <input class="field-input" type="text" id="addr-numero" placeholder="123" />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="addr-comp">Complemento</label>
+              <input class="field-input" type="text" id="addr-comp" placeholder="Apto, Bloco..." />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="addr-bairro">Bairro <span>*</span></label>
+              <input class="field-input" type="text" id="addr-bairro" placeholder="Centro" />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="addr-cidade">Cidade <span>*</span></label>
+              <input class="field-input" type="text" id="addr-cidade" placeholder="Belo Horizonte" />
+            </div>
+          </div>
+
+          <!-- CEP info -->
+          <div class="cep-info" id="cep-info"></div>
+
+          <!-- Frete Grátis badge -->
+          <div class="shipping-badge">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+            </svg>
+            <span>🚚 Frete Grátis — Entrega para todo o Brasil em 5 a 10 dias úteis</span>
+          </div>
+
+          <button class="btn-proceed" id="btn-step2" onclick="proceedStep2()">
+            Revisar e Confirmar Pedido
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Confirmação -->
+      <div class="checkout-panel" id="panel-step3" style="display:none; margin-top: 24px;">
+        <div class="checkout-panel__header">
+          <div class="panel-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h2>Confirmar Pedido</h2>
+        </div>
+        <div class="checkout-panel__body">
+          <div id="order-review" style="margin-bottom:24px;"></div>
+
+          <div style="background:#fffbeb;border:1.5px solid #fde68a;border-radius:10px;padding:16px;margin-bottom:20px;">
+            <p style="font-size:.85rem;color:#92400e;font-weight:600;">
+              📋 Ao confirmar, seu pedido será registrado e você receberá um e-mail de confirmação. O pagamento é combinado por WhatsApp após a confirmação.
+            </p>
+          </div>
+
+          <button class="btn-proceed" id="btn-confirm" onclick="confirmOrder()" style="background:#16a34a;">
+            ✅ Confirmar Pedido
+          </button>
+        </div>
+
+        <!-- Success Screen -->
+        <div class="order-success" id="order-success">
+          <div class="success-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h2>Pedido Confirmado! 🎉</h2>
+          <p>Obrigado pela sua compra. Seu número de pedido é:</p>
+          <div class="order-number" id="order-number-display"></div>
+          <p>Um e-mail de confirmação foi enviado para <strong id="order-email-display"></strong>.<br>Nossa equipe entrará em contato via WhatsApp em breve.</p>
+          <a href="index.html" class="btn-proceed" style="margin-top:24px;text-decoration:none;">Voltar à Loja</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right: Order Summary -->
+    <div class="checkout-summary">
+      <div class="summary-header">
+        <h3>🛒 Resumo do Pedido</h3>
+      </div>
+      <div class="summary-body">
+        <div class="summary-items" id="summary-items">
+          <!-- filled by JS -->
+        </div>
+        <hr class="summary-divider" />
+        <div class="summary-row">
+          <span class="label">Subtotal</span>
+          <span class="value" id="summary-subtotal">R$ 0,00</span>
+        </div>
+        <div class="summary-row shipping">
+          <span class="label">Frete</span>
+          <span class="value">GRÁTIS 🚚</span>
+        </div>
+        <div class="summary-total">
+          <span class="label">Total</span>
+          <span class="value" id="summary-total">R$ 0,00</span>
+        </div>
+        <div class="security-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Compra 100% segura e protegida
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="js/checkout.js"></script>
+</body>
+</html>

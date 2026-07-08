@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Quifabra</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%231E96C8'/><text y='24' x='4' font-size='22' font-family='Arial Black' font-weight='900' fill='white'>Q</text></svg>" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    body { background: #f0f2f5; font-family: 'Inter', sans-serif; }
+
+    /* ── Admin Layout ── */
+    .admin-wrap { display: flex; min-height: 100vh; }
+
+    /* Sidebar */
+    .admin-sidebar {
+      width: 240px;
+      background: #1D2533;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 24px 0;
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      z-index: 100;
+    }
+    .admin-sidebar__logo {
+      padding: 0 24px 24px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      margin-bottom: 16px;
+    }
+    .admin-sidebar__logo span {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 1.3rem;
+      color: #1E96C8;
+    }
+    .admin-sidebar__logo small { display: block; font-size: .65rem; color: rgba(255,255,255,.4); text-transform: uppercase; letter-spacing: .08em; margin-top: 2px; }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 24px;
+      color: rgba(255,255,255,.6);
+      font-size: .88rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      font-family: inherit;
+      transition: all .2s;
+      text-decoration: none;
+    }
+    .nav-item:hover, .nav-item.active {
+      background: rgba(30,150,200,.12);
+      color: #1E96C8;
+    }
+    .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    .admin-sidebar__bottom { margin-top: auto; padding: 16px 24px; border-top: 1px solid rgba(255,255,255,.08); }
+    .admin-user { font-size: .78rem; color: rgba(255,255,255,.5); }
+    .admin-user strong { display: block; color: rgba(255,255,255,.9); font-size: .85rem; margin-bottom: 2px; }
+
+    /* Main content */
+    .admin-main {
+      margin-left: 240px;
+      flex: 1;
+      padding: 32px;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .admin-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+    .admin-title { font-family: 'Montserrat', sans-serif; font-size: 1.5rem; font-weight: 900; color: #1D2533; }
+    .admin-subtitle { font-size: .85rem; color: #9ca3af; margin-top: 2px; }
+
+    /* Stats grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+    @media (max-width: 900px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 500px) { .stats-grid { grid-template-columns: 1fr; } }
+
+    .stat-card {
+      background: white;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.05);
+      border-left: 4px solid transparent;
+    }
+    .stat-card--blue   { border-color: #1E96C8; }
+    .stat-card--green  { border-color: #16a34a; }
+    .stat-card--amber  { border-color: #d97706; }
+    .stat-card--purple { border-color: #7c3aed; }
+
+    .stat-label { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #9ca3af; margin-bottom: 8px; }
+    .stat-value { font-family: 'Montserrat', sans-serif; font-size: 2rem; font-weight: 900; color: #1D2533; }
+    .stat-sub   { font-size: .75rem; color: #9ca3af; margin-top: 4px; }
+
+    /* Orders panel */
+    .orders-panel {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.05);
+      overflow: hidden;
+    }
+    .orders-panel__header {
+      padding: 20px 24px;
+      border-bottom: 1px solid #f0f1f3;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .orders-panel__header h2 { font-family: 'Montserrat', sans-serif; font-weight: 800; color: #1D2533; font-size: 1.1rem; }
+
+    /* Filters */
+    .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filter-pill {
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: .78rem;
+      font-weight: 700;
+      border: 1.5px solid #e8eaed;
+      background: white;
+      color: #6b7280;
+      cursor: pointer;
+      transition: all .2s;
+      font-family: inherit;
+    }
+    .filter-pill.active, .filter-pill:hover { background: #1E96C8; color: white; border-color: #1E96C8; }
+
+    /* Table */
+    .orders-table { width: 100%; border-collapse: collapse; }
+    .orders-table th {
+      text-align: left;
+      padding: 12px 20px;
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: #9ca3af;
+      background: #fafafa;
+      border-bottom: 1px solid #f0f1f3;
+    }
+    .orders-table td {
+      padding: 16px 20px;
+      border-bottom: 1px solid #f0f1f3;
+      font-size: .88rem;
+      color: #1D2533;
+      vertical-align: middle;
+    }
+    .orders-table tr:last-child td { border-bottom: none; }
+    .orders-table tr:hover td { background: #fafbff; }
+
+    /* Status badge */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: .72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .status-badge--pendente   { background: #fff7ed; color: #c2410c; }
+    .status-badge--separacao  { background: #eff6ff; color: #1d4ed8; }
+    .status-badge--enviado    { background: #f0fdf4; color: #16a34a; }
+    .status-badge--entregue   { background: #f3f4f6; color: #374151; }
+    .status-badge--cancelado  { background: #fef2f2; color: #dc2626; }
+
+    /* Status select */
+    .status-select {
+      padding: 6px 10px;
+      border: 1.5px solid #e8eaed;
+      border-radius: 8px;
+      font-size: .8rem;
+      font-family: inherit;
+      color: #1D2533;
+      cursor: pointer;
+      background: white;
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 60px 24px;
+      color: #9ca3af;
+    }
+    .empty-state svg { margin: 0 auto 16px; color: #e8eaed; }
+    .empty-state h3 { font-size: 1.1rem; font-weight: 700; color: #6b7280; margin-bottom: 8px; }
+
+    /* Order detail modal */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(10,15,30,.6);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+      opacity: 0; pointer-events: none;
+      transition: opacity .2s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: white;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 560px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,.2);
+    }
+    .modal__header {
+      padding: 20px 24px;
+      border-bottom: 1px solid #f0f1f3;
+      display: flex; justify-content: space-between; align-items: center;
+      position: sticky; top: 0; background: white; z-index: 1;
+    }
+    .modal__header h3 { font-family: 'Montserrat', sans-serif; font-weight: 800; color: #1D2533; }
+    .modal__close { background: none; border: none; font-size: 1.4rem; color: #9ca3af; cursor: pointer; line-height: 1; }
+    .modal__body { padding: 24px; }
+    .modal-section { margin-bottom: 20px; }
+    .modal-section h4 { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #9ca3af; margin-bottom: 10px; }
+    .modal-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .info-row { background: #fafafa; border-radius: 8px; padding: 10px; }
+    .info-row .key { font-size: .72rem; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: .04em; }
+    .info-row .val { font-size: .88rem; font-weight: 600; color: #1D2533; margin-top: 2px; }
+    .info-row.full { grid-column: span 2; }
+
+    /* Login screen */
+    .admin-login {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1D2533 0%, #1a3d5c 100%);
+    }
+    .login-box {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.3);
+    }
+    .login-box h1 { font-family: 'Montserrat', sans-serif; font-size: 1.5rem; font-weight: 900; color: #1D2533; margin-bottom: 6px; }
+    .login-box p  { color: #9ca3af; font-size: .88rem; margin-bottom: 24px; }
+    .login-field { margin-bottom: 16px; }
+    .login-field label { display: block; font-size: .78rem; font-weight: 700; color: #1D2533; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .04em; }
+    .login-field input {
+      width: 100%; padding: 12px 14px; border: 1.5px solid #e8eaed; border-radius: 10px;
+      font-family: 'Inter', sans-serif; font-size: .95rem; color: #1D2533; background: #fafafa;
+      transition: border-color .2s; outline: none;
+    }
+    .login-field input:focus { border-color: #1E96C8; background: white; }
+    .btn-login {
+      width: 100%; padding: 14px; background: #1E96C8; color: white; border: none;
+      border-radius: 10px; font-family: 'Montserrat', sans-serif; font-size: .95rem; font-weight: 800;
+      cursor: pointer; transition: background .2s;
+    }
+    .btn-login:hover { background: #1677A0; }
+    .login-error { display: none; margin-top: 12px; padding: 10px; background: #fef2f2; border-radius: 8px; font-size: .82rem; color: #dc2626; }
+
+    @media (max-width: 768px) {
+      .admin-sidebar { display: none; }
+      .admin-main { margin-left: 0; padding: 20px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Login Screen -->
+<div id="admin-login-screen" class="admin-login">
+  <div class="login-box">
+    <h1>🔐 Quifabra Admin</h1>
+    <p>Acesso restrito para administradores</p>
+    <div class="login-field">
+      <label for="admin-email">E-mail</label>
+      <input type="email" id="admin-email" placeholder="ecal7450@gmail.com" />
+    </div>
+    <div class="login-field">
+      <label for="admin-pass">Senha</label>
+      <input type="password" id="admin-pass" placeholder="Sua senha de administrador" />
+    </div>
+    <div class="login-error" id="admin-login-err">E-mail ou senha incorretos.</div>
+    <button class="btn-login" onclick="adminLogin()">Entrar no Painel</button>
+    <div style="text-align:center;margin-top:16px;">
+      <a href="index.html" style="font-size:.8rem;color:#9ca3af;text-decoration:none;">← Voltar ao site</a>
+    </div>
+  </div>
+</div>
+
+<!-- Admin Panel (shown after login) -->
+<div id="admin-panel" style="display:none;">
+  <div class="admin-wrap">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar__logo">
+        <span>Quifabra</span>
+        <small>Painel Administrativo</small>
+      </div>
+      <nav>
+        <button class="nav-item active" onclick="showSection('orders')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+          Pedidos
+        </button>
+        <button class="nav-item" onclick="showSection('customers')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          Clientes
+        </button>
+        <a href="index.html" class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Ver Site
+        </a>
+      </nav>
+      <div class="admin-sidebar__bottom">
+        <div class="admin-user">
+          <strong id="admin-name-display">Admin</strong>
+          ecal7450@gmail.com
+        </div>
+        <button onclick="adminLogout()" style="margin-top:10px;width:100%;padding:8px;background:rgba(255,255,255,.08);border:none;border-radius:8px;color:rgba(255,255,255,.5);font-size:.78rem;cursor:pointer;font-family:inherit;">Sair</button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="admin-main">
+
+      <!-- SECTION: ORDERS -->
+      <div id="section-orders">
+        <div class="admin-header">
+          <div>
+            <div class="admin-title">Pedidos</div>
+            <div class="admin-subtitle" id="orders-count-sub">Carregando...</div>
+          </div>
+          <button onclick="loadOrders()" style="padding:10px 18px;background:var(--color-primary);color:white;border:none;border-radius:10px;font-weight:700;font-size:.85rem;cursor:pointer;font-family:inherit;">↻ Atualizar</button>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid" id="admin-stats">
+          <div class="stat-card stat-card--blue">
+            <div class="stat-label">Total de Pedidos</div>
+            <div class="stat-value" id="stat-total">—</div>
+          </div>
+          <div class="stat-card stat-card--amber">
+            <div class="stat-label">Pendentes</div>
+            <div class="stat-value" id="stat-pendente">—</div>
+          </div>
+          <div class="stat-card stat-card--purple">
+            <div class="stat-label">Enviados</div>
+            <div class="stat-value" id="stat-enviado">—</div>
+          </div>
+          <div class="stat-card stat-card--green">
+            <div class="stat-label">Receita Total</div>
+            <div class="stat-value" id="stat-receita" style="font-size:1.3rem;">—</div>
+          </div>
+        </div>
+
+        <!-- Orders Table -->
+        <div class="orders-panel">
+          <div class="orders-panel__header">
+            <h2>📋 Lista de Pedidos</h2>
+            <div class="filter-bar" id="filter-bar">
+              <button class="filter-pill active" data-filter="all" onclick="filterOrders('all')">Todos</button>
+              <button class="filter-pill" data-filter="Pendente" onclick="filterOrders('Pendente')">Pendente</button>
+              <button class="filter-pill" data-filter="Em Separação" onclick="filterOrders('Em Separação')">Em Separação</button>
+              <button class="filter-pill" data-filter="Enviado" onclick="filterOrders('Enviado')">Enviado</button>
+              <button class="filter-pill" data-filter="Entregue" onclick="filterOrders('Entregue')">Entregue</button>
+            </div>
+          </div>
+
+          <div id="orders-table-wrap">
+            <div class="empty-state">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+              <h3>Nenhum pedido ainda</h3>
+              <p>Quando clientes finalizarem compras, eles aparecerão aqui.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION: CUSTOMERS -->
+      <div id="section-customers" style="display:none;">
+        <div class="admin-header">
+          <div>
+            <div class="admin-title">Clientes</div>
+            <div class="admin-subtitle">Todos os clientes cadastrados</div>
+          </div>
+        </div>
+        <div class="orders-panel">
+          <div id="customers-table-wrap"></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Order Detail Modal -->
+<div class="modal-overlay" id="orderModal" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal__header">
+      <h3 id="modal-order-id">Pedido</h3>
+      <button class="modal__close" onclick="closeOrderModal()">×</button>
+    </div>
+    <div class="modal__body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+  // ── Auth Admin ──────────────────────────────────────────────
+  const ADMIN_EMAIL_ADM = 'ecal7450@gmail.com';
+  let allOrders = [];
+  let currentFilter = 'all';
+
+  function adminLogin() {
+    const email = document.getElementById('admin-email').value.trim();
+    const pass  = document.getElementById('admin-pass').value;
+    const errEl = document.getElementById('admin-login-err');
+
+    // Verifica se o email é do admin
+    if (email !== ADMIN_EMAIL_ADM) {
+      errEl.style.display = 'block';
+      return;
+    }
+
+    // Verifica senha na lista de usuários (a mesma senha criada no checkout)
+    const users = JSON.parse(localStorage.getItem('qf_users')) || [];
+    const user  = users.find(u => u.email === email && u.senha === pass);
+
+    if (!user) {
+      errEl.style.display = 'block';
+      return;
+    }
+
+    errEl.style.display = 'none';
+    document.getElementById('admin-login-screen').style.display = 'none';
+    document.getElementById('admin-panel').style.display = 'block';
+    document.getElementById('admin-name-display').textContent = user.nome.split(' ')[0];
+    loadOrders();
+    loadCustomers();
+  }
+
+  function adminLogout() {
+    document.getElementById('admin-login-screen').style.display = 'flex';
+    document.getElementById('admin-panel').style.display = 'none';
+  }
+
+  // ── Load Orders ─────────────────────────────────────────────
+  function loadOrders() {
+    allOrders = JSON.parse(localStorage.getItem('qf_orders')) || [];
+    allOrders.reverse(); // Mais recentes primeiro
+    updateStats();
+    renderOrders(allOrders);
+    const sub = document.getElementById('orders-count-sub');
+    if (sub) sub.textContent = allOrders.length + ' pedido(s) registrado(s)';
+  }
+
+  function updateStats() {
+    const pendentes = allOrders.filter(o => o.status === 'Pendente').length;
+    const enviados  = allOrders.filter(o => o.status === 'Enviado').length;
+    const receita   = allOrders.reduce((s, o) => s + (o.total || 0), 0);
+    document.getElementById('stat-total').textContent    = allOrders.length;
+    document.getElementById('stat-pendente').textContent = pendentes;
+    document.getElementById('stat-enviado').textContent  = enviados;
+    document.getElementById('stat-receita').textContent  = 'R$ ' + receita.toLocaleString('pt-BR', {minimumFractionDigits:2});
+  }
+
+  function filterOrders(filter) {
+    currentFilter = filter;
+    document.querySelectorAll('.filter-pill').forEach(p => {
+      p.classList.toggle('active', p.dataset.filter === filter);
+    });
+    const filtered = filter === 'all' ? allOrders : allOrders.filter(o => o.status === filter);
+    renderOrders(filtered);
+  }
+
+  function renderOrders(orders) {
+    const wrap = document.getElementById('orders-table-wrap');
+    if (!orders.length) {
+      wrap.innerHTML = `<div class="empty-state">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+        <h3>Nenhum pedido encontrado</h3><p>Tente outro filtro.</p></div>`;
+      return;
+    }
+
+    const statusClass = {
+      'Pendente':     'pendente',
+      'Em Separação': 'separacao',
+      'Enviado':      'enviado',
+      'Entregue':     'entregue',
+      'Cancelado':    'cancelado',
+    };
+
+    wrap.innerHTML = `
+      <table class="orders-table">
+        <thead>
+          <tr>
+            <th>Nº Pedido</th>
+            <th>Data</th>
+            <th>Cliente</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${orders.map(o => `
+            <tr>
+              <td><code style="font-size:.82rem;background:#f4f5f7;padding:3px 8px;border-radius:6px;">${o.id}</code></td>
+              <td style="color:#6b7280;font-size:.82rem;">${o.date}</td>
+              <td>
+                <div style="font-weight:700;">${o.customer?.nome || '—'}</div>
+                <div style="font-size:.75rem;color:#9ca3af;">${o.customer?.email || ''}</div>
+              </td>
+              <td style="font-family:'Montserrat',sans-serif;font-weight:800;">R$ ${(o.total||0).toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
+              <td>
+                <span class="status-badge status-badge--${statusClass[o.status] || 'pendente'}">${o.status || 'Pendente'}</span>
+              </td>
+              <td>
+                <div style="display:flex;gap:6px;align-items:center;">
+                  <button onclick="viewOrder('${o.id}')" style="padding:6px 12px;background:#f0f9ff;border:none;border-radius:8px;font-size:.78rem;font-weight:700;color:#1E96C8;cursor:pointer;font-family:inherit;">Ver</button>
+                  <select class="status-select" onchange="updateStatus('${o.id}', this.value)">
+                    <option ${o.status==='Pendente'?'selected':''}>Pendente</option>
+                    <option ${o.status==='Em Separação'?'selected':''}>Em Separação</option>
+                    <option ${o.status==='Enviado'?'selected':''}>Enviado</option>
+                    <option ${o.status==='Entregue'?'selected':''}>Entregue</option>
+                    <option ${o.status==='Cancelado'?'selected':''}>Cancelado</option>
+                  </select>
+                </div>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+  }
+
+  function updateStatus(orderId, status) {
+    const orders = JSON.parse(localStorage.getItem('qf_orders')) || [];
+    const order  = orders.find(o => o.id === orderId);
+    if (order) {
+      order.status = status;
+      localStorage.setItem('qf_orders', JSON.stringify(orders));
+      loadOrders();
+    }
+  }
+
+  function viewOrder(orderId) {
+    const order = allOrders.find(o => o.id === orderId);
+    if (!order) return;
+
+    document.getElementById('modal-order-id').textContent = 'Pedido ' + orderId;
+    const addr = order.address || {};
+
+    document.getElementById('modal-body').innerHTML = `
+      <div class="modal-section">
+        <h4>Cliente</h4>
+        <div class="modal-info-grid">
+          <div class="info-row"><div class="key">Nome</div><div class="val">${order.customer?.nome||'—'}</div></div>
+          <div class="info-row"><div class="key">CPF</div><div class="val">${order.customer?.cpf||'—'}</div></div>
+          <div class="info-row"><div class="key">E-mail</div><div class="val">${order.customer?.email||'—'}</div></div>
+          <div class="info-row"><div class="key">Celular</div><div class="val">${order.customer?.cel||'—'}</div></div>
+        </div>
+      </div>
+      <div class="modal-section">
+        <h4>Endereço de Entrega</h4>
+        <div class="modal-info-grid">
+          <div class="info-row full"><div class="key">Logradouro</div><div class="val">${addr.rua||'—'}, ${addr.numero||''} ${addr.comp?'('+addr.comp+')':''}</div></div>
+          <div class="info-row"><div class="key">Bairro</div><div class="val">${addr.bairro||'—'}</div></div>
+          <div class="info-row"><div class="key">Cidade/UF</div><div class="val">${addr.cidade||'—'}/${addr.estado||'—'}</div></div>
+          <div class="info-row"><div class="key">CEP</div><div class="val">${addr.cep||'—'}</div></div>
+          <div class="info-row"><div class="key">Frete</div><div class="val" style="color:#16a34a;font-weight:800;">GRÁTIS 🚚</div></div>
+        </div>
+      </div>
+      <div class="modal-section">
+        <h4>Itens do Pedido</h4>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          ${(order.items||[]).map(i => `
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:#fafafa;border-radius:8px;">
+              <div>
+                <div style="font-weight:700;font-size:.88rem;">${i.title}</div>
+                <div style="font-size:.75rem;color:#9ca3af;">Qtd: ${i.qty} × R$ ${i.price.toLocaleString('pt-BR',{minimumFractionDigits:2})}</div>
+              </div>
+              <div style="font-weight:800;font-family:'Montserrat',sans-serif;">R$ ${(i.price*i.qty).toLocaleString('pt-BR',{minimumFractionDigits:2})}</div>
+            </div>
+          `).join('')}
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 10px;border-top:2px solid #1D2533;margin-top:4px;">
+            <span style="font-weight:800;">TOTAL</span>
+            <span style="font-family:'Montserrat',sans-serif;font-size:1.2rem;font-weight:900;">R$ ${(order.total||0).toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:8px;">
+        <a href="https://wa.me/55${(order.customer?.cel||'').replace(/\D/g,'')}" target="_blank" rel="noopener"
+           style="flex:1;padding:12px;background:#25D366;color:white;border:none;border-radius:10px;font-weight:700;font-size:.88rem;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;">
+          💬 WhatsApp do Cliente
+        </a>
+        <a href="mailto:${order.customer?.email||''}"
+           style="padding:12px 16px;background:#f0f9ff;color:#1E96C8;border:none;border-radius:10px;font-weight:700;font-size:.88rem;text-decoration:none;display:flex;align-items:center;justify-content:center;">
+          ✉️ E-mail
+        </a>
+      </div>
+    `;
+
+    document.getElementById('orderModal').classList.add('open');
+  }
+
+  function closeOrderModal() {
+    document.getElementById('orderModal').classList.remove('open');
+  }
+
+  function closeModal(e) {
+    if (e.target === document.getElementById('orderModal')) closeOrderModal();
+  }
+
+  // ── Load Customers ──────────────────────────────────────────
+  function loadCustomers() {
+    const users  = JSON.parse(localStorage.getItem('qf_users')) || [];
+    const orders = JSON.parse(localStorage.getItem('qf_orders')) || [];
+    const wrap   = document.getElementById('customers-table-wrap');
+
+    if (!users.length) {
+      wrap.innerHTML = `<div class="empty-state"><h3>Nenhum cliente cadastrado ainda.</h3></div>`;
+      return;
+    }
+
+    wrap.innerHTML = `
+      <table class="orders-table">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>E-mail</th>
+            <th>Celular</th>
+            <th>CPF</th>
+            <th>Pedidos</th>
+            <th>Cadastro</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${users.map(u => {
+            const numPedidos = orders.filter(o => o.customer?.email === u.email).length;
+            return `
+              <tr>
+                <td style="font-weight:700;">${u.nome}</td>
+                <td>${u.email}</td>
+                <td>${u.cel||'—'}</td>
+                <td style="font-size:.82rem;color:#9ca3af;">${u.cpf||'—'}</td>
+                <td><span style="background:#f0f9ff;color:#1E96C8;padding:3px 10px;border-radius:12px;font-weight:700;font-size:.78rem;">${numPedidos}</span></td>
+                <td style="font-size:.78rem;color:#9ca3af;">${new Date(u.createdAt).toLocaleDateString('pt-BR')}</td>
+              </tr>
+            `;
+          }).join('')}
+        </tbody>
+      </table>
+    `;
+  }
+
+  // ── Sections ────────────────────────────────────────────────
+  function showSection(name) {
+    document.querySelectorAll('.admin-main > div').forEach(d => d.style.display = 'none');
+    document.getElementById('section-' + name).style.display = 'block';
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+  }
+
+  // Enter to login
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && document.getElementById('admin-login-screen').style.display !== 'none') {
+      adminLogin();
+    }
+  });
+</script>
+</body>
+</html>
