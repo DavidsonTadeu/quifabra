@@ -300,7 +300,7 @@
       <label for="admin-pass">Senha</label>
       <input type="password" id="admin-pass" placeholder="Sua senha de administrador" />
     </div>
-    <div class="login-error" id="admin-login-err">E-mail ou senha incorretos.</div>
+    <div class="login-error" id="admin-error">E-mail ou senha incorretos.</div>
     <button class="btn-login" onclick="adminLogin()">Entrar no Painel</button>
     <div style="text-align:center;margin-top:16px;">
       <a href="index.html" style="font-size:.8rem;color:#9ca3af;text-decoration:none;">← Voltar ao site</a>
@@ -308,8 +308,8 @@
   </div>
 </div>
 
-<!-- Admin Panel (shown after login) -->
-<div id="admin-panel" style="display:none;">
+<!-- Admin Dashboard (shown after login) -->
+<div id="admin-dashboard" style="display:none;">
   <div class="admin-wrap">
 
     <!-- Sidebar -->
@@ -319,11 +319,11 @@
         <small>Painel Administrativo</small>
       </div>
       <nav>
-        <button class="nav-item active" onclick="showSection('orders')">
+        <button class="nav-item active" onclick="showSection('orders', this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
           Pedidos
         </button>
-        <button class="nav-item" onclick="showSection('customers')">
+        <button class="nav-item" onclick="showSection('customers', this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
           Clientes
         </button>
@@ -349,9 +349,8 @@
         <div class="admin-header">
           <div>
             <div class="admin-title">Pedidos</div>
-            <div class="admin-subtitle" id="orders-count-sub">Carregando...</div>
+            <div class="admin-subtitle" id="orders-count-sub">Atualizado em tempo real</div>
           </div>
-          <button onclick="loadOrders()" style="padding:10px 18px;background:var(--color-primary);color:white;border:none;border-radius:10px;font-weight:700;font-size:.85rem;cursor:pointer;font-family:inherit;">↻ Atualizar</button>
         </div>
 
         <!-- Stats -->
@@ -378,13 +377,6 @@
         <div class="orders-panel">
           <div class="orders-panel__header">
             <h2>📋 Lista de Pedidos</h2>
-            <div class="filter-bar" id="filter-bar">
-              <button class="filter-pill active" data-filter="all" onclick="filterOrders('all')">Todos</button>
-              <button class="filter-pill" data-filter="Pendente" onclick="filterOrders('Pendente')">Pendente</button>
-              <button class="filter-pill" data-filter="Em Separação" onclick="filterOrders('Em Separação')">Em Separação</button>
-              <button class="filter-pill" data-filter="Enviado" onclick="filterOrders('Enviado')">Enviado</button>
-              <button class="filter-pill" data-filter="Entregue" onclick="filterOrders('Entregue')">Entregue</button>
-            </div>
           </div>
 
           <div id="orders-table-wrap">

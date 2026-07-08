@@ -113,5 +113,5 @@ function renderOrder(order) {
 
 window.logout = function() {
   sessionStorage.removeItem('qf_user');
-  window.location.href = 'checkout.html';
+  window.location.href = 'index.html';
 };

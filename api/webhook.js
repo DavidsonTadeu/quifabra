@@ -1,20 +1,35 @@
-// Substitua pelo SDK do Firebase Admin se precisar atualizar o Firestore diretamente do Node.js
-// Mas como o webhook recebe o status, podemos fazer isso com Admin SDK
 import { MercadoPagoConfig, Payment } from 'mercadopago';
 
-// Esta API precisa se conectar ao Firestore para atualizar o status do pedido para "Pago".
-// Configurar o Firebase Admin SDK requer variáveis de ambiente com a Service Account.
-// Por simplificação inicial, este webhook apenas valida o pagamento. O update no Firestore
-// requer o firebase-admin.
-
 const ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN;
+const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID || 'quifabraloja';
+
+// Atualiza o status do pedido no Firestore via REST API (sem precisar do firebase-admin)
+async function updateOrderStatus(orderId, status) {
+  const firestoreUrl = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/orders/${orderId}`;
+  
+  const body = {
+    fields: {
+      status: { stringValue: status }
+    }
+  };
+
+  const response = await fetch(`${firestoreUrl}?updateMask.fieldPaths=status`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+
+  if (!response.ok) {
+    const err = await response.text();
+    throw new Error(`Firestore update failed: ${err}`);
+  }
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // O Mercado Pago envia um parâmetro data.id com o ID do pagamento
   const paymentId = req.query['data.id'] || req.body?.data?.id;
   const type = req.query.type || req.body?.type;
 
@@ -32,16 +47,21 @@ export default async function handler(req, res) {
 
   try {
     const paymentData = await payment.get({ id: paymentId });
-    
+
     const externalReference = paymentData.external_reference; // É o nosso orderId
-    const status = paymentData.status;
+    const mpStatus = paymentData.status;
 
-    console.log(`Pagamento ${paymentId} para pedido ${externalReference} está ${status}`);
+    console.log(`Pagamento ${paymentId} para pedido ${externalReference} está ${mpStatus}`);
 
-    if (status === 'approved') {
-      // TODO: Conectar ao Firebase Admin SDK e atualizar o doc do Firestore
-      // Exemplo (requer import do firebase-admin):
-      // await admin.firestore().collection('orders').doc(externalReference).update({ status: 'Pago' });
+    // Mapeia o status do MP para o status do nosso sistema
+    let novoStatus = null;
+    if (mpStatus === 'approved') novoStatus = 'Pago';
+    else if (mpStatus === 'rejected' || mpStatus === 'cancelled') novoStatus = 'Cancelado';
+    else if (mpStatus === 'in_process' || mpStatus === 'pending') novoStatus = 'Pendente';
+
+    if (novoStatus && externalReference) {
+      await updateOrderStatus(externalReference, novoStatus);
+      console.log(`Pedido ${externalReference} atualizado para: ${novoStatus}`);
     }
 
     res.status(200).send('OK');
