@@ -1,57 +1,85 @@
-import { db, collection, query, where, getDocs, orderBy } from "./firebase-config.js";
+import { db, auth, googleProvider, signInWithPopup, onAuthStateChanged, signOut, collection, query, where, getDocs } from "./firebase-config.js";
 
-document.addEventListener('DOMContentLoaded', async () => {
-  const currentUser = JSON.parse(sessionStorage.getItem('qf_user'));
-  
-  if (!currentUser) {
-    document.getElementById('unauth-view').style.display = 'flex';
-    return;
-  }
-  
-  document.getElementById('auth-view').style.display = 'block';
-  
-  // Set User Info
-  document.getElementById('user-name-display').textContent = currentUser.nome;
-  document.getElementById('user-email-display').textContent = currentUser.email;
-  document.getElementById('user-avatar').textContent = currentUser.nome.charAt(0).toUpperCase();
-  
-  // Load Orders from Firestore
-  const container = document.getElementById('orders-container');
-  try {
-    const q = query(
-      collection(db, "orders"), 
-      where("customer.email", "==", currentUser.email)
-      // orderBy("createdAt", "desc") // requires composite index sometimes, keeping simple
-    );
-    
-    const querySnapshot = await getDocs(q);
-    const orders = [];
-    querySnapshot.forEach((doc) => {
-      orders.push({ id: doc.id, ...doc.data() });
+document.addEventListener('DOMContentLoaded', () => {
+  const loginBtn = document.getElementById('google-login-btn');
+  if (loginBtn) {
+    loginBtn.addEventListener('click', async () => {
+      try {
+        await signInWithPopup(auth, googleProvider);
+      } catch (error) {
+        console.error("Erro no login:", error);
+        alert("Erro ao fazer login com o Google. Certifique-se de que o provedor Google está ativado no Firebase Console.");
+      }
     });
-    
-    // Sort locally by date descending
-    orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    
-    if (orders.length === 0) {
-      container.innerHTML = `
-        <div class="empty-state">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-          <p style="font-weight:600; font-size:1.1rem; color:#1D2533; margin-bottom:8px;">Nenhum pedido encontrado</p>
-          <p>Você ainda não fez nenhuma compra.</p>
-          <a href="index.html#loja" class="btn btn--primary" style="margin-top:16px;">Ir para a Loja</a>
-        </div>
-      `;
+  }
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      document.getElementById('unauth-view').style.display = 'flex';
+      document.getElementById('auth-view').style.display = 'none';
       return;
     }
     
-    container.innerHTML = orders.map(renderOrder).join('');
+    document.getElementById('unauth-view').style.display = 'none';
+    document.getElementById('auth-view').style.display = 'block';
     
-  } catch (error) {
-    console.error("Error loading orders:", error);
-    container.innerHTML = `<div class="empty-state" style="color:#ef4444;">Erro ao carregar pedidos. Verifique se o banco de dados está configurado.</div>`;
-  }
+    // Set User Info
+    document.getElementById('user-name-display').textContent = user.displayName || 'Usuário';
+    document.getElementById('user-email-display').textContent = user.email;
+    
+    if (user.photoURL) {
+      document.getElementById('user-avatar').innerHTML = `<img src="${user.photoURL}" alt="Avatar" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+    } else {
+      document.getElementById('user-avatar').textContent = (user.displayName || 'U').charAt(0).toUpperCase();
+    }
+    
+    // Sincroniza também no sessionStorage para compatibilidade se necessário
+    sessionStorage.setItem('qf_user', JSON.stringify({ nome: user.displayName, email: user.email }));
+    
+    // Load Orders from Firestore
+    const container = document.getElementById('orders-container');
+    try {
+      const q = query(
+        collection(db, "orders"), 
+        where("customer.email", "==", user.email)
+      );
+      
+      const querySnapshot = await getDocs(q);
+      const orders = [];
+      querySnapshot.forEach((doc) => {
+        orders.push({ id: doc.id, ...doc.data() });
+      });
+      
+      // Sort locally by date descending
+      orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      
+      if (orders.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            <p style="font-weight:600; font-size:1.1rem; color:#1D2533; margin-bottom:8px;">Nenhum pedido encontrado</p>
+            <p>Você ainda não fez nenhuma compra.</p>
+            <a href="index.html#loja" class="btn btn--primary" style="margin-top:16px;">Ir para a Loja</a>
+          </div>
+        `;
+        return;
+      }
+      
+      container.innerHTML = orders.map(renderOrder).join('');
+      
+    } catch (error) {
+      console.error("Error loading orders:", error);
+      container.innerHTML = `<div class="empty-state" style="color:#ef4444;">Erro ao carregar pedidos. Verifique se o banco de dados está configurado.</div>`;
+    }
+  });
 });
+
+window.logout = function() {
+  signOut(auth).then(() => {
+    sessionStorage.removeItem('qf_user');
+    window.location.reload();
+  });
+};
 
 function renderOrder(order) {
   const steps = ['Pendente', 'Pago', 'Em Separação', 'Enviado', 'Entregue'];

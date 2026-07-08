@@ -1,6 +1,7 @@
 // js/firebase-config.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getFirestore, collection, addDoc, setDoc, getDocs, doc, updateDoc, query, where, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
 // TODO: Cole aqui as configurações do seu projeto Firebase
 const firebaseConfig = {
@@ -16,5 +17,8 @@ const firebaseConfig = {
 // Inicializa Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
 
-export { db, collection, addDoc, setDoc, getDocs, doc, updateDoc, query, where, orderBy, onSnapshot };
+export { db, auth, googleProvider, signInWithPopup, onAuthStateChanged, signOut, collection, addDoc, setDoc, getDocs, doc, updateDoc, query, where, orderBy, onSnapshot };
+

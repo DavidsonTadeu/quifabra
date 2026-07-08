@@ -503,4 +503,78 @@ document.addEventListener('DOMContentLoaded', () => {
     track.style.animation = 'none';
     wrap.style.overflowX  = 'auto';
   }
-})();
+})();// =========================================================
+// BANNER DE COOKIES E POPUP PROMOCIONAL (5s)
+// =========================================================
+document.addEventListener('DOMContentLoaded', () => {
+  
+  // ── 1. Cookie Banner ──
+  const cookieConsent = localStorage.getItem('qf_cookie_consent');
+  if (!cookieConsent) {
+    const bannerHTML = `
+      <div id="cookie-banner" style="position:fixed; bottom:0; left:0; right:0; background:#1D2533; color:white; padding:16px 24px; z-index:9999; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; transform:translateY(100%); transition:transform 0.4s ease; box-shadow:0 -4px 20px rgba(0,0,0,0.15);">
+        <div style="font-size:0.85rem; flex:1; min-width:280px; line-height:1.4;">
+          Utilizamos cookies para melhorar a sua experiência. Ao continuar navegando, você concorda com nossa política de privacidade.
+        </div>
+        <button id="cookie-accept" style="background:#00a650; color:white; border:none; padding:10px 24px; border-radius:8px; font-weight:700; cursor:pointer; transition:background 0.2s;">Aceitar e Fechar</button>
+      </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', bannerHTML);
+    const banner = document.getElementById('cookie-banner');
+    
+    // Animação de entrada
+    setTimeout(() => { banner.style.transform = 'translateY(0)'; }, 500);
+    
+    document.getElementById('cookie-accept').addEventListener('click', () => {
+      localStorage.setItem('qf_cookie_consent', 'true');
+      banner.style.transform = 'translateY(100%)';
+      setTimeout(() => banner.remove(), 400);
+    });
+  }
+
+  // ── 2. Popup Promocional (Aparece após 5s) ──
+  // Não mostra se o usuário já viu e fechou, OU se já está na página de checkout/admin
+  const popupShown = localStorage.getItem('qf_promo_popup_shown');
+  const path = window.location.pathname;
+  const isExcludedPage = path.includes('checkout') || path.includes('admin') || path.includes('minha-conta');
+  
+  if (!popupShown && !isExcludedPage) {
+    const popupHTML = `
+      <div id="promo-popup-overlay" style="position:fixed; inset:0; background:rgba(10,15,30,0.7); backdrop-filter:blur(4px); z-index:10000; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.4s ease;">
+        <div id="promo-popup-modal" style="background:white; border-radius:16px; padding:32px 24px; max-width:90%; width:400px; text-align:center; position:relative; transform:scale(0.9); transition:transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow:0 10px 40px rgba(0,0,0,0.2);">
+          <button id="promo-popup-close" style="position:absolute; top:12px; right:16px; background:none; border:none; font-size:1.8rem; color:#9ca3af; cursor:pointer; line-height:1; transition:color 0.2s;">&times;</button>
+          <div style="font-size:3.5rem; margin-bottom:8px;">🛒</div>
+          <h3 style="font-family:var(--font-heading); font-size:1.5rem; font-weight:900; color:var(--color-dark); margin-bottom:12px; line-height:1.2;">Compre direto<br>pelo nosso site!</h3>
+          <p style="color:#6b7280; font-size:0.95rem; margin-bottom:24px; line-height:1.5;">Sabia que nossa loja virtual já está no ar? Garanta equipamentos originais Quifabra de forma rápida e segura.</p>
+          <a href="index.html#loja" id="promo-popup-btn" style="display:block; background:var(--color-primary); color:white; padding:14px; border-radius:10px; font-weight:800; text-decoration:none; transition:transform 0.2s, background 0.2s;">Ver Produtos Agora</a>
+        </div>
+      </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', popupHTML);
+    
+    const overlay = document.getElementById('promo-popup-overlay');
+    const modal = document.getElementById('promo-popup-modal');
+    const closeBtn = document.getElementById('promo-popup-close');
+    const actionBtn = document.getElementById('promo-popup-btn');
+    
+    const fecharPopup = () => {
+      localStorage.setItem('qf_promo_popup_shown', 'true');
+      overlay.style.opacity = '0';
+      modal.style.transform = 'scale(0.9)';
+      setTimeout(() => overlay.remove(), 400);
+    };
+
+    closeBtn.addEventListener('click', fecharPopup);
+    actionBtn.addEventListener('click', fecharPopup);
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) fecharPopup();
+    });
+
+    // Dispara após 5 segundos
+    setTimeout(() => {
+      overlay.style.opacity = '1';
+      overlay.style.pointerEvents = 'all';
+      modal.style.transform = 'scale(1)';
+    }, 5000);
+  }
+});

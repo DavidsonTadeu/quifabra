@@ -4,7 +4,7 @@
  */
 'use strict';
 
-import { db, doc, setDoc, getDocs, collection } from './firebase-config.js';
+import { db, doc, setDoc, getDocs, collection, auth, googleProvider, signInWithPopup, onAuthStateChanged, signOut } from './firebase-config.js';
 
 // ══════════════════════════════════════════════════════════════
 // CONFIGURAÇÕES
@@ -28,7 +28,7 @@ const EMAILJS_CONFIG = {
 const ADMIN_EMAIL = 'ecal7450@gmail.com';
 
 // ── Estado da sessão ──────────────────────────────────────────
-let currentUser  = JSON.parse(sessionStorage.getItem('qf_user'))  || null;
+let currentUser  = null;
 let currentStep  = 1;
 let orderAddress = {};
 
@@ -85,22 +85,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
   populateSummary();
 
-  // Se já está logado, pula para step 2
-  if (currentUser) {
-    document.getElementById('panel-step1').innerHTML = `
-      <div class="checkout-panel__header">
-        <div class="panel-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+  // Monitora o estado de autenticação via Firebase Auth
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      currentUser = {
+        nome: user.displayName || 'Usuário',
+        email: user.email,
+        uid: user.uid
+      };
+      document.getElementById('panel-step1').innerHTML = `
+        <div class="checkout-panel__header">
+          <div class="panel-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h2 style="color:#16a34a;">Bem-vindo, ${currentUser.nome.split(' ')[0]}!</h2>
         </div>
-        <h2 style="color:#16a34a;">Bem-vindo, ${currentUser.nome.split(' ')[0]}!</h2>
-      </div>
-      <div class="checkout-panel__body">
-        <p style="color:#6b7280;font-size:.9rem;margin-bottom:12px;">Você está logado como <strong>${currentUser.email}</strong>.</p>
-        <button class="btn-proceed" onclick="goToStep(2)">Continuar para Endereço →</button>
-        <button onclick="logout()" style="width:100%;margin-top:8px;padding:10px;background:none;border:none;color:#9ca3af;font-size:.82rem;cursor:pointer;font-family:inherit;">Sair da conta</button>
-      </div>
-    `;
-    setStep(1);
+        <div class="checkout-panel__body">
+          <p style="color:#6b7280;font-size:.9rem;margin-bottom:12px;">Você está logado como <strong>${currentUser.email}</strong>.</p>
+          <button class="btn-proceed" onclick="goToStep(2)">Continuar para Endereço →</button>
+          <button onclick="logout()" style="width:100%;margin-top:8px;padding:10px;background:none;border:none;color:#9ca3af;font-size:.82rem;cursor:pointer;font-family:inherit;">Sair da conta</button>
+        </div>
+      `;
+      setStep(1);
+    }
+  });
+
+  const loginBtn = document.getElementById('google-login-btn');
+  if (loginBtn) {
+    loginBtn.addEventListener('click', async () => {
+      try {
+        await signInWithPopup(auth, googleProvider);
+      } catch (error) {
+        console.error("Erro no login:", error);
+        alert("Erro ao fazer login com o Google. Certifique-se de que o provedor Google está ativado no Firebase Console.");
+      }
+    });
   }
 });
 
@@ -133,101 +152,32 @@ function populateSummary() {
   if (totalEl)    totalEl.textContent    = formatBRL(total);
 }
 
-// ══════════════════════════════════════════════════════════════
-// AUTH — AUTH TABS
-// ══════════════════════════════════════════════════════════════
-window.switchAuthTab = function(tab) {
-  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('tab-' + tab).classList.add('active');
-  document.getElementById('panel-' + tab).classList.add('active');
-};
-
-// ── Usuarios salvos em localStorage ─────────────────────────
-function getUsers() {
-  return JSON.parse(localStorage.getItem('qf_users')) || [];
-}
-
-function saveUsers(users) {
-  localStorage.setItem('qf_users', JSON.stringify(users));
-}
-
-function setSession(user) {
-  currentUser = user;
-  sessionStorage.setItem('qf_user', JSON.stringify(user));
-}
-
 window.logout = function () {
-  currentUser = null;
-  sessionStorage.removeItem('qf_user');
-  location.reload();
+  signOut(auth).then(() => {
+    currentUser = null;
+    location.reload();
+  });
 };
-
-// ══════════════════════════════════════════════════════════════
-// STEP 1 — Cadastro / Login
-// ══════════════════════════════════════════════════════════════
-window.proceedStep1 = function () {
-  const activeTab = document.querySelector('.auth-tab.active')?.id;
-
-  if (activeTab === 'tab-register') {
-    handleRegister();
-  } else {
-    handleLogin();
-  }
-};
-
-function handleRegister() {
-  const nome   = val('reg-nome');
-  const cpf    = val('reg-cpf').replace(/\D/g, '');
-  const email  = val('reg-email');
-  const cel    = val('reg-celular');
-  const senha  = val('reg-senha');
-
-  let valid = true;
-
-  if (!nome) { showErr('err-reg-nome', true); valid = false; } else { showErr('err-reg-nome', false); }
-  if (cpf.length < 11) { showErr('err-reg-cpf', true); valid = false; } else { showErr('err-reg-cpf', false); }
-  if (!validateEmail(email)) { showErr('err-reg-email', true); valid = false; } else { showErr('err-reg-email', false); }
-  if (cel.replace(/\D/g, '').length < 10) { showErr('err-reg-cel', true); valid = false; } else { showErr('err-reg-cel', false); }
-  if (senha.length < 6) { showErr('err-reg-senha', true); valid = false; } else { showErr('err-reg-senha', false); }
-  if (!valid) return;
-
-  const users = getUsers();
-  const exists = users.find(u => u.email === email);
-  if (exists) {
-    showErr('err-reg-email', true, 'E-mail já cadastrado. Use "Já tenho conta".');
-    return;
-  }
-
-  const user = { nome, cpf, email, cel, senha, createdAt: new Date().toISOString() };
-  users.push(user);
-  saveUsers(users);
-  setSession(user);
-  goToStep(2);
-}
-
-function handleLogin() {
-  const email = val('login-email');
-  const senha = val('login-senha');
-  const errEl = document.getElementById('login-error');
-
-  const users = getUsers();
-  const user  = users.find(u => u.email === email && u.senha === senha);
-
-  if (!user) {
-    errEl.textContent = '❌ E-mail ou senha incorretos.';
-    errEl.style.display = 'block';
-    return;
-  }
-
-  errEl.style.display = 'none';
-  setSession(user);
-  goToStep(2);
-}
 
 // ══════════════════════════════════════════════════════════════
 // STEP 2 — Endereço + CEP
 // ══════════════════════════════════════════════════════════════
+window.maskCPF = function (input) {
+  let v = input.value.replace(/\D/g, '');
+  if (v.length > 3) v = v.slice(0, 3) + '.' + v.slice(3);
+  if (v.length > 7) v = v.slice(0, 7) + '.' + v.slice(7);
+  if (v.length > 11) v = v.slice(0, 11) + '-' + v.slice(11, 13);
+  input.value = v;
+};
+
+window.maskCel = function (input) {
+  let v = input.value.replace(/\D/g, '');
+  if (v.length > 0) v = '(' + v;
+  if (v.length > 3) v = v.slice(0, 3) + ') ' + v.slice(3);
+  if (v.length > 10) v = v.slice(0, 10) + '-' + v.slice(10, 14);
+  input.value = v;
+};
+
 window.onCepInput = function (input) {
   let v = input.value.replace(/\D/g, '');
   if (v.length > 5) v = v.slice(0, 5) + '-' + v.slice(5, 8);
@@ -267,19 +217,29 @@ async function fetchCep(cep) {
 }
 
 window.proceedStep2 = function () {
+  const cpf    = val('addr-cpf').replace(/\D/g, '');
+  const cel    = val('addr-celular').replace(/\D/g, '');
   const cep    = val('addr-cep').replace(/\D/g, '');
   const rua    = val('addr-rua');
   const numero = val('addr-numero');
   const bairro = val('addr-bairro');
   const cidade = val('addr-cidade');
+  
+  let valid = true;
+  
+  if (cpf.length < 11) { showErr('err-cpf', true); valid = false; } else { showErr('err-cpf', false); }
+  if (cel.length < 10) { showErr('err-cel', true); valid = false; } else { showErr('err-cel', false); }
 
   if (cep.length < 8 || !rua || !numero || !bairro || !cidade) {
     showErr('err-cep', cep.length < 8);
     alert('Por favor, preencha todos os campos obrigatórios do endereço.');
-    return;
+    valid = false;
   }
+  
+  if (!valid) return;
 
   showErr('err-cep', false);
+  
   orderAddress = {
     cep:    val('addr-cep'),
     rua, numero,
@@ -287,6 +247,10 @@ window.proceedStep2 = function () {
     bairro, cidade,
     estado: val('addr-estado'),
   };
+  
+  // Adiciona CPF e Celular ao currentUser para enviar ao Firebase e Mercado Pago
+  currentUser.cpf = val('addr-cpf');
+  currentUser.cel = val('addr-celular');
 
   buildReview();
   goToStep(3);
