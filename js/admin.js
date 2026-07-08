@@ -4,7 +4,7 @@ import { escapeHtml } from './sanitize.js';
 let allOrders = [];
 let allProducts = [];
 
-document.addEventListener('DOMContentLoaded', () => {
+function initAdmin() {
   const isAdmin = sessionStorage.getItem('qf_admin_logged');
   if (isAdmin) {
     document.getElementById('admin-login-screen').style.display = 'none';
@@ -36,7 +36,13 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error("Erro ao carregar produtos do Firebase", error);
     });
   }
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initAdmin);
+} else {
+  initAdmin();
+}
 
 // Tentativas de login (rate limiting simples no cliente)
 let loginAttempts = 0;
@@ -44,34 +50,38 @@ const MAX_ATTEMPTS = 5;
 let lockUntil = 0;
 
 window.adminLogin = async function() {
-  const email = document.getElementById('admin-email').value.trim();
-  const pass  = document.getElementById('admin-pass').value;
-  const err   = document.getElementById('admin-error');
+  try {
+    const email = document.getElementById('admin-email').value.trim();
+    const pass  = document.getElementById('admin-pass').value.trim();
+    const err   = document.getElementById('admin-error');
 
-  // Rate limiting: bloqueia após 5 tentativas por 2 minutos
-  if (Date.now() < lockUntil) {
-    const secsLeft = Math.ceil((lockUntil - Date.now()) / 1000);
-    err.textContent = `Muitas tentativas. Aguarde ${secsLeft}s.`;
-    err.style.display = 'block';
-    return;
-  }
-
-  const ADMIN_EMAIL = 'ecal7450@gmail.com';
-  // Senha configurada — altere para uma senha forte de sua escolha
-  const ADMIN_PASS  = 'Quifabra@2024!';
-
-  if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
-    sessionStorage.setItem('qf_admin_logged', 'true');
-    window.location.reload();
-  } else {
-    loginAttempts++;
-    if (loginAttempts >= MAX_ATTEMPTS) {
-      lockUntil = Date.now() + 120000; // Bloqueia por 2 min
-      err.textContent = 'Muitas tentativas. Bloqueado por 2 minutos.';
-    } else {
-      err.textContent = `E-mail ou senha incorretos. Tentativas restantes: ${MAX_ATTEMPTS - loginAttempts}`;
+    // Rate limiting: bloqueia após 5 tentativas por 2 minutos
+    if (Date.now() < lockUntil) {
+      const secsLeft = Math.ceil((lockUntil - Date.now()) / 1000);
+      err.textContent = `Muitas tentativas. Aguarde ${secsLeft}s.`;
+      err.style.display = 'block';
+      return;
     }
-    err.style.display = 'block';
+
+    const ADMIN_EMAIL = 'ecal7450@gmail.com';
+    const ADMIN_PASS  = 'Quifabra@2024!';
+
+    if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
+      sessionStorage.setItem('qf_admin_logged', 'true');
+      window.location.reload();
+    } else {
+      loginAttempts++;
+      if (loginAttempts >= MAX_ATTEMPTS) {
+        lockUntil = Date.now() + 120000; // Bloqueia por 2 min
+        err.textContent = 'Muitas tentativas. Bloqueado por 2 minutos.';
+      } else {
+        err.textContent = `E-mail ou senha incorretos. Tentativas restantes: ${MAX_ATTEMPTS - loginAttempts}`;
+      }
+      err.style.display = 'block';
+    }
+  } catch (e) {
+    console.error(e);
+    alert("Erro interno: " + e.message);
   }
 };
 
