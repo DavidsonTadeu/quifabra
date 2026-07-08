@@ -1,0 +1,12 @@
+{
+  "name": "quifabra-ecommerce",
+  "version": "1.0.0",
+  "description": "E-commerce Quifabra com Mercado Pago e Firebase",
+  "main": "index.html",
+  "scripts": {
+    "start": "echo \"Servido via Vercel ou local static server\""
+  },
+  "dependencies": {
+    "mercadopago": "^2.0.1"
+  }
+}

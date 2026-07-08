@@ -578,14 +578,17 @@
         <div class="checkout-panel__body">
           <div id="order-review" style="margin-bottom:24px;"></div>
 
+          <!-- Container do Mercado Pago -->
+          <div id="wallet_container" style="margin-bottom: 20px;"></div>
+
           <div style="background:#fffbeb;border:1.5px solid #fde68a;border-radius:10px;padding:16px;margin-bottom:20px;">
             <p style="font-size:.85rem;color:#92400e;font-weight:600;">
-              📋 Ao confirmar, seu pedido será registrado e você receberá um e-mail de confirmação. O pagamento é combinado por WhatsApp após a confirmação.
+              📋 Confirme seu pedido acima e escolha sua forma de pagamento (Pix, Cartão ou Boleto). Pagamento 100% seguro via Mercado Pago.
             </p>
           </div>
 
           <button class="btn-proceed" id="btn-confirm" onclick="confirmOrder()" style="background:#16a34a;">
-            ✅ Confirmar Pedido
+            ✅ Gerar Pagamento
           </button>
         </div>
 
@@ -636,8 +639,10 @@
   </div>
 </div>
 
+<!-- Mercado Pago SDK -->
+<script src="https://sdk.mercadopago.com/js/v2"></script>
 <!-- EmailJS SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script src="js/checkout.js"></script>
+<script type="module" src="js/checkout.js"></script>
 </body>
 </html>

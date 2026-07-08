@@ -4,8 +4,15 @@
  */
 'use strict';
 
+import { db, doc, setDoc, getDocs, collection } from './firebase-config.js';
+
 // ══════════════════════════════════════════════════════════════
-// CONFIGURAÇÃO DO EMAILJS
+// CONFIGURAÇÕES
+// ══════════════════════════════════════════════════════════════
+// Substitua pela sua Public Key do Mercado Pago
+const MP_PUBLIC_KEY = 'YOUR_MP_PUBLIC_KEY';
+const mp = typeof MercadoPago !== 'undefined' ? new MercadoPago(MP_PUBLIC_KEY) : null;
+
 // Para ativar os emails:
 // 1. Acesse emailjs.com e crie conta grátis com ecal7450@gmail.com
 // 2. Crie um Email Service (Gmail) e um Template
@@ -327,7 +334,7 @@ function buildReview() {
 }
 
 // ══════════════════════════════════════════════════════════════
-// CONFIRMAR PEDIDO
+// CONFIRMAR PEDIDO E INICIAR MERCADO PAGO
 // ══════════════════════════════════════════════════════════════
 window.confirmOrder = async function () {
   const btn  = document.getElementById('btn-confirm');
@@ -337,7 +344,6 @@ window.confirmOrder = async function () {
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Processando...';
 
-  // Gera número de pedido único
   const orderNum = 'QF-' + Date.now().toString(36).toUpperCase();
   const orderDate = new Date().toLocaleString('pt-BR');
   const total     = cartTotal(cart);
@@ -350,61 +356,79 @@ window.confirmOrder = async function () {
     items:     cart,
     total,
     status:    'Pendente',
+    createdAt: new Date().toISOString()
   };
 
-  // Salva pedido no localStorage (histórico do cliente)
-  const orders = JSON.parse(localStorage.getItem('qf_orders')) || [];
-  orders.push(order);
-  localStorage.setItem('qf_orders', JSON.stringify(orders));
+  try {
+    // 1. Salvar pedido no Firebase Firestore
+    await setDoc(doc(db, "orders", orderNum), order);
 
-  // Monta texto dos itens para o email
+    // 2. Chamar a API da Vercel para gerar o pagamento no Mercado Pago
+    const response = await fetch('/api/create-preference', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items: cart, customer: currentUser, orderId: orderNum })
+    });
+
+    const preference = await response.json();
+
+    if (preference.id && mp) {
+      // 3. Ocultar o botão e carregar o Brick do Mercado Pago
+      btn.style.display = 'none';
+      const bricksBuilder = mp.bricks();
+      
+      await bricksBuilder.create("wallet", "wallet_container", {
+        initialization: {
+          preferenceId: preference.id,
+          redirectMode: "self"
+        }
+      });
+      
+      // Salva info local só para referência rápida (opcional, já que está no Firebase)
+      const orders = JSON.parse(localStorage.getItem('qf_orders')) || [];
+      orders.push(order);
+      localStorage.setItem('qf_orders', JSON.stringify(orders));
+      
+      clearCart();
+      updateCartBadges();
+
+      // Email pode ser enviado depois via webhook, ou aqui se desejar (simplificado)
+      sendEmailConfirm(orderNum, orderDate, cart, total);
+      
+    } else {
+      alert("Erro ao conectar com o Mercado Pago. Verifique a configuração.");
+      btn.disabled = false;
+      btn.innerHTML = '✅ Gerar Pagamento';
+    }
+
+  } catch (error) {
+    console.error("Erro no checkout:", error);
+    alert("Falha ao processar pedido. Tente novamente.");
+    btn.disabled = false;
+    btn.innerHTML = '✅ Gerar Pagamento';
+  }
+};
+
+function sendEmailConfirm(orderNum, orderDate, cart, total) {
   const itemsText = cart.map(i => `• ${i.qty}× ${i.title} — ${formatBRL(i.price * i.qty)}`).join('\n');
   const addrText  = `${orderAddress.rua}, ${orderAddress.numero}${orderAddress.comp ? ', '+orderAddress.comp : ''}, ${orderAddress.bairro} — ${orderAddress.cidade}/${orderAddress.estado} — CEP ${orderAddress.cep}`;
 
-  // ── Envio de email via EmailJS ──
   if (typeof emailjs !== 'undefined' && EMAILJS_CONFIG.publicKey !== 'YOUR_EMAILJS_PUBLIC_KEY') {
-    try {
-      const templateParams = {
-        to_email:     ADMIN_EMAIL,
-        client_email: currentUser.email,
-        order_id:     orderNum,
-        order_date:   orderDate,
-        client_name:  currentUser.nome,
-        client_phone: currentUser.cel || 'Não informado',
-        client_cpf:   currentUser.cpf || 'Não informado',
-        address:      addrText,
-        items:        itemsText,
-        total:        formatBRL(total),
-        shipping:     'GRÁTIS',
-      };
-
-      await emailjs.send(
-        EMAILJS_CONFIG.serviceId,
-        EMAILJS_CONFIG.templateId,
-        templateParams
-      );
-    } catch (err) {
-      console.warn('EmailJS error:', err);
-      // Continua mesmo se falhar o email
-    }
+    emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, {
+      to_email:     ADMIN_EMAIL,
+      client_email: currentUser.email,
+      order_id:     orderNum,
+      order_date:   orderDate,
+      client_name:  currentUser.nome,
+      client_phone: currentUser.cel || 'Não informado',
+      client_cpf:   currentUser.cpf || 'Não informado',
+      address:      addrText,
+      items:        itemsText,
+      total:        formatBRL(total),
+      shipping:     'GRÁTIS',
+    }).catch(console.warn);
   }
-
-  // ── Sucesso ──
-  clearCart();
-  updateCartBadges();
-
-  document.getElementById('btn-confirm').style.display    = 'none';
-  document.getElementById('order-review').style.display   = 'none';
-  document.querySelector('#panel-step3 .checkout-panel__header').style.display = 'none';
-  document.querySelector('#panel-step3 > div:not(.order-success)').style.display = 'none';
-
-  document.getElementById('order-number-display').textContent = orderNum;
-  document.getElementById('order-email-display').textContent  = currentUser.email;
-  document.getElementById('order-success').classList.add('show');
-
-  // Atualiza indicador de steps
-  setStep(3, true);
-};
+}
 
 // ══════════════════════════════════════════════════════════════
 // ADMIN — verificação (usada no admin.html)
