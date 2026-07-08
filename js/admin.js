@@ -1,7 +1,8 @@
-import { db, collection, getDocs, doc, updateDoc, onSnapshot } from './firebase-config.js';
+import { db, collection, getDocs, doc, updateDoc, addDoc, deleteDoc, onSnapshot } from './firebase-config.js';
 import { escapeHtml } from './sanitize.js';
 
 let allOrders = [];
+let allProducts = [];
 
 document.addEventListener('DOMContentLoaded', () => {
   const isAdmin = sessionStorage.getItem('qf_admin_logged');
@@ -22,6 +23,17 @@ document.addEventListener('DOMContentLoaded', () => {
       loadCustomers(); // Recarrega clientes a cada atualização de pedidos
     }, (error) => {
       console.error("Erro ao carregar pedidos do Firebase", error);
+    });
+
+    // Real-time listener for products
+    onSnapshot(collection(db, "products"), (snapshot) => {
+      allProducts = [];
+      snapshot.forEach(docSnap => {
+        allProducts.push({ id: docSnap.id, ...docSnap.data() });
+      });
+      renderProducts();
+    }, (error) => {
+      console.error("Erro ao carregar produtos do Firebase", error);
     });
   }
 });
@@ -128,37 +140,37 @@ function renderOrders(filterStatus = 'all') {
           if(o.status === 'Entregue') badgeClass = 'status-badge--entregue';
           if(o.status === 'Cancelado') badgeClass = 'status-badge--cancelado';
           
-          return `
-          <tr onclick="viewOrder('${escapeHtml(o.id)}')" style="cursor:pointer;">
-            <td style="font-weight:600;font-family:monospace;color:var(--color-primary);">${escapeHtml(o.id.substring(0,8))}...</td>
-            <td style="font-size:0.8rem;color:var(--color-text-muted);">${escapeHtml(o.date)}</td>
+          return \`
+          <tr onclick="viewOrder('\${escapeHtml(o.id)}')" style="cursor:pointer;">
+            <td style="font-weight:600;font-family:monospace;color:var(--color-primary);">\${escapeHtml(o.id.substring(0,8))}...</td>
+            <td style="font-size:0.8rem;color:var(--color-text-muted);">\${escapeHtml(o.date)}</td>
             <td>
               <div class="customer-info">
-                <span class="customer-name">${escapeHtml(o.customer?.nome || '—')}</span>
-                <span class="customer-email">${escapeHtml(o.customer?.email || '')}</span>
+                <span class="customer-name">\${escapeHtml(o.customer?.nome || '—')}</span>
+                <span class="customer-email">\${escapeHtml(o.customer?.email || '')}</span>
               </div>
             </td>
-            <td style="font-weight:600;">R$ ${(o.total || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+            <td style="font-weight:600;">R$ \${(o.total || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
             <td onclick="event.stopPropagation()">
               <div style="display:flex; align-items:center; gap:8px;">
-                <span class="status-badge ${badgeClass}" style="margin-right:4px;">${escapeHtml(o.status)}</span>
-                <select class="status-select" style="padding:4px; font-size:0.75rem;" onchange="updateStatus('${escapeHtml(o.id)}', this.value)">
-                  <option value="Pendente" ${o.status === 'Pendente' ? 'selected' : ''}>Pendente</option>
-                  <option value="Pago" ${o.status === 'Pago' ? 'selected' : ''}>Pago</option>
-                  <option value="Em Separação" ${o.status === 'Em Separação' ? 'selected' : ''}>Separação</option>
-                  <option value="Enviado" ${o.status === 'Enviado' ? 'selected' : ''}>Enviado</option>
-                  <option value="Entregue" ${o.status === 'Entregue' ? 'selected' : ''}>Entregue</option>
-                  <option value="Cancelado" ${o.status === 'Cancelado' ? 'selected' : ''}>Cancelado</option>
+                <span class="status-badge \${badgeClass}" style="margin-right:4px;">\${escapeHtml(o.status)}</span>
+                <select class="status-select" style="padding:4px; font-size:0.75rem;" onchange="updateStatus('\${escapeHtml(o.id)}', this.value)">
+                  <option value="Pendente" \${o.status === 'Pendente' ? 'selected' : ''}>Pendente</option>
+                  <option value="Pago" \${o.status === 'Pago' ? 'selected' : ''}>Pago</option>
+                  <option value="Em Separação" \${o.status === 'Em Separação' ? 'selected' : ''}>Separação</option>
+                  <option value="Enviado" \${o.status === 'Enviado' ? 'selected' : ''}>Enviado</option>
+                  <option value="Entregue" \${o.status === 'Entregue' ? 'selected' : ''}>Entregue</option>
+                  <option value="Cancelado" \${o.status === 'Cancelado' ? 'selected' : ''}>Cancelado</option>
                 </select>
               </div>
             </td>
             <td>
-              <button style="padding:6px 12px; font-size:0.75rem; background:white; border:1px solid var(--border-color); border-radius:6px; cursor:pointer;" onclick="event.stopPropagation(); viewOrder('${escapeHtml(o.id)}')">
+              <button style="padding:6px 12px; font-size:0.75rem; background:white; border:1px solid var(--border-color); border-radius:6px; cursor:pointer;" onclick="event.stopPropagation(); viewOrder('\${escapeHtml(o.id)}')">
                 Detalhes
               </button>
             </td>
           </tr>
-        `}).join('')}
+        \`}).join('')}
       </tbody>
     </table>
     </div>
@@ -248,6 +260,11 @@ window.closeOrderModal = function(e) {
   document.getElementById('modal-overlay').classList.remove('open');
 };
 
+window.closeModals = function(e) {
+  window.closeOrderModal(e);
+  window.closeProductModal(e);
+};
+
 window.showSection = function(name, clickedEl) {
   document.querySelectorAll('.admin-main > div').forEach(d => d.style.display = 'none');
   const section = document.getElementById('section-' + name);
@@ -292,18 +309,162 @@ function loadCustomers() {
       <tbody>
         ${users.map(u => {
           const numPedidos = allOrders.filter(o => o.customer?.email === u.email).length;
-          return `
+          return \`
             <tr>
-              <td style="font-weight:600;color:var(--color-brand);">${escapeHtml(u.nome)}</td>
-              <td style="color:var(--color-text-muted);">${escapeHtml(u.email)}</td>
-              <td>${escapeHtml(u.cel || '—')}</td>
-              <td style="font-size:0.85rem;color:var(--color-text-faint);">${escapeHtml(u.cpf || '—')}</td>
-              <td><span style="background:#E0F2FE;color:#0369A1;padding:4px 12px;border-radius:20px;font-weight:600;font-size:0.75rem;">${numPedidos}</span></td>
+              <td style="font-weight:600;color:var(--color-brand);">\${escapeHtml(u.nome)}</td>
+              <td style="color:var(--color-text-muted);">\${escapeHtml(u.email)}</td>
+              <td>\${escapeHtml(u.cel || '—')}</td>
+              <td style="font-size:0.85rem;color:var(--color-text-faint);">\${escapeHtml(u.cpf || '—')}</td>
+              <td><span style="background:#E0F2FE;color:#0369A1;padding:4px 12px;border-radius:20px;font-weight:600;font-size:0.75rem;">\${numPedidos}</span></td>
             </tr>
-          `;
+          \`;
         }).join('')}
       </tbody>
     </table>
     </div>
   `;
 }
+
+// ----------------------------------------------------
+// PRODUTOS (CRUD)
+// ----------------------------------------------------
+
+function renderProducts() {
+  const wrap = document.getElementById('products-table-wrap');
+  if (!wrap) return;
+
+  if (allProducts.length === 0) {
+    wrap.innerHTML = `<div class="empty-state">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+      <h3>Nenhum produto cadastrado</h3>
+      <p>Você ainda não tem nenhum produto à venda na loja.</p>
+    </div>`;
+    return;
+  }
+
+  wrap.innerHTML = `
+    <div style="overflow-x:auto;">
+    <table class="orders-table">
+      <thead>
+        <tr>
+          <th>Produto</th>
+          <th>Categoria</th>
+          <th>Preço</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${allProducts.map(p => {
+          let isPromo = p.promo_price && Number(p.promo_price) > 0 && Number(p.promo_price) < Number(p.price);
+          let displayPrice = isPromo 
+            ? \`<span style="text-decoration:line-through; color:var(--color-text-faint); font-size:0.75rem; margin-right:4px;">R$ \${Number(p.price).toLocaleString('pt-BR',{minimumFractionDigits:2})}</span> <span style="color:#10B981;">R$ \${Number(p.promo_price).toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>\`
+            : \`R$ \${Number(p.price).toLocaleString('pt-BR',{minimumFractionDigits:2})}\`;
+            
+          let statusBadge = p.status === 'Ativo' 
+            ? \`<span class="status-badge status-badge--entregue">Ativo</span>\` 
+            : \`<span class="status-badge status-badge--cancelado">Inativo</span>\`;
+
+          return \`
+            <tr>
+              <td>
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <img src="\${escapeHtml(p.image_url)}" style="width:40px; height:40px; border-radius:6px; object-fit:cover; border:1px solid var(--border-color);" />
+                  <span style="font-weight:600; color:var(--color-brand); max-width:250px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${escapeHtml(p.title)}</span>
+                </div>
+              </td>
+              <td>\${escapeHtml(p.category || 'Sem Categoria')}</td>
+              <td style="font-weight:600;">\${displayPrice}</td>
+              <td>\${statusBadge}</td>
+              <td>
+                <button style="padding:6px 12px; font-size:0.75rem; background:white; border:1px solid var(--border-color); border-radius:6px; cursor:pointer;" onclick="editProduct('\${escapeHtml(p.id)}')">Editar</button>
+                <button style="padding:6px 12px; font-size:0.75rem; background:#FEF2F2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; cursor:pointer; margin-left:4px;" onclick="deleteProduct('\${escapeHtml(p.id)}')">Deletar</button>
+              </td>
+            </tr>
+          \`;
+        }).join('')}
+      </tbody>
+    </table>
+    </div>
+  `;
+}
+
+window.openProductModal = function() {
+  document.getElementById('product-form').reset();
+  document.getElementById('prod-id').value = '';
+  document.getElementById('product-modal-title').textContent = 'Novo Produto';
+  
+  document.getElementById('product-modal').classList.add('open');
+  document.getElementById('modal-overlay').classList.add('open');
+};
+
+window.editProduct = function(id) {
+  const p = allProducts.find(x => x.id === id);
+  if (!p) return;
+
+  document.getElementById('product-modal-title').textContent = 'Editar Produto';
+  document.getElementById('prod-id').value = p.id;
+  document.getElementById('prod-title').value = p.title;
+  document.getElementById('prod-price').value = p.price;
+  document.getElementById('prod-promo').value = p.promo_price || '';
+  document.getElementById('prod-image').value = p.image_url;
+  document.getElementById('prod-category').value = p.category || 'Andaimes';
+  document.getElementById('prod-status').value = p.status || 'Ativo';
+  document.getElementById('prod-desc-short').value = p.desc_short || '';
+  document.getElementById('prod-desc-long').value = p.desc_long || '';
+
+  document.getElementById('product-modal').classList.add('open');
+  document.getElementById('modal-overlay').classList.add('open');
+};
+
+window.closeProductModal = function(e) {
+  if (e && e.target !== document.getElementById('modal-overlay') && !e.target.closest('.slide-over__close')) return;
+  document.getElementById('product-modal').classList.remove('open');
+  document.getElementById('modal-overlay').classList.remove('open');
+};
+
+window.saveProduct = async function(e) {
+  e.preventDefault();
+  
+  const id = document.getElementById('prod-id').value;
+  const productData = {
+    title: document.getElementById('prod-title').value,
+    price: Number(document.getElementById('prod-price').value),
+    promo_price: document.getElementById('prod-promo').value ? Number(document.getElementById('prod-promo').value) : null,
+    image_url: document.getElementById('prod-image').value,
+    category: document.getElementById('prod-category').value,
+    status: document.getElementById('prod-status').value,
+    desc_short: document.getElementById('prod-desc-short').value,
+    desc_long: document.getElementById('prod-desc-long').value,
+    updatedAt: new Date().toISOString()
+  };
+
+  try {
+    if (id) {
+      // Editar
+      await updateDoc(doc(db, "products", id), productData);
+      alert('Produto atualizado com sucesso!');
+    } else {
+      // Criar
+      productData.createdAt = new Date().toISOString();
+      await addDoc(collection(db, "products"), productData);
+      alert('Produto criado com sucesso!');
+    }
+    window.closeProductModal();
+  } catch (error) {
+    console.error("Erro ao salvar produto:", error);
+    alert('Erro ao salvar produto. Verifique sua conexão e regras do Firestore.');
+  }
+};
+
+window.deleteProduct = async function(id) {
+  if (confirm("Tem certeza que deseja DELETAR este produto permanentemente?")) {
+    try {
+      await deleteDoc(doc(db, "products", id));
+      alert("Produto deletado.");
+    } catch (error) {
+      console.error("Erro ao deletar:", error);
+      alert('Erro ao deletar produto.');
+    }
+  }
+};

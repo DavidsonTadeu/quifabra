@@ -230,110 +230,10 @@
   <div class="carousel-track-wrap" id="carouselWrap">
     <div class="carousel-track" id="carouselTrack">
 
-      <!-- Card 1 -->
-      <a href="andaime-tubular.html" class="carousel-card" id="cc-andaime-tubular" aria-label="Ver Andaime Tubular">
-        <div class="carousel-card__thumb">
-          <img src="assets/images/andaime-tubular.jpg" alt="Andaime Tubular" loading="lazy" />
-          <div class="carousel-card__overlay">
-            <span>Ver Detalhes →</span>
-          </div>
-        </div>
-        <div class="carousel-card__body">
-          <span class="carousel-card__tag">Andaimes</span>
-          <h3 class="carousel-card__title">Andaime Tubular</h3>
-          <p class="carousel-card__desc">Sistema modular de alta resistência para obras de médio e grande porte.</p>
-        </div>
-      </a>
-
-      <!-- Card 2 -->
-      <a href="andaime-fachadeiro.html" class="carousel-card" id="cc-andaime-fachadeiro" aria-label="Ver Andaime Fachadeiro">
-        <div class="carousel-card__thumb">
-          <img src="assets/images/andaime-fachadeiro.jpg" alt="Andaime Fachadeiro" loading="lazy" />
-          <div class="carousel-card__overlay">
-            <span>Ver Detalhes →</span>
-          </div>
-        </div>
-        <div class="carousel-card__body">
-          <span class="carousel-card__tag">Andaimes</span>
-          <h3 class="carousel-card__title">Andaime Fachadeiro</h3>
-          <p class="carousel-card__desc">Plataformas seguras para trabalhos em fachadas de qualquer altura.</p>
-        </div>
-      </a>
-
-      <!-- Card 3 -->
-      <a href="escoras-metalicas.html" class="carousel-card" id="cc-escoras" aria-label="Ver Escoras Metálicas">
-        <div class="carousel-card__thumb">
-          <img src="assets/images/escoras-metalicas.jpg" alt="Escoras Metálicas" loading="lazy" />
-          <div class="carousel-card__overlay">
-            <span>Ver Detalhes →</span>
-          </div>
-        </div>
-        <div class="carousel-card__body">
-          <span class="carousel-card__tag">Escoramento</span>
-          <h3 class="carousel-card__title">Escoras Metálicas</h3>
-          <p class="carousel-card__desc">Reguláveis e de alta resistência para suporte de lajes e vigas durante a cura.</p>
-        </div>
-      </a>
-
-      <!-- Card 4 -->
-      <a href="torres-de-escoramento.html" class="carousel-card" id="cc-torres" aria-label="Ver Torres de Escoramento">
-        <div class="carousel-card__thumb">
-          <img src="assets/images/torres-escoramento.jpg" alt="Torres de Escoramento" loading="lazy" />
-          <div class="carousel-card__overlay">
-            <span>Ver Detalhes →</span>
-          </div>
-        </div>
-        <div class="carousel-card__body">
-          <span class="carousel-card__tag">Escoramento</span>
-          <h3 class="carousel-card__title">Torres de Escoramento</h3>
-          <p class="carousel-card__desc">Modulares para grandes cargas e pé-direito elevado com alta produtividade.</p>
-        </div>
-      </a>
-
-      <!-- Card 5 -->
-      <a href="acessorios-para-escoramento.html" class="carousel-card" id="cc-acessorios" aria-label="Ver Acessórios e Equipamentos">
-        <div class="carousel-card__thumb">
-          <img src="assets/images/acessorios-escoramento.jpg" alt="Acessórios e Equipamentos de Escoramento" loading="lazy" />
-          <div class="carousel-card__overlay">
-            <span>Ver Detalhes →</span>
-          </div>
-        </div>
-        <div class="carousel-card__body">
-          <span class="carousel-card__tag">Acessórios</span>
-          <h3 class="carousel-card__title">Acessórios e Equipamentos</h3>
-          <p class="carousel-card__desc">Suportes, sapatas, garfos e conectores para otimizar seu escoramento.</p>
-        </div>
-      </a>
-
-      <!-- Card 6 -->
-      <a href="travamento-de-pilares.html" class="carousel-card" id="cc-pilares" aria-label="Ver Travamento de Pilares">
-        <div class="carousel-card__thumb">
-          <img src="assets/images/travamento-pilares.jpg" alt="Travamento de Pilares" loading="lazy" />
-          <div class="carousel-card__overlay">
-            <span>Ver Detalhes →</span>
-          </div>
-        </div>
-        <div class="carousel-card__body">
-          <span class="carousel-card__tag">Serviços Especiais</span>
-          <h3 class="carousel-card__title">Travamento de Pilares</h3>
-          <p class="carousel-card__desc">Garantia de alinhamento perfeito e segurança estrutural na concretagem.</p>
-        </div>
-      </a>
-
-      <!-- Card 7 -->
-      <a href="vigas.html" class="carousel-card" id="cc-vigas" aria-label="Ver Vigas de Aço">
-        <div class="carousel-card__thumb">
-          <img src="assets/images/vigas-aco.jpg" alt="Vigas de Aço" loading="lazy" />
-          <div class="carousel-card__overlay">
-            <span>Ver Detalhes →</span>
-          </div>
-        </div>
-        <div class="carousel-card__body">
-          <span class="carousel-card__tag">Serviços Especiais</span>
-          <h3 class="carousel-card__title">Vigas de Aço</h3>
-          <p class="carousel-card__desc">Vigas H20 e metálicas de alta resistência compatíveis com sistemas modulares.</p>
-        </div>
-      </a>
+      <!-- Produtos carregados dinamicamente via JS -->
+      <div id="dynamic-products-loading" style="padding: 40px; color: #6b7280; text-align: center; font-size: 1.1rem;">
+        Carregando catálogo de produtos...
+      </div>
 
     </div>
   </div>
@@ -1093,5 +993,70 @@
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script src="js/main.js"></script>
 <script src="js/cart.js"></script>
+<script type="module">
+  import { db, collection, getDocs, query, where } from './js/firebase-config.js';
+  
+  async function loadProducts() {
+    const track = document.getElementById('carouselTrack');
+    if(!track) return;
+    
+    try {
+      const q = query(collection(db, "products"), where("status", "==", "Ativo"));
+      const querySnapshot = await getDocs(q);
+      
+      const loadingEl = document.getElementById('dynamic-products-loading');
+      if (loadingEl) loadingEl.remove();
+
+      if (querySnapshot.empty) {
+        track.innerHTML = '<div style="padding:40px;width:100%;text-align:center;">Nenhum produto cadastrado no momento.</div>';
+        return;
+      }
+
+      let html = '';
+      querySnapshot.forEach((docSnap) => {
+        const p = docSnap.data();
+        let priceHtml = '';
+        if (p.promo_price && Number(p.promo_price) > 0 && Number(p.promo_price) < Number(p.price)) {
+          priceHtml = `<div style="margin-top:8px; font-weight:700; color:#10B981; font-size:1.1rem;">R$ ${Number(p.promo_price).toLocaleString('pt-BR',{minimumFractionDigits:2})}</div>`;
+        } else {
+          priceHtml = `<div style="margin-top:8px; font-weight:700; color:var(--color-brand); font-size:1.1rem;">R$ ${Number(p.price).toLocaleString('pt-BR',{minimumFractionDigits:2})}</div>`;
+        }
+        
+        html += `
+          <a href="produto.html?id=${docSnap.id}" class="carousel-card" aria-label="Ver ${p.title}">
+            <div class="carousel-card__thumb">
+              <img src="${p.image_url}" alt="${p.title}" loading="lazy" />
+              <div class="carousel-card__overlay">
+                <span>Ver Detalhes →</span>
+              </div>
+            </div>
+            <div class="carousel-card__body">
+              <span class="carousel-card__tag">${p.category || 'Categoria'}</span>
+              <h3 class="carousel-card__title">${p.title}</h3>
+              <p class="carousel-card__desc">${p.desc_short || ''}</p>
+              ${priceHtml}
+            </div>
+          </a>
+        `;
+      });
+      
+      // Duplicando para fazer o efeito infinito se houver produtos suficientes
+      if (querySnapshot.size > 2) {
+        track.innerHTML = html + html;
+      } else {
+        track.innerHTML = html;
+        // Ajustando CSS local para não animar se houver poucos produtos
+        track.style.animation = 'none';
+        track.style.display = 'flex';
+        track.style.justifyContent = 'center';
+      }
+      
+    } catch(e) {
+      console.error("Erro ao carregar produtos:", e);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', loadProducts);
+</script>
 </body>
 </html>

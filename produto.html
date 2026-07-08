@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Produto — Quifabra</title>
+  
+  <!-- Favicon inline SVG -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%231E96C8'/><text y='24' x='4' font-size='22' font-family='Arial Black' font-weight='900' fill='white'>Q</text></svg>" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* Estilos específicos para a página do produto (Estilo Mercado Livre) */
+    .product-page { padding: 40px 20px; background: #EBEBEB; min-height: calc(100vh - 200px); }
+    .product-container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 1px 2px 0 rgba(0,0,0,.1); display: grid; grid-template-columns: 2fr 1.2fr; gap: 0; overflow: hidden; }
+    
+    .product-gallery { padding: 32px; border-right: 1px solid #EDEDED; display: flex; align-items: center; justify-content: center; }
+    .product-gallery img { max-width: 100%; max-height: 500px; object-fit: contain; }
+    
+    .product-info { padding: 32px; }
+    .product-status { font-size: 14px; color: #999; margin-bottom: 8px; display: block; }
+    .product-title { font-size: 22px; font-weight: 600; color: #333; margin-bottom: 12px; line-height: 1.2; }
+    
+    .product-price-container { margin: 24px 0; }
+    .product-price-old { text-decoration: line-through; color: #999; font-size: 16px; display: none; }
+    .product-price-current { font-size: 36px; font-weight: 300; color: #333; display: flex; align-items: flex-start; }
+    .product-price-current span { font-size: 18px; margin-top: 4px; }
+    
+    .product-shipping { color: #00A650; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 16px; margin-bottom: 24px; }
+    
+    .product-desc-short { font-size: 16px; color: #666; margin-bottom: 24px; line-height: 1.5; }
+    
+    .product-action-btn { width: 100%; padding: 16px; font-size: 16px; font-weight: 600; border-radius: 6px; cursor: pointer; text-align: center; border: none; transition: 0.2s; }
+    .btn-buy-now { background: #3483FA; color: white; margin-bottom: 12px; }
+    .btn-buy-now:hover { background: #2968C8; }
+    .btn-add-cart { background: rgba(65,137,230,.15); color: #3483FA; }
+    .btn-add-cart:hover { background: rgba(65,137,230,.2); }
+    
+    .product-description-long { max-width: 1200px; margin: 32px auto; background: white; border-radius: 8px; padding: 40px; box-shadow: 0 1px 2px 0 rgba(0,0,0,.1); }
+    .product-description-long h2 { font-size: 24px; color: #333; margin-bottom: 24px; border-bottom: 1px solid #EDEDED; padding-bottom: 16px; }
+    .product-description-long .content { font-size: 18px; color: #666; line-height: 1.6; }
+
+    .loading-spinner { text-align: center; padding: 100px; font-size: 20px; color: #666; }
+
+    @media(max-width: 900px) {
+      .product-container { grid-template-columns: 1fr; }
+      .product-gallery { border-right: none; border-bottom: 1px solid #EDEDED; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar" id="navbar" role="banner" style="background:#fff; border-bottom:1px solid #EDEDED; position:relative;">
+  <div class="container">
+    <nav class="navbar__inner">
+      <a href="index.html" class="navbar__logo">
+        <svg viewBox="0 0 140 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="38" height="38" rx="8" fill="#1E96C8"/>
+          <text x="7" y="30" font-family="Arial Black" font-size="26" font-weight="900" fill="white">Q</text>
+          <text x="44" y="24" font-family="Arial Black" font-size="20" font-weight="900" fill="#1E96C8">UIFABRA</text>
+          <text x="44" y="38" font-family="Arial" font-size="8" fill="#6B7280">Escoramento Andaimes e Acessórios</text>
+        </svg>
+      </a>
+      <ul class="navbar__menu">
+        <li class="navbar__item"><a href="index.html" class="navbar__link">Voltar à Loja</a></li>
+        <li class="navbar__item"><a href="minha-conta.html" class="navbar__link" style="color: var(--color-primary); font-weight: 700;">Minha Conta</a></li>
+      </ul>
+      
+      <!-- Hamburger -->
+      <button class="navbar__toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobileMenu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </div>
+</header>
+<div class="mobile-menu" id="mobileMenu" role="navigation" aria-label="Menu mobile">
+  <div>
+    <a href="index.html" class="mobile-nav-link">Voltar à Loja</a>
+    <a href="minha-conta.html" class="mobile-nav-link" style="color:var(--color-primary);font-weight:700;">Minha Conta</a>
+  </div>
+</div>
+
+<!-- PAGE CONTENT -->
+<main class="product-page">
+  <div id="product-loading" class="loading-spinner">Carregando produto...</div>
+  
+  <div id="product-content" style="display:none;">
+    <div class="product-container">
+      <!-- Imagem -->
+      <div class="product-gallery">
+        <img id="prod-img" src="" alt="Imagem do produto" />
+      </div>
+      
+      <!-- Detalhes e Compra -->
+      <div class="product-info">
+        <span class="product-status" id="prod-status-text">Novo | <span id="prod-category"></span></span>
+        <h1 class="product-title" id="prod-title">Carregando...</h1>
+        
+        <div class="product-price-container">
+          <div class="product-price-old" id="prod-price-old">R$ 0,00</div>
+          <div class="product-price-current">
+            <span>R$</span><span id="prod-price-current" style="font-size:36px; margin:0 4px;">0</span><span id="prod-price-cents">00</span>
+          </div>
+        </div>
+
+        <div class="product-shipping">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          Frete grátis
+        </div>
+        
+        <p class="product-desc-short" id="prod-desc-short"></p>
+        
+        <button class="product-action-btn btn-buy-now" onclick="buyNow()">Comprar agora</button>
+        <button class="product-action-btn btn-add-cart" onclick="addToCartEvent()">Adicionar ao carrinho</button>
+        
+        <div style="margin-top:24px; font-size:14px; color:#666;">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3483FA" stroke-width="2"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            Compra Garantida, receba o produto que está esperando ou devolvemos o dinheiro.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="product-description-long">
+      <h2>Descrição</h2>
+      <div class="content" id="prod-desc-long">
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Overlay e Sidebar do Carrinho -->
+<div class="cart-overlay" id="cartOverlay"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <h2><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg> Seu Carrinho</h2>
+    <button class="cart-close" id="closeCart">&times;</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-footer">
+    <div class="cart-total">
+      <span>Subtotal</span>
+      <strong id="cartTotal">R$ 0,00</strong>
+    </div>
+    <button class="btn-checkout" onclick="window.location.href='checkout.html'">
+      Finalizar Compra
+    </button>
+  </div>
+</div>
+
+<button class="floating-cart" id="floatingCartBtn" onclick="toggleCart()" aria-label="Abrir Carrinho">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+  <span class="cart-badge cart-badge-count" style="display:none;">0</span>
+</button>
+
+<script src="js/cart.js"></script>
+<script type="module">
+  import { db, doc, getDoc } from './js/firebase-config.js';
+  
+  let currentProduct = null;
+
+  async function loadProduct() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+    
+    if (!id) {
+      document.getElementById('product-loading').textContent = "Produto não encontrado.";
+      return;
+    }
+
+    try {
+      const docRef = doc(db, "products", id);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const p = docSnap.data();
+        p.id = docSnap.id;
+        currentProduct = p;
+        
+        if (p.status !== 'Ativo') {
+          document.getElementById('product-loading').textContent = "Este produto não está mais disponível.";
+          return;
+        }
+
+        // Renderizar dados
+        document.getElementById('prod-title').textContent = p.title;
+        document.getElementById('prod-img').src = p.image_url;
+        document.getElementById('prod-category').textContent = p.category || '';
+        document.getElementById('prod-desc-short').textContent = p.desc_short || '';
+        document.getElementById('prod-desc-long').innerHTML = p.desc_long || '';
+
+        // Lógica de Preço
+        let priceToDisplay = Number(p.price);
+        if (p.promo_price && Number(p.promo_price) > 0 && Number(p.promo_price) < priceToDisplay) {
+          document.getElementById('prod-price-old').style.display = 'block';
+          document.getElementById('prod-price-old').textContent = `R$ ${priceToDisplay.toLocaleString('pt-BR', {minimumFractionDigits:2})}`;
+          priceToDisplay = Number(p.promo_price);
+        }
+
+        const priceParts = priceToDisplay.toLocaleString('pt-BR', {minimumFractionDigits:2}).split(',');
+        document.getElementById('prod-price-current').textContent = priceParts[0];
+        document.getElementById('prod-price-cents').textContent = priceParts[1];
+
+        document.getElementById('product-loading').style.display = 'none';
+        document.getElementById('product-content').style.display = 'block';
+      } else {
+        document.getElementById('product-loading').textContent = "Produto não encontrado.";
+      }
+    } catch (e) {
+      console.error(e);
+      document.getElementById('product-loading').textContent = "Erro ao carregar produto.";
+    }
+  }
+
+  window.addToCartEvent = function() {
+    if(!currentProduct) return;
+    let finalPrice = currentProduct.promo_price ? Number(currentProduct.promo_price) : Number(currentProduct.price);
+    
+    // Supondo que addToCart esteja no escopo global através do cart.js
+    if (typeof addToCart === 'function') {
+      addToCart({
+        id: currentProduct.id,
+        title: currentProduct.title,
+        price: finalPrice
+      });
+      toggleCart(); // Abre sidebar do carrinho
+    }
+  };
+
+  window.buyNow = function() {
+    window.addToCartEvent();
+    window.location.href = 'checkout.html';
+  };
+
+  document.addEventListener('DOMContentLoaded', loadProduct);
+</script>
+
+</body>
+</html>
