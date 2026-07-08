@@ -1629,6 +1629,16 @@ section { padding: var(--section-padding); }
 .mobile-submenu a:hover { color: var(--color-primary); background: rgba(30,150,200,.05); }
 
 /* =========================================================
+   GRIDS RESPONSIVOS DE PRODUTOS
+   ========================================================= */
+.products__grid {
+  display: grid;
+  gap: 32px;
+}
+.products__grid--3 { grid-template-columns: repeat(3, 1fr); }
+.products__grid--2 { grid-template-columns: repeat(2, 1fr); }
+
+/* =========================================================
    RESPONSIVO
    ========================================================= */
 @media (max-width: 1024px) {
@@ -1663,6 +1673,7 @@ section { padding: var(--section-padding); }
 
   .quality__grid { grid-template-columns: 1fr; gap: 40px; }
   .sectors__grid { grid-template-columns: 1fr; }
+  .products__grid--3 { grid-template-columns: repeat(2, 1fr); }
   .sectors__image { min-height: 300px; }
   .sectors__content { padding: 40px 32px; }
   .sectors__list { grid-template-columns: 1fr; }
@@ -1687,7 +1698,7 @@ section { padding: var(--section-padding); }
   .hero__content { padding: 40px 24px; }
   .hero__title { font-size: 1.8rem; }
   .form-row { grid-template-columns: 1fr; }
-  .products__grid { grid-template-columns: 1fr; }
+  .products__grid, .products__grid--2, .products__grid--3 { grid-template-columns: 1fr; }
   .blog__grid { grid-template-columns: 1fr; }
   .whatsapp-fab { bottom: 20px; right: 20px; width: 52px; height: 52px; }
 }
