@@ -54,7 +54,20 @@ window.openCheckout = function () {
 // ══════════════════════════════════════════════════════════════
 // ADICIONAR AO CARRINHO
 // ══════════════════════════════════════════════════════════════
-window.addToCart = function (product) {
+window.addToCart = function (idOrProduct, title, price, img) {
+  // Suporta: addToCart(id, title, price, img) OU addToCart({ id, title, price, img, qty })
+  let product;
+  if (typeof idOrProduct === 'object' && idOrProduct !== null) {
+    product = idOrProduct;
+  } else {
+    product = { id: idOrProduct, title: title, price: Number(price), img: img };
+  }
+
+  if (!product.id || !product.title || isNaN(product.price)) {
+    console.error('addToCart: produto inválido', product);
+    return;
+  }
+
   const cart = getCart();
   const existing = cart.find(item => item.id === product.id);
 

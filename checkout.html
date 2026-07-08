@@ -78,8 +78,14 @@
       align-items: start;
     }
     @media (max-width: 860px) {
-      .checkout-layout { grid-template-columns: 1fr; }
+      .checkout-layout { grid-template-columns: 1fr; padding: 0 16px; }
       .checkout-summary { order: -1; }
+    }
+    @media (max-width: 640px) {
+      .checkout-layout { margin: 24px auto; gap: 20px; }
+      .checkout-panel__body { padding: 20px 16px; }
+      .checkout-panel__header { padding: 16px; }
+      .checkout-hero { padding: 24px 16px; }
     }
 
     /* ── Form Panel ── */
@@ -142,11 +148,11 @@
     /* ── Form fields ── */
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .form-grid--full { grid-template-columns: 1fr; }
-    @media (max-width: 500px) { .form-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } }
 
     .field-group { display: flex; flex-direction: column; gap: 6px; }
     .field-group.col-span-2 { grid-column: span 2; }
-    @media (max-width: 500px) { .field-group.col-span-2 { grid-column: span 1; } }
+    @media (max-width: 640px) { .field-group.col-span-2 { grid-column: span 1; } }
 
     .field-label {
       font-size: .8rem;

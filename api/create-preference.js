@@ -19,6 +19,29 @@ export default async function handler(req, res) {
   try {
     const { items, customer, orderId } = req.body;
 
+    // ── Validação de entrada ────────────────────────────────────
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ error: 'Lista de itens inválida ou vazia.' });
+    }
+    if (items.length > 50) {
+      return res.status(400).json({ error: 'Muitos itens no pedido.' });
+    }
+    if (!customer || !customer.email || !customer.nome) {
+      return res.status(400).json({ error: 'Dados do cliente incompletos.' });
+    }
+    if (!orderId || typeof orderId !== 'string' || orderId.length > 50) {
+      return res.status(400).json({ error: 'ID do pedido inválido.' });
+    }
+    for (const item of items) {
+      if (typeof item.price !== 'number' || item.price <= 0 || item.price > 1000000) {
+        return res.status(400).json({ error: 'Preço de item inválido.' });
+      }
+      if (!Number.isInteger(item.qty) || item.qty <= 0 || item.qty > 999) {
+        return res.status(400).json({ error: 'Quantidade de item inválida.' });
+      }
+    }
+    // ─────────────────────────────────────────────────────────────
+
     const mpItems = items.map(item => ({
       id: item.id || 'N/A',
       title: item.title,

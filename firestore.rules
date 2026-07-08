@@ -1,0 +1,38 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Pedidos: qualquer pessoa autenticada pode criar (cliente fazendo pedido)
+    // Somente a leitura é feita diretamente pelo frontend autenticado
+    match /orders/{orderId} {
+      // Permitir leitura apenas se o campo customer.email corresponder ao usuário
+      // OU leitura pública para o MVP (Firestore web SDK com config pública)
+      // Para o MVP, permitimos leitura/escrita de forma mais aberta
+      // mas restringimos ao máximo possível
+
+      // Leitura: cliente pode ver seus próprios pedidos (baseado em email no cliente)
+      // Escrita: qualquer um pode criar pedido (necessário para checkout sem auth Firebase)
+      allow read: if true;
+      allow create: if
+        request.resource.data.keys().hasAll(['id', 'customer', 'items', 'total', 'status', 'createdAt']) &&
+        request.resource.data.total is number &&
+        request.resource.data.total > 0 &&
+        request.resource.data.total < 1000000 &&
+        request.resource.data.status == 'Pendente' &&
+        request.resource.data.items.size() > 0 &&
+        request.resource.data.items.size() <= 50;
+      // Atualização: apenas via servidor (webhook) ou admin
+      // Como não temos Firebase Auth, permitimos updates (o webhook faz isso)
+      allow update: if
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']) &&
+        request.resource.data.status in ['Pendente', 'Pago', 'Em Separação', 'Enviado', 'Entregue', 'Cancelado'];
+      allow delete: if false; // Nunca deletar pedidos
+    }
+
+    // Bloqueio padrão: nenhuma outra coleção é acessível
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

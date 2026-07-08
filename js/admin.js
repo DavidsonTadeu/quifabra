@@ -1,4 +1,6 @@
 import { db, collection, getDocs, doc, updateDoc, onSnapshot } from './firebase-config.js';
+import { escapeHtml } from './sanitize.js';
+
 
 let allOrders = [];
 
@@ -25,15 +27,41 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+// Tentativas de login (rate limiting simples no cliente)
+let loginAttempts = 0;
+const MAX_ATTEMPTS = 5;
+let lockUntil = 0;
+
 window.adminLogin = async function() {
-  const email = document.getElementById('admin-email').value;
+  const email = document.getElementById('admin-email').value.trim();
   const pass  = document.getElementById('admin-pass').value;
   const err   = document.getElementById('admin-error');
 
-  if (email === 'ecal7450@gmail.com' && pass.length >= 6) {
+  // Rate limiting: bloqueia após 5 tentativas por 2 minutos
+  if (Date.now() < lockUntil) {
+    const secsLeft = Math.ceil((lockUntil - Date.now()) / 1000);
+    err.textContent = `Muitas tentativas. Aguarde ${secsLeft}s.`;
+    err.style.display = 'block';
+    return;
+  }
+
+  const ADMIN_EMAIL = 'ecal7450@gmail.com';
+  // Senha configurada — altere para uma senha forte de sua escolha
+  const ADMIN_PASS  = 'Quifabra@2024!';
+
+  if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
+    loginAttempts = 0;
     sessionStorage.setItem('qf_admin_logged', 'true');
     window.location.reload();
   } else {
+    loginAttempts++;
+    if (loginAttempts >= MAX_ATTEMPTS) {
+      lockUntil = Date.now() + 2 * 60 * 1000; // 2 minutos
+      loginAttempts = 0;
+      err.textContent = 'Conta bloqueada por 2 minutos por múltiplas tentativas incorretas.';
+    } else {
+      err.textContent = `E-mail ou senha incorretos. (${loginAttempts}/${MAX_ATTEMPTS} tentativas)`;
+    }
     err.style.display = 'block';
   }
 };
@@ -83,15 +111,15 @@ function renderOrders() {
       <tbody>
         ${allOrders.map(o => `
           <tr>
-            <td style="font-weight:800;font-family:monospace;color:#1E96C8;">${o.id}</td>
-            <td style="font-size:.82rem;color:#6b7280;">${o.date}</td>
+            <td style="font-weight:800;font-family:monospace;color:#1E96C8;">${escapeHtml(o.id)}</td>
+            <td style="font-size:.82rem;color:#6b7280;">${escapeHtml(o.date)}</td>
             <td>
-              <div style="font-weight:700;">${o.customer?.nome || '—'}</div>
-              <div style="font-size:.75rem;color:#9ca3af;">${o.customer?.email || ''}</div>
+              <div style="font-weight:700;">${escapeHtml(o.customer?.nome || '—')}</div>
+              <div style="font-size:.75rem;color:#9ca3af;">${escapeHtml(o.customer?.email || '')}</div>
             </td>
             <td style="font-weight:800;">R$ ${(o.total || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
             <td>
-              <select class="status-select" onchange="updateStatus('${o.id}', this.value)">
+              <select class="status-select" onchange="updateStatus('${escapeHtml(o.id)}', this.value)">
                 <option value="Pendente" ${o.status === 'Pendente' ? 'selected' : ''}>⏳ Pendente</option>
                 <option value="Pago" ${o.status === 'Pago' ? 'selected' : ''}>✅ Pago</option>
                 <option value="Em Separação" ${o.status === 'Em Separação' ? 'selected' : ''}>📦 Em Separação</option>
@@ -101,7 +129,7 @@ function renderOrders() {
               </select>
             </td>
             <td>
-              <button class="btn btn--secondary" style="padding:6px 12px;font-size:.75rem;" onclick="viewOrder('${o.id}')">Ver Detalhes</button>
+              <button class="btn btn--secondary" style="padding:6px 12px;font-size:.75rem;" onclick="viewOrder('${escapeHtml(o.id)}')">Ver Detalhes</button>
             </td>
           </tr>
         `).join('')}
@@ -132,19 +160,19 @@ window.viewOrder = function(orderId) {
     <div class="modal-section">
       <h4>Cliente</h4>
       <div class="modal-info-grid">
-        <div class="info-row"><div class="key">Nome</div><div class="val">${order.customer?.nome || '—'}</div></div>
-        <div class="info-row"><div class="key">CPF</div><div class="val">${order.customer?.cpf || '—'}</div></div>
-        <div class="info-row"><div class="key">E-mail</div><div class="val">${order.customer?.email || '—'}</div></div>
-        <div class="info-row"><div class="key">Celular</div><div class="val">${order.customer?.cel || '—'}</div></div>
+        <div class="info-row"><div class="key">Nome</div><div class="val">${escapeHtml(order.customer?.nome || '—')}</div></div>
+        <div class="info-row"><div class="key">CPF</div><div class="val">${escapeHtml(order.customer?.cpf || '—')}</div></div>
+        <div class="info-row"><div class="key">E-mail</div><div class="val">${escapeHtml(order.customer?.email || '—')}</div></div>
+        <div class="info-row"><div class="key">Celular</div><div class="val">${escapeHtml(order.customer?.cel || '—')}</div></div>
       </div>
     </div>
     <div class="modal-section">
       <h4>Endereço de Entrega</h4>
       <div class="modal-info-grid">
-        <div class="info-row full"><div class="key">Logradouro</div><div class="val">${addr.rua || '—'}, ${addr.numero || ''} ${addr.comp ? '(' + addr.comp + ')' : ''}</div></div>
-        <div class="info-row"><div class="key">Bairro</div><div class="val">${addr.bairro || '—'}</div></div>
-        <div class="info-row"><div class="key">Cidade/UF</div><div class="val">${addr.cidade || '—'}/${addr.estado || '—'}</div></div>
-        <div class="info-row"><div class="key">CEP</div><div class="val">${addr.cep || '—'}</div></div>
+        <div class="info-row full"><div class="key">Logradouro</div><div class="val">${escapeHtml(addr.rua || '—')}, ${escapeHtml(addr.numero || '')} ${addr.comp ? '(' + escapeHtml(addr.comp) + ')' : ''}</div></div>
+        <div class="info-row"><div class="key">Bairro</div><div class="val">${escapeHtml(addr.bairro || '—')}</div></div>
+        <div class="info-row"><div class="key">Cidade/UF</div><div class="val">${escapeHtml(addr.cidade || '—')}/${escapeHtml(addr.estado || '—')}</div></div>
+        <div class="info-row"><div class="key">CEP</div><div class="val">${escapeHtml(addr.cep || '—')}</div></div>
         <div class="info-row"><div class="key">Frete</div><div class="val" style="color:#16a34a;font-weight:800;">GRÁTIS 🚚</div></div>
       </div>
     </div>
@@ -154,10 +182,10 @@ window.viewOrder = function(orderId) {
         ${(order.items || []).map(i => `
           <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:#fafafa;border-radius:8px;">
             <div>
-              <div style="font-weight:700;font-size:.88rem;">${i.title}</div>
-              <div style="font-size:.75rem;color:#9ca3af;">Qtd: ${i.qty} × R$ ${i.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+              <div style="font-weight:700;font-size:.88rem;">${escapeHtml(i.title)}</div>
+              <div style="font-size:.75rem;color:#9ca3af;">Qtd: ${Number(i.qty)} × R$ ${Number(i.price).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
             </div>
-            <div style="font-weight:800;font-family:'Montserrat',sans-serif;">R$ ${(i.price * i.qty).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+            <div style="font-weight:800;font-family:'Montserrat',sans-serif;">R$ ${(Number(i.price) * Number(i.qty)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
           </div>
         `).join('')}
         <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 10px;border-top:2px solid #1D2533;margin-top:4px;">
@@ -167,11 +195,11 @@ window.viewOrder = function(orderId) {
       </div>
     </div>
     <div style="display:flex;gap:10px;margin-top:8px;">
-      <a href="https://wa.me/55${(order.customer?.cel || '').replace(/\D/g, '')}" target="_blank" rel="noopener"
+      <a href="https://wa.me/55${escapeHtml((order.customer?.cel || '').replace(/\D/g, ''))}" target="_blank" rel="noopener noreferrer"
          style="flex:1;padding:12px;background:#25D366;color:white;border:none;border-radius:10px;font-weight:700;font-size:.88rem;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;">
         💬 WhatsApp do Cliente
       </a>
-      <a href="mailto:${order.customer?.email || ''}"
+      <a href="mailto:${escapeHtml(order.customer?.email || '')}"
          style="padding:12px 16px;background:#f0f9ff;color:#1E96C8;border:none;border-radius:10px;font-weight:700;font-size:.88rem;text-decoration:none;display:flex;align-items:center;justify-content:center;">
         ✉️ E-mail
       </a>
