@@ -110,9 +110,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  const loginBtn = document.getElementById('google-login-btn');
-  if (loginBtn) {
-    loginBtn.addEventListener('click', async () => {
+  const loginBtns = document.querySelectorAll('.ml-google-btn, #google-login-btn');
+  loginBtns.forEach(btn => {
+    btn.addEventListener('click', async () => {
       try {
         await signInWithPopup(auth, googleProvider);
       } catch (error) {
@@ -120,7 +120,71 @@ document.addEventListener('DOMContentLoaded', () => {
         alert("Erro ao fazer login com o Google. Certifique-se de que o provedor Google está ativado no Firebase Console.");
       }
     });
-  }
+  });
+
+  window.toggleAuthForm = function(formId) {
+    const loginForm = document.getElementById('form-login');
+    const registerForm = document.getElementById('form-register');
+    if (loginForm && registerForm) {
+      loginForm.style.display = formId === 'login' ? 'block' : 'none';
+      registerForm.style.display = formId === 'register' ? 'block' : 'none';
+    }
+  };
+
+  window.doLogin = async function() {
+    const email = document.getElementById('login-email').value;
+    const pass = document.getElementById('login-senha').value;
+    const errEl = document.getElementById('login-error');
+    errEl.style.display = 'none';
+
+    if (!email || !pass) {
+      errEl.textContent = 'Preencha e-mail e senha.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+    } catch (error) {
+      console.error(error);
+      errEl.textContent = 'E-mail ou senha incorretos.';
+      errEl.style.display = 'block';
+    }
+  };
+
+  window.doRegister = async function() {
+    const email = document.getElementById('reg-email').value;
+    const nome = document.getElementById('reg-nome').value;
+    const pass = document.getElementById('reg-senha').value;
+    const errEl = document.getElementById('reg-error');
+    errEl.style.display = 'none';
+
+    if (!email || !nome || !pass) {
+      errEl.textContent = 'Preencha todos os campos.';
+      errEl.style.display = 'block';
+      return;
+    }
+    
+    if (pass.length < 6) {
+      errEl.textContent = 'A senha deve ter no mínimo 6 caracteres.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    try {
+      const userCred = await createUserWithEmailAndPassword(auth, email, pass);
+      await updateProfile(userCred.user, { displayName: nome });
+      location.reload();
+    } catch (error) {
+      console.error(error);
+      if (error.code === 'auth/email-already-in-use') {
+        errEl.textContent = 'Este e-mail já está em uso.';
+      } else {
+        errEl.textContent = 'Erro ao criar conta. Tente novamente.';
+      }
+      errEl.style.display = 'block';
+    }
+  };
 });
 
 // ── Preenche o resumo lateral ────────────────────────────────
