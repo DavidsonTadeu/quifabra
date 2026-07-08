@@ -578,3 +578,50 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 5000);
   }
 });
+
+// --- Pop-up e Cookie Banner ---
+document.addEventListener('DOMContentLoaded', () => {
+  // Cookie Banner
+  if (!localStorage.getItem('qf_cookies_accepted')) {
+    const banner = document.getElementById('cookie-banner');
+    if (banner) {
+      banner.style.display = 'flex';
+    }
+  }
+
+  window.acceptCookies = function() {
+    localStorage.setItem('qf_cookies_accepted', 'true');
+    const banner = document.getElementById('cookie-banner');
+    if (banner) {
+      banner.style.display = 'none';
+    }
+  };
+
+  // Sales Popup
+  if (!sessionStorage.getItem('qf_sales_popup_shown')) {
+    setTimeout(() => {
+      const popup = document.getElementById('sales-popup');
+      if (popup) {
+        popup.style.display = 'flex';
+        setTimeout(() => {
+          popup.style.opacity = '1';
+          const content = document.getElementById('sales-popup-content');
+          if (content) content.style.transform = 'translateY(0)';
+        }, 50);
+        sessionStorage.setItem('qf_sales_popup_shown', 'true');
+      }
+    }, 5000);
+  }
+
+  window.closeSalesPopup = function() {
+    const popup = document.getElementById('sales-popup');
+    if (popup) {
+      popup.style.opacity = '0';
+      const content = document.getElementById('sales-popup-content');
+      if (content) content.style.transform = 'translateY(20px)';
+      setTimeout(() => {
+        popup.style.display = 'none';
+      }, 400);
+    }
+  };
+});
