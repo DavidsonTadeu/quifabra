@@ -156,8 +156,10 @@ function renderCartSidebar() {
 // ══════════════════════════════════════════════════════════════
 window.toggleCart = function () {
   const sidebar = document.getElementById('cartSidebar');
+  const overlay = document.getElementById('cartOverlay');
   if (!sidebar) return;
   const isOpen = sidebar.classList.toggle('open');
+  if (overlay) overlay.classList.toggle('open', isOpen);
   document.body.style.overflow = isOpen ? 'hidden' : '';
 };
 
@@ -169,6 +171,7 @@ function injectCartDOM() {
 
   const cartHTML = `
     <!-- Overlay Escuro -->
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
     <div id="cartSidebar" class="cart-sidebar">
       <div class="cart-sidebar__header">
         <h2>Seu Carrinho</h2>
