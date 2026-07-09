@@ -398,201 +398,6 @@ function renderProducts() {
               <td>${escapeHtml(p.category || 'Sem Categoria')}</td>
               <td style="font-weight:600;">${displayPrice}</td>
               <td>${statusBadge}</td>
-  } catch(e) {
-    console.error("Erro ao atualizar status", e);
-    alert("Erro ao atualizar status. Verifique sua conexão e as permissões do Firestore.");
-  }
-};
-
-window.viewOrder = function(orderId) {
-  const order = allOrders.find(o => o.id === orderId);
-  if (!order) return;
-
-  document.getElementById('modal-title').textContent = 'Pedido #' + orderId.substring(0,8);
-  const addr = order.address || {};
-
-  document.getElementById('modal-body').innerHTML = `
-    <div class="slide-section">
-      <h4>Detalhes do Cliente</h4>
-      <div class="info-grid">
-        <div class="info-item"><span class="key">Nome</span><span class="val">${escapeHtml(order.customer?.nome || '—')}</span></div>
-        <div class="info-item"><span class="key">CPF</span><span class="val">${escapeHtml(order.customer?.cpf || '—')}</span></div>
-        <div class="info-item"><span class="key">E-mail</span><span class="val">${escapeHtml(order.customer?.email || '—')}</span></div>
-        <div class="info-item"><span class="key">Celular</span><span class="val">${escapeHtml(order.customer?.cel || '—')}</span></div>
-      </div>
-    </div>
-    
-    <div class="slide-section">
-      <h4>Endereço de Entrega</h4>
-      <div class="info-grid">
-        <div class="info-item full"><span class="key">Logradouro</span><span class="val">${escapeHtml(addr.rua || '—')}, ${escapeHtml(addr.numero || '')} ${addr.comp ? '(' + escapeHtml(addr.comp) + ')' : ''}</span></div>
-        <div class="info-item"><span class="key">Bairro</span><span class="val">${escapeHtml(addr.bairro || '—')}</span></div>
-        <div class="info-item"><span class="key">Cidade/UF</span><span class="val">${escapeHtml(addr.cidade || '—')} / ${escapeHtml(addr.estado || '—')}</span></div>
-        <div class="info-item"><span class="key">CEP</span><span class="val">${escapeHtml(addr.cep || '—')}</span></div>
-        <div class="info-item"><span class="key">Custo de Frete</span><span class="val" style="color:#10B981;">Gratuito</span></div>
-      </div>
-    </div>
-    
-    <div class="slide-section">
-      <h4>Itens Comprados</h4>
-      <div style="display:flex;flex-direction:column;gap:8px;">
-        ${(order.items || []).map(i => `
-          <div class="item-row">
-            <div class="item-img"></div>
-            <div class="item-details">
-              <div class="item-name">${escapeHtml(i.title)}</div>
-              <div class="item-qtd">Qtd: ${Number(i.qty)} × R$ ${Number(i.price).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
-            </div>
-            <div class="item-price">
-              R$ ${(Number(i.price) * Number(i.qty)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-            </div>
-          </div>
-        `).join('')}
-        <div style="display:flex;justify-content:space-between;align-items:center;padding-top:16px;border-top:1px dashed var(--border-color);margin-top:8px;">
-          <span style="font-weight:600;color:var(--color-text-muted);">Total do Pedido</span>
-          <span style="font-size:1.25rem;font-weight:700;color:var(--color-brand);">R$ ${(order.total || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
-        </div>
-      </div>
-    </div>
-    
-    <div style="display:flex;gap:12px;margin-top:16px;">
-      <a href="https://wa.me/55${escapeHtml((order.customer?.cel || '').replace(/\D/g, ''))}" target="_blank" rel="noopener noreferrer"
-         style="flex:1;padding:12px;background:#10B981;color:white;border-radius:8px;font-weight:600;font-size:0.875rem;text-align:center;text-decoration:none;">
-        Falar no WhatsApp
-      </a>
-      <a href="mailto:${escapeHtml(order.customer?.email || '')}"
-         style="padding:12px 20px;background:#F3F4F6;color:var(--color-brand);border-radius:8px;font-weight:600;font-size:0.875rem;text-decoration:none;">
-        E-mail
-      </a>
-    </div>
-  `;
-  document.getElementById('order-modal').classList.add('open');
-  document.getElementById('modal-overlay').classList.add('open');
-};
-
-window.closeOrderModal = function(e) {
-  if (e && e.target !== document.getElementById('modal-overlay') && !e.target.closest('.slide-over__close')) return;
-  document.getElementById('order-modal').classList.remove('open');
-  document.getElementById('modal-overlay').classList.remove('open');
-};
-
-window.closeModals = function(e) {
-  window.closeOrderModal(e);
-  window.closeProductModal(e);
-};
-
-window.showSection = function(name, clickedEl) {
-  document.querySelectorAll('.admin-main > div').forEach(d => d.style.display = 'none');
-  const section = document.getElementById('section-' + name);
-  if (section) section.style.display = 'block';
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  if (clickedEl) clickedEl.classList.add('active');
-};
-
-function loadCustomers() {
-  const usersMap = new Map();
-  allOrders.forEach(o => {
-    if (o.customer && !usersMap.has(o.customer.email)) {
-      usersMap.set(o.customer.email, o.customer);
-    }
-  });
-
-  const users = Array.from(usersMap.values());
-  const wrap = document.getElementById('customers-table-wrap');
-  if (!wrap) return;
-
-  if (!users.length) {
-    wrap.innerHTML = `<div class="empty-state">
-      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="7" r="4"></circle><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path></svg>
-      <h3>Nenhum cliente cadastrado</h3>
-      <p>Os clientes aparecerão aqui após fazerem uma compra.</p>
-    </div>`;
-    return;
-  }
-
-  wrap.innerHTML = `
-    <div style="overflow-x:auto;">
-    <table class="orders-table">
-      <thead>
-        <tr>
-          <th>Nome do Cliente</th>
-          <th>E-mail de Contato</th>
-          <th>Celular</th>
-          <th>CPF</th>
-          <th>Total Pedidos</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${users.map(u => {
-          const numPedidos = allOrders.filter(o => o.customer?.email === u.email).length;
-          return `
-            <tr>
-              <td style="font-weight:600;color:var(--color-brand);">${escapeHtml(u.nome)}</td>
-              <td style="color:var(--color-text-muted);">${escapeHtml(u.email)}</td>
-              <td>${escapeHtml(u.cel || '—')}</td>
-              <td style="font-size:0.85rem;color:var(--color-text-faint);">${escapeHtml(u.cpf || '—')}</td>
-              <td><span style="background:#E0F2FE;color:#0369A1;padding:4px 12px;border-radius:20px;font-weight:600;font-size:0.75rem;">${numPedidos}</span></td>
-            </tr>
-          `;
-        }).join('')}
-      </tbody>
-    </table>
-    </div>
-  `;
-}
-
-// ----------------------------------------------------
-// PRODUTOS (CRUD)
-// ----------------------------------------------------
-
-function renderProducts() {
-  const wrap = document.getElementById('products-table-wrap');
-  if (!wrap) return;
-
-  if (allProducts.length === 0) {
-    wrap.innerHTML = `<div class="empty-state">
-      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
-      <h3>Nenhum produto cadastrado</h3>
-      <p>Você ainda não tem nenhum produto à venda na loja.</p>
-      <button class="btn btn--primary" style="margin-top: 16px;" onclick="seedDefaultProducts()">Carregar Produtos Padrão</button>
-    </div>`;
-    return;
-  }
-
-  wrap.innerHTML = `
-    <div style="overflow-x:auto;">
-    <table class="orders-table">
-      <thead>
-        <tr>
-          <th>Produto</th>
-          <th>Categoria</th>
-          <th>Preço</th>
-          <th>Status</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${allProducts.map(p => {
-          let isPromo = p.promo_price && Number(p.promo_price) > 0 && Number(p.promo_price) < Number(p.price);
-          let displayPrice = isPromo 
-            ? `<span style="text-decoration:line-through; color:var(--color-text-faint); font-size:0.75rem; margin-right:4px;">R$ ${Number(p.price).toLocaleString('pt-BR',{minimumFractionDigits:2})}</span> <span style="color:#10B981;">R$ ${Number(p.promo_price).toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>`
-            : `R$ ${Number(p.price).toLocaleString('pt-BR',{minimumFractionDigits:2})}`;
-            
-          let statusBadge = p.status === 'Ativo' 
-            ? `<span class="status-badge status-badge--entregue">Ativo</span>` 
-            : `<span class="status-badge status-badge--cancelado">Inativo</span>`;
-
-          return `
-            <tr>
-              <td>
-                <div style="display:flex; align-items:center; gap:12px;">
-                  <img src="${escapeHtml(p.image_url)}" style="width:40px; height:40px; border-radius:6px; object-fit:cover; border:1px solid var(--border-color);" />
-                  <span style="font-weight:600; color:var(--color-brand); max-width:250px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(p.title)}</span>
-                </div>
-              </td>
-              <td>${escapeHtml(p.category || 'Sem Categoria')}</td>
-              <td style="font-weight:600;">${displayPrice}</td>
-              <td>${statusBadge}</td>
               <td>
                 <button style="padding:6px 12px; font-size:0.75rem; background:white; border:1px solid var(--border-color); border-radius:6px; cursor:pointer;" onclick="editProduct('${escapeHtml(p.id)}')">Editar</button>
                 <button style="padding:6px 12px; font-size:0.75rem; background:#FEF2F2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; cursor:pointer; margin-left:4px;" onclick="deleteProduct('${escapeHtml(p.id)}')">Deletar</button>
@@ -656,49 +461,9 @@ window.saveProduct = async function(e) {
     if (fileInput.files.length > 0) {
       statusEl.textContent = 'Enviando imagem...';
       const file = fileInput.files[0];
-      try {
-        const storageRef = ref(storage, `products/${Date.now()}_${file.name}`);
-        await uploadBytes(storageRef, file);
-        imageUrl = await getDownloadURL(storageRef);
-      } catch (err) {
-        console.warn("Storage falhou, usando fallback de compressão (Base64).", err);
-        statusEl.textContent = 'Otimizando imagem...';
-        
-        imageUrl = await new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = (event) => {
-            const img = new Image();
-            img.src = event.target.result;
-            img.onload = () => {
-              const canvas = document.createElement('canvas');
-              const MAX_WIDTH = 800;
-              const MAX_HEIGHT = 800;
-              let width = img.width;
-              let height = img.height;
-
-              if (width > height) {
-                if (width > MAX_WIDTH) {
-                  height *= MAX_WIDTH / width;
-                  width = MAX_WIDTH;
-                }
-              } else {
-                if (height > MAX_HEIGHT) {
-                  width *= MAX_HEIGHT / height;
-                  height = MAX_HEIGHT;
-                }
-              }
-              canvas.width = width;
-              canvas.height = height;
-              const ctx = canvas.getContext('2d');
-              ctx.drawImage(img, 0, 0, width, height);
-              resolve(canvas.toDataURL('image/jpeg', 0.7));
-            };
-            img.onerror = () => reject(new Error("Erro ao processar imagem para fallback."));
-          };
-          reader.onerror = () => reject(new Error("Erro ao ler o arquivo de imagem."));
-        });
-      }
+      const storageRef = ref(storage, `products/${Date.now()}_${file.name}`);
+      await uploadBytes(storageRef, file);
+      imageUrl = await getDownloadURL(storageRef);
     } else if (!imageUrl) {
       throw new Error("Você deve enviar uma imagem ou colar uma URL.");
     }
@@ -779,7 +544,7 @@ window.seedDefaultProducts = async function() {
       updatedAt: new Date().toISOString()
     },
     {
-      title: "Andaime Tubular 1,00m — Kit para até 4m altura",
+      title: "Andaime Tubular 1,00m – Kit para até 4m altura",
       price: 600.00,
       promo_price: null,
       image_url: "assets/images/prod-andaime-tubular-kit.jpg",
@@ -791,7 +556,7 @@ window.seedDefaultProducts = async function() {
       updatedAt: new Date().toISOString()
     },
     {
-      title: "Andaime Tubular 1,00m — Kit 8 Peças",
+      title: "Andaime Tubular 1,00m – Kit 8 Peças",
       price: 1580.00,
       promo_price: null,
       image_url: "assets/images/prod-andaime-tubular-kit.jpg",
