@@ -409,6 +409,27 @@
             </div>
             <div class="stat-value" id="stat-receita" style="font-size:1.75rem;">—</div>
             <div class="stat-trend"><span class="trend-up">↑ Receita processada</span></div>
+            <div class="stat-trend"><span class="trend-up">↑ Receita processada</span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Total de Produtos</span>
+              <div class="stat-icon icon-blue">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+              </div>
+            </div>
+            <div class="stat-value" id="stat-produtos">—</div>
+            <div class="stat-trend">Cadastrados na loja</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Total de Clientes</span>
+              <div class="stat-icon icon-amber">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+              </div>
+            </div>
+            <div class="stat-value" id="stat-clientes">—</div>
+            <div class="stat-trend">Compradores únicos</div>
           </div>
         </div>
 
@@ -513,9 +534,17 @@
           <input type="number" step="0.01" id="prod-promo" placeholder="Opcional" />
         </div>
       </div>
-      <div class="login-field" style="margin-bottom:12px;">
-        <label>URL da Imagem (Link)</label>
-        <input type="url" id="prod-image" placeholder="https://exemplo.com/imagem.jpg" required />
+      <div style="background:#F9FAFB; padding:16px; border-radius:8px; border:1px dashed var(--border-color); margin-bottom:12px;">
+        <div class="login-field" style="margin-bottom:8px;">
+          <label>Fazer Upload de Imagem (Arquivo)</label>
+          <input type="file" id="prod-image-file" accept="image/*" style="padding: 8px; border: none; background: white; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" />
+          <small style="color:var(--color-text-faint); font-size:0.8rem; display:block; margin-top:4px;">Selecione uma foto do seu computador/celular.</small>
+        </div>
+        <div style="text-align:center; font-weight:600; color:var(--color-text-muted); font-size:0.8rem; margin-bottom:8px;">OU</div>
+        <div class="login-field" style="margin-bottom:0;">
+          <label>Colar URL da Imagem (Link)</label>
+          <input type="url" id="prod-image" placeholder="https://exemplo.com/imagem.jpg" />
+        </div>
       </div>
       <div class="login-field" style="margin-bottom:12px;">
         <label>Categoria</label>
@@ -540,7 +569,8 @@
         <label>Descrição Completa (HTML permitido)</label>
         <textarea id="prod-desc-long" rows="4" style="width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-family: inherit; font-size: 1rem; color: var(--color-text-main); outline: none;" required></textarea>
       </div>
-      <button type="submit" class="btn-login" style="margin-top:0;">Salvar Produto</button>
+      <button type="submit" class="btn-login" id="btn-save-product" style="margin-top:0;">Salvar Produto</button>
+      <div id="product-save-status" style="margin-top:12px; font-size:0.85rem; font-weight:600; text-align:center; color:var(--color-primary); display:none;">Salvando...</div>
     </form>
   </div>
 </div>

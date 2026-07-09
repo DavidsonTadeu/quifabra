@@ -1,4 +1,4 @@
-import { db, collection, getDocs, doc, updateDoc, addDoc, deleteDoc, onSnapshot } from './firebase-config.js';
+import { db, storage, ref, uploadBytes, getDownloadURL, collection, getDocs, doc, updateDoc, addDoc, deleteDoc, onSnapshot } from './firebase-config.js';
 import { escapeHtml } from './sanitize.js';
 
 let allOrders = [];
@@ -101,15 +101,26 @@ function updateStats() {
   const enviados  = allOrders.filter(o => o.status === 'Enviado' || o.status === 'Entregue').length;
   const totalGeral = allOrders.reduce((acc, o) => acc + (Number(o.total) || 0), 0);
 
+  const usersMap = new Map();
+  allOrders.forEach(o => {
+    if (o.customer && !usersMap.has(o.customer.email)) {
+      usersMap.set(o.customer.email, o.customer);
+    }
+  });
+
   const statTotal    = document.getElementById('stat-total');
   const statPendente = document.getElementById('stat-pendente');
   const statEnviado  = document.getElementById('stat-enviado');
   const statReceita  = document.getElementById('stat-receita');
+  const statProdutos = document.getElementById('stat-produtos');
+  const statClientes = document.getElementById('stat-clientes');
 
   if (statTotal)    statTotal.textContent    = allOrders.length;
   if (statPendente) statPendente.textContent = pendentes;
   if (statEnviado)  statEnviado.textContent  = enviados;
   if (statReceita)  statReceita.textContent  = 'R$ ' + totalGeral.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+  if (statProdutos) statProdutos.textContent = allProducts.length;
+  if (statClientes) statClientes.textContent = usersMap.size;
 }
 
 function renderOrders(filterStatus = 'all') {
@@ -436,20 +447,40 @@ window.closeProductModal = function(e) {
 window.saveProduct = async function(e) {
   e.preventDefault();
   
-  const id = document.getElementById('prod-id').value;
-  const productData = {
-    title: document.getElementById('prod-title').value,
-    price: Number(document.getElementById('prod-price').value),
-    promo_price: document.getElementById('prod-promo').value ? Number(document.getElementById('prod-promo').value) : null,
-    image_url: document.getElementById('prod-image').value,
-    category: document.getElementById('prod-category').value,
-    status: document.getElementById('prod-status').value,
-    desc_short: document.getElementById('prod-desc-short').value,
-    desc_long: document.getElementById('prod-desc-long').value,
-    updatedAt: new Date().toISOString()
-  };
+  const btn = document.getElementById('btn-save-product');
+  const statusEl = document.getElementById('product-save-status');
+  btn.style.display = 'none';
+  statusEl.style.display = 'block';
 
   try {
+    const id = document.getElementById('prod-id').value;
+    const fileInput = document.getElementById('prod-image-file');
+    let imageUrl = document.getElementById('prod-image').value;
+
+    if (fileInput.files.length > 0) {
+      statusEl.textContent = 'Enviando imagem...';
+      const file = fileInput.files[0];
+      const storageRef = ref(storage, `products/${Date.now()}_${file.name}`);
+      await uploadBytes(storageRef, file);
+      imageUrl = await getDownloadURL(storageRef);
+    } else if (!imageUrl) {
+      throw new Error("Você deve enviar uma imagem ou colar uma URL.");
+    }
+
+    statusEl.textContent = 'Salvando produto...';
+
+    const productData = {
+      title: document.getElementById('prod-title').value,
+      price: Number(document.getElementById('prod-price').value),
+      promo_price: document.getElementById('prod-promo').value ? Number(document.getElementById('prod-promo').value) : null,
+      image_url: imageUrl,
+      category: document.getElementById('prod-category').value,
+      status: document.getElementById('prod-status').value,
+      desc_short: document.getElementById('prod-desc-short').value,
+      desc_long: document.getElementById('prod-desc-long').value,
+      updatedAt: new Date().toISOString()
+    };
+
     if (id) {
       // Editar
       await updateDoc(doc(db, "products", id), productData);
@@ -463,7 +494,10 @@ window.saveProduct = async function(e) {
     window.closeProductModal();
   } catch (error) {
     console.error("Erro ao salvar produto:", error);
-    alert('Erro ao salvar produto. Verifique sua conexão e regras do Firestore.');
+    alert(error.message || 'Erro ao salvar produto. Verifique sua conexão e regras do Firestore.');
+  } finally {
+    btn.style.display = 'block';
+    statusEl.style.display = 'none';
   }
 };
 
