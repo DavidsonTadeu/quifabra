@@ -398,20 +398,20 @@ function renderProducts() {
               <td>${escapeHtml(p.category || 'Sem Categoria')}</td>
               <td style="font-weight:600;">${displayPrice}</td>
               <td>${statusBadge}</td>
-              <td>
-                <button style="padding:6px 12px; font-size:0.75rem; background:white; border:1px solid var(--border-color); border-radius:6px; cursor:pointer;" onclick="editProduct('${escapeHtml(p.id)}')">Editar</button>
-                <button style="padding:6px 12px; font-size:0.75rem; background:#FEF2F2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; cursor:pointer; margin-left:4px;" onclick="deleteProduct('${escapeHtml(p.id)}')">Deletar</button>
-              </td>
-            </tr>
-          `;
-        }).join('')}
-      </tbody>
-    </table>
-    </div>
-  `;
-}
+  } catch(e) {
+    console.error("Erro ao atualizar status", e);
+    alert("Erro ao atualizar status. Verifique sua conexão e as permissões do Firestore.");
+  }
+};
 
-window.openProductModal = function() {
+window.viewOrder = function(orderId) {
+  const order = allOrders.find(o => o.id === orderId);
+  if (!order) return;
+
+  document.getElementById('modal-title').textContent = 'Pedido #' + orderId.substring(0,8);
+  const addr = order.address || {};
+
+  document.getElementById('modal-body').innerHTML = `
     <div class="slide-section">
       <h4>Detalhes do Cliente</h4>
       <div class="info-grid">
