@@ -4,7 +4,7 @@
  */
 'use strict';
 
-import { db, doc, setDoc, getDocs, collection, auth, googleProvider, signInWithPopup, onAuthStateChanged, signOut } from './firebase-config.js';
+import { db, doc, setDoc, getDocs, collection, auth, googleProvider, signInWithPopup, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from './firebase-config.js';
 
 // ══════════════════════════════════════════════════════════════
 // CONFIGURAÇÕES
