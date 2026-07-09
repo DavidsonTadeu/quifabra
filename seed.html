@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Seed Data</title>
+</head>
+<body>
+  <h1>Seeding DB...</h1>
+  <div id="status">Wait...</div>
+  <script type="module">
+    import { db, collection, addDoc } from './js/firebase-config.js';
+
+    const products = [
+      {
+        title: "Sapata Regulável Para Andaime 45 cm",
+        price: 65.00,
+        promo_price: null,
+        image_url: "assets/images/prod-sapata-regulavel.jpg",
+        category: "Acessórios",
+        status: "Ativo",
+        desc_short: "Base 10x10cm, rosca ajustável, aço galvanizado. Suporta até 800 kg. Altura total 50cm.",
+        desc_long: "Base 10x10cm, rosca ajustável, aço galvanizado. Suporta até 800 kg. Altura total 50cm.",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      },
+      {
+        title: "Kit 10 Escoras Metálicas Quifabra 2,00 a 3,10m",
+        price: 875.00,
+        promo_price: null,
+        image_url: "assets/images/prod-escoras-kit.jpg",
+        category: "Escoramento Metálico",
+        status: "Ativo",
+        desc_short: "Capacidade de carga até 1.500 kg. Tubo externo 48mm. Regulagem milimétrica com pino de segurança.",
+        desc_long: "Capacidade de carga até 1.500 kg. Tubo externo 48mm. Regulagem milimétrica com pino de segurança.",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      },
+      {
+        title: "Andaime Tubular 1,00 x 1,00m",
+        price: 145.00,
+        promo_price: null,
+        image_url: "assets/images/prod-andaime-1x1.jpg",
+        category: "Andaimes",
+        status: "Ativo",
+        desc_short: "Painel em aço carbono SAE 1010, tubo de 42,2mm. Encaixe perfeito e alta estabilidade para obras de pequeno a grande porte.",
+        desc_long: "Painel em aço carbono SAE 1010, tubo de 42,2mm. Encaixe perfeito e alta estabilidade para obras de pequeno a grande porte.",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+    ];
+
+    async function seed() {
+      try {
+        for (const p of products) {
+          await addDoc(collection(db, "products"), p);
+        }
+        document.getElementById('status').innerText = 'DONE!';
+      } catch (e) {
+        document.getElementById('status').innerText = 'ERROR: ' + e.message;
+      }
+    }
+    
+    seed();
+  </script>
+</body>
+</html>
