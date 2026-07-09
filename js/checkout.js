@@ -4,7 +4,7 @@
  */
 'use strict';
 
-import { db, doc, setDoc, getDocs, collection, auth, googleProvider, signInWithPopup, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from './firebase-config.js';
+import { db, doc, setDoc, getDoc, getDocs, updateDoc, collection, auth, googleProvider, signInWithPopup, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from './firebase-config.js';
 
 // ══════════════════════════════════════════════════════════════
 // CONFIGURAÇÕES
@@ -86,13 +86,26 @@ document.addEventListener('DOMContentLoaded', () => {
   populateSummary();
 
   // Monitora o estado de autenticação via Firebase Auth
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
     if (user) {
       currentUser = {
         nome: user.displayName || 'Usuário',
         email: user.email,
         uid: user.uid
       };
+      
+      // Busca dados complementares do usuário se existirem
+      try {
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+          if (data.cpf) document.getElementById('addr-cpf').value = data.cpf;
+          if (data.celular) document.getElementById('addr-celular').value = data.celular;
+        }
+      } catch (e) {
+        console.error('Erro ao buscar dados do usuário:', e);
+      }
+
       document.getElementById('panel-step1').innerHTML = `
         <div class="checkout-panel__header">
           <div class="panel-icon">
@@ -226,22 +239,6 @@ window.logout = function () {
 // ══════════════════════════════════════════════════════════════
 // STEP 2 — Endereço + CEP
 // ══════════════════════════════════════════════════════════════
-window.maskCPF = function (input) {
-  let v = input.value.replace(/\D/g, '');
-  if (v.length > 3) v = v.slice(0, 3) + '.' + v.slice(3);
-  if (v.length > 7) v = v.slice(0, 7) + '.' + v.slice(7);
-  if (v.length > 11) v = v.slice(0, 11) + '-' + v.slice(11, 13);
-  input.value = v;
-};
-
-window.maskCel = function (input) {
-  let v = input.value.replace(/\D/g, '');
-  if (v.length > 0) v = '(' + v;
-  if (v.length > 3) v = v.slice(0, 3) + ') ' + v.slice(3);
-  if (v.length > 10) v = v.slice(0, 10) + '-' + v.slice(10, 14);
-  input.value = v;
-};
-
 window.onCepInput = function (input) {
   let v = input.value.replace(/\D/g, '');
   if (v.length > 5) v = v.slice(0, 5) + '-' + v.slice(5, 8);
@@ -280,7 +277,7 @@ async function fetchCep(cep) {
   }
 }
 
-window.proceedStep2 = function () {
+window.proceedStep2 = async function () {
   const cpf    = val('addr-cpf').replace(/\D/g, '');
   const cel    = val('addr-celular').replace(/\D/g, '');
   const cep    = val('addr-cep').replace(/\D/g, '');
@@ -315,6 +312,16 @@ window.proceedStep2 = function () {
   // Adiciona CPF e Celular ao currentUser para enviar ao Firebase e Mercado Pago
   currentUser.cpf = val('addr-cpf');
   currentUser.cel = val('addr-celular');
+
+  // Salva no banco para futuras compras
+  if (auth.currentUser) {
+    try {
+      await setDoc(doc(db, 'users', auth.currentUser.uid), {
+        cpf: currentUser.cpf,
+        celular: currentUser.cel
+      }, { merge: true });
+    } catch(e) { console.error('Erro ao salvar dados:', e); }
+  }
 
   buildReview();
   goToStep(3);

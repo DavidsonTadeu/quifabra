@@ -1,6 +1,6 @@
 // js/firebase-config.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getFirestore, collection, addDoc, setDoc, getDocs, doc, updateDoc, deleteDoc, query, where, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, setDoc, getDoc, getDocs, doc, updateDoc, deleteDoc, query, where, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
@@ -22,5 +22,5 @@ const auth = getAuth(app);
 const storage = getStorage(app);
 const googleProvider = new GoogleAuthProvider();
 
-export { db, auth, storage, ref, uploadBytes, getDownloadURL, googleProvider, signInWithPopup, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, collection, addDoc, setDoc, getDocs, doc, updateDoc, deleteDoc, query, where, orderBy, onSnapshot };
+export { db, auth, storage, ref, uploadBytes, getDownloadURL, googleProvider, signInWithPopup, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, collection, addDoc, setDoc, getDoc, getDocs, doc, updateDoc, deleteDoc, query, where, orderBy, onSnapshot };
 

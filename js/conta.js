@@ -1,4 +1,4 @@
-import { db, auth, googleProvider, signInWithPopup, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, collection, query, where, getDocs } from "./firebase-config.js";
+import { db, auth, googleProvider, signInWithPopup, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, collection, query, where, getDocs, doc, getDoc, setDoc } from "./firebase-config.js";
 
 document.addEventListener('DOMContentLoaded', () => {
   const loginBtns = document.querySelectorAll('.ml-google-btn, #google-login-btn');
@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
   window.toggleAuthForm = function(formId) {
     document.getElementById('form-login').style.display = formId === 'login' ? 'block' : 'none';
     document.getElementById('form-register').style.display = formId === 'register' ? 'block' : 'none';
+    const fg = document.getElementById('form-complete-google');
+    if(fg) fg.style.display = 'none';
   };
 
   window.doLogin = async function() {
@@ -44,10 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const email = document.getElementById('reg-email').value;
     const nome = document.getElementById('reg-nome').value;
     const pass = document.getElementById('reg-senha').value;
+    const cpf = document.getElementById('reg-cpf')?.value || '';
+    const cel = document.getElementById('reg-celular')?.value || '';
     const errEl = document.getElementById('reg-error');
     errEl.style.display = 'none';
 
-    if (!email || !nome || !pass) {
+    if (!email || !nome || !pass || !cpf || !cel) {
       errEl.textContent = 'Preencha todos os campos.';
       errEl.style.display = 'block';
       return;
@@ -62,7 +66,14 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const userCred = await createUserWithEmailAndPassword(auth, email, pass);
       await updateProfile(userCred.user, { displayName: nome });
-      // Como o updateProfile não dispara onAuthStateChanged imediatamente com os novos dados, podemos recarregar
+      // Salva no firestore
+      await setDoc(doc(db, 'users', userCred.user.uid), {
+        nome: nome,
+        email: email,
+        cpf: cpf,
+        celular: cel,
+        createdAt: new Date().toISOString()
+      });
       location.reload();
     } catch (error) {
       console.error(error);
@@ -75,6 +86,36 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  window.saveGoogleProfile = async function() {
+    const user = auth.currentUser;
+    if(!user) return;
+    const cpf = document.getElementById('google-cpf').value;
+    const cel = document.getElementById('google-celular').value;
+    const errEl = document.getElementById('google-error');
+    errEl.style.display = 'none';
+
+    if(!cpf || !cel) {
+      errEl.textContent = 'Preencha CPF e Celular para concluir.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    try {
+      await setDoc(doc(db, 'users', user.uid), {
+        nome: user.displayName,
+        email: user.email,
+        cpf: cpf,
+        celular: cel,
+        createdAt: new Date().toISOString()
+      });
+      location.reload();
+    } catch(err) {
+      console.error(err);
+      errEl.textContent = 'Erro ao salvar dados. Tente novamente.';
+      errEl.style.display = 'block';
+    }
+  };
+
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
       document.getElementById('unauth-view').style.display = 'flex';
@@ -82,6 +123,28 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     
+    // Check if user has complete profile
+    try {
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      if(!userDoc.exists() || !userDoc.data().cpf) {
+        // Needs completion
+        document.getElementById('unauth-view').style.display = 'flex';
+        document.getElementById('auth-view').style.display = 'none';
+        
+        document.getElementById('form-login').style.display = 'none';
+        document.getElementById('form-register').style.display = 'none';
+        const fg = document.getElementById('form-complete-google');
+        if(fg) {
+           fg.style.display = 'block';
+           document.getElementById('google-email-display').value = user.email;
+           document.getElementById('google-nome-display').value = user.displayName || '';
+        }
+        return; // Don't show auth view yet
+      }
+    } catch(e) {
+      console.error(e);
+    }
+
     document.getElementById('unauth-view').style.display = 'none';
     document.getElementById('auth-view').style.display = 'block';
     

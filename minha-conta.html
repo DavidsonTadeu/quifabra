@@ -121,6 +121,16 @@
       <label class="ml-label" for="reg-nome">Nome completo</label>
       <input class="ml-input" type="text" id="reg-nome" placeholder="Seu nome" />
     </div>
+    <div class="ml-field" style="display:flex; gap:10px;">
+      <div style="flex:1;">
+        <label class="ml-label" for="reg-cpf">CPF</label>
+        <input class="ml-input" type="text" id="reg-cpf" placeholder="000.000.000-00" oninput="if(window.maskCPF) window.maskCPF(this);" />
+      </div>
+      <div style="flex:1;">
+        <label class="ml-label" for="reg-celular">Celular</label>
+        <input class="ml-input" type="text" id="reg-celular" placeholder="(00) 00000-0000" oninput="if(window.maskCel) window.maskCel(this);" />
+      </div>
+    </div>
     <div class="ml-field">
       <label class="ml-label" for="reg-senha">Senha</label>
       <input class="ml-input" type="password" id="reg-senha" placeholder="Mínimo 6 caracteres" />
@@ -128,6 +138,34 @@
     <div id="reg-error" class="ml-error"></div>
     <button class="ml-btn ml-btn-primary" style="margin-top: 16px;" onclick="doRegister()">Continuar</button>
     <a class="ml-link" onclick="toggleAuthForm('login')">Já tenho conta</a>
+  </div>
+
+  <!-- Completar Cadastro Google -->
+  <div class="ml-card" id="form-complete-google" style="display:none;">
+    <div class="ml-title">Quase lá!</div>
+    <p style="text-align:center; font-size: 0.9rem; color: #666; margin-bottom: 20px;">Falta pouco para criar sua conta. Confirme seus dados.</p>
+    
+    <div class="ml-field">
+      <label class="ml-label" for="google-nome-display">Nome</label>
+      <input class="ml-input" type="text" id="google-nome-display" disabled style="background:#f5f5f5;" />
+    </div>
+    <div class="ml-field">
+      <label class="ml-label" for="google-email-display">E-mail</label>
+      <input class="ml-input" type="text" id="google-email-display" disabled style="background:#f5f5f5;" />
+    </div>
+    <div class="ml-field" style="display:flex; gap:10px;">
+      <div style="flex:1;">
+        <label class="ml-label" for="google-cpf">CPF</label>
+        <input class="ml-input" type="text" id="google-cpf" placeholder="000.000.000-00" oninput="if(window.maskCPF) window.maskCPF(this);" />
+      </div>
+      <div style="flex:1;">
+        <label class="ml-label" for="google-celular">Celular</label>
+        <input class="ml-input" type="text" id="google-celular" placeholder="(00) 00000-0000" oninput="if(window.maskCel) window.maskCel(this);" />
+      </div>
+    </div>
+    
+    <div id="google-error" class="ml-error"></div>
+    <button class="ml-btn ml-btn-primary" style="margin-top: 16px;" onclick="saveGoogleProfile()">Finalizar Cadastro</button>
   </div>
 
 </div>

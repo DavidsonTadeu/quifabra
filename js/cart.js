@@ -162,9 +162,51 @@ window.toggleCart = function () {
 };
 
 // ══════════════════════════════════════════════════════════════
+// INJETAR CARRINHO NO DOM
+// ══════════════════════════════════════════════════════════════
+function injectCartDOM() {
+  if (document.getElementById('cartSidebar')) return; // Já existe
+
+  const cartHTML = `
+    <!-- Overlay Escuro -->
+    <div id="cartSidebar" class="cart-sidebar">
+      <div class="cart-sidebar__header">
+        <h2>Seu Carrinho</h2>
+        <button class="cart-sidebar__close" onclick="toggleCart()" aria-label="Fechar carrinho">✕</button>
+      </div>
+
+      <div id="cart-empty" class="cart-sidebar__empty" style="display: flex;">
+        <span style="font-size: 3rem; margin-bottom: 10px;">🛒</span>
+        <p>Seu carrinho está vazio.</p>
+        <button class="btn btn--primary" onclick="toggleCart()" style="margin-top: 15px; padding: 10px 20px;">Continuar Comprando</button>
+      </div>
+
+      <div id="cart-content" class="cart-sidebar__content" style="display: none;">
+        <div id="cart-items" class="cart-sidebar__items"></div>
+        <div class="cart-sidebar__footer">
+          <div class="cart-sidebar__total-row">
+            <span>Total:</span>
+            <strong id="cart-total">R$ 0,00</strong>
+          </div>
+          <button class="btn btn--primary" onclick="openCheckout()" style="width: 100%; padding: 16px; font-size: 1.1rem; text-transform: uppercase; font-weight: 800;">Finalizar Compra</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botão Flutuante -->
+    <button class="floating-cart-btn" id="floatingCartBtn" onclick="toggleCart()" aria-label="Abrir Carrinho">
+      🛒
+      <span class="cart-badge-count" style="display:none;">0</span>
+    </button>
+  `;
+  document.body.insertAdjacentHTML('beforeend', cartHTML);
+}
+
+// ══════════════════════════════════════════════════════════════
 // INICIALIZAÇÃO
 // ══════════════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
+  injectCartDOM();
   updateCartBadges();
   renderCartSidebar();
 });
