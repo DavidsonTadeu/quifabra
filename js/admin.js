@@ -119,8 +119,6 @@ function updateStats() {
   const enviados  = allOrders.filter(o => o.status === 'Enviado' || o.status === 'Entregue').length;
   const totalGeral = allOrders.reduce((acc, o) => acc + (Number(o.total) || 0), 0);
 
-  const totalGeral = allOrders.reduce((acc, o) => acc + (Number(o.total) || 0), 0);
-
   const statTotal    = document.getElementById('stat-total');
   const statPendente = document.getElementById('stat-pendente');
   const statEnviado  = document.getElementById('stat-enviado');
@@ -344,18 +342,18 @@ function loadCustomers() {
             ? '<span style="background:#FEF3C7;color:#D97706;padding:4px 10px;border-radius:20px;font-size:0.7rem;font-weight:600;">Lead Adicionado</span>'
             : '<span style="background:#DCFCE7;color:#16A34A;padding:4px 10px;border-radius:20px;font-size:0.7rem;font-weight:600;">Conta Criada</span>';
 
-          return \`
+          return `
             <tr>
               <td>
-                <div style="font-weight:600;color:var(--color-brand);">\${escapeHtml(u.nome || '—')}</div>
-                <div style="font-size:0.75rem;color:var(--color-text-muted);">\${escapeHtml(u.email || '—')}</div>
+                <div style="font-weight:600;color:var(--color-brand);">${escapeHtml(u.nome || '—')}</div>
+                <div style="font-size:0.75rem;color:var(--color-text-muted);">${escapeHtml(u.email || '—')}</div>
               </td>
-              <td style="color:var(--color-text-main);">\${escapeHtml(u.celular || u.cel || '—')}</td>
-              <td>\${origemBadge}</td>
-              <td style="font-size:0.85rem;color:var(--color-text-faint);">\${escapeHtml(u.cpf || '—')}</td>
-              <td><span style="background:#E0F2FE;color:#0369A1;padding:4px 12px;border-radius:20px;font-weight:600;font-size:0.75rem;">\${numPedidos}</span></td>
+              <td style="color:var(--color-text-main);">${escapeHtml(u.celular || u.cel || '—')}</td>
+              <td>${origemBadge}</td>
+              <td style="font-size:0.85rem;color:var(--color-text-faint);">${escapeHtml(u.cpf || '—')}</td>
+              <td><span style="background:#E0F2FE;color:#0369A1;padding:4px 12px;border-radius:20px;font-weight:600;font-size:0.75rem;">${numPedidos}</span></td>
             </tr>
-          \`;
+          `;
         }).join('')}
       </tbody>
     </table>
