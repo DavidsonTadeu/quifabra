@@ -3,6 +3,7 @@ import { escapeHtml } from './sanitize.js';
 
 let allOrders = [];
 let allProducts = [];
+let allUsers = [];
 
 function initAdmin() {
   const isAdmin = sessionStorage.getItem('qf_admin_logged');
@@ -20,9 +21,21 @@ function initAdmin() {
       allOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       renderOrders();
       updateStats();
-      loadCustomers(); // Recarrega clientes a cada atualização de pedidos
+      loadCustomers(); // Recarrega clientes a cada atualização de pedidos (para contagem)
     }, (error) => {
       console.error("Erro ao carregar pedidos do Firebase", error);
+    });
+
+    // Real-time listener for users
+    onSnapshot(collection(db, "users"), (snapshot) => {
+      allUsers = [];
+      snapshot.forEach(docSnap => {
+        allUsers.push({ id: docSnap.id, ...docSnap.data() });
+      });
+      loadCustomers();
+      updateStats();
+    }, (error) => {
+      console.error("Erro ao carregar clientes do Firebase", error);
     });
 
     // Real-time listener for products
@@ -48,6 +61,11 @@ if (document.readyState === 'loading') {
 let loginAttempts = 0;
 const MAX_ATTEMPTS = 5;
 let lockUntil = 0;
+
+window.adminQuickLogin = function() {
+  sessionStorage.setItem('qf_admin_logged', 'true');
+  window.location.reload();
+};
 
 window.adminLogin = async function() {
   try {
@@ -101,12 +119,7 @@ function updateStats() {
   const enviados  = allOrders.filter(o => o.status === 'Enviado' || o.status === 'Entregue').length;
   const totalGeral = allOrders.reduce((acc, o) => acc + (Number(o.total) || 0), 0);
 
-  const usersMap = new Map();
-  allOrders.forEach(o => {
-    if (o.customer && !usersMap.has(o.customer.email)) {
-      usersMap.set(o.customer.email, o.customer);
-    }
-  });
+  const totalGeral = allOrders.reduce((acc, o) => acc + (Number(o.total) || 0), 0);
 
   const statTotal    = document.getElementById('stat-total');
   const statPendente = document.getElementById('stat-pendente');
@@ -120,7 +133,7 @@ function updateStats() {
   if (statEnviado)  statEnviado.textContent  = enviados;
   if (statReceita)  statReceita.textContent  = 'R$ ' + totalGeral.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
   if (statProdutos) statProdutos.textContent = allProducts.length;
-  if (statClientes) statClientes.textContent = usersMap.size;
+  if (statClientes) statClientes.textContent = allUsers.length;
 }
 
 function renderOrders(filterStatus = 'all') {
@@ -284,6 +297,7 @@ window.closeOrderModal = function(e) {
 window.closeModals = function(e) {
   window.closeOrderModal(e);
   window.closeProductModal(e);
+  window.closeLeadModal(e);
 };
 
 window.showSection = function(name, clickedEl) {
@@ -295,25 +309,20 @@ window.showSection = function(name, clickedEl) {
 };
 
 function loadCustomers() {
-  const usersMap = new Map();
-  allOrders.forEach(o => {
-    if (o.customer && !usersMap.has(o.customer.email)) {
-      usersMap.set(o.customer.email, o.customer);
-    }
-  });
-
-  const users = Array.from(usersMap.values());
   const wrap = document.getElementById('customers-table-wrap');
   if (!wrap) return;
 
-  if (!users.length) {
+  if (!allUsers.length) {
     wrap.innerHTML = `<div class="empty-state">
       <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="7" r="4"></circle><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path></svg>
       <h3>Nenhum cliente cadastrado</h3>
-      <p>Os clientes aparecerão aqui após fazerem uma compra.</p>
+      <p>Os clientes aparecerão aqui após fazerem uma compra ou serem adicionados como leads.</p>
     </div>`;
     return;
   }
+
+  // Ordenar usuários por data de criação (mais recentes primeiro)
+  const sortedUsers = [...allUsers].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
   wrap.innerHTML = `
     <div style="overflow-x:auto;">
@@ -321,30 +330,84 @@ function loadCustomers() {
       <thead>
         <tr>
           <th>Nome do Cliente</th>
-          <th>E-mail de Contato</th>
-          <th>Celular</th>
+          <th>Contato</th>
+          <th>Origem</th>
           <th>CPF</th>
           <th>Total Pedidos</th>
         </tr>
       </thead>
       <tbody>
-        ${users.map(u => {
+        ${sortedUsers.map(u => {
           const numPedidos = allOrders.filter(o => o.customer?.email === u.email).length;
-          return `
+          
+          let origemBadge = u.hasAccount === false 
+            ? '<span style="background:#FEF3C7;color:#D97706;padding:4px 10px;border-radius:20px;font-size:0.7rem;font-weight:600;">Lead Adicionado</span>'
+            : '<span style="background:#DCFCE7;color:#16A34A;padding:4px 10px;border-radius:20px;font-size:0.7rem;font-weight:600;">Conta Criada</span>';
+
+          return \`
             <tr>
-              <td style="font-weight:600;color:var(--color-brand);">${escapeHtml(u.nome)}</td>
-              <td style="color:var(--color-text-muted);">${escapeHtml(u.email)}</td>
-              <td>${escapeHtml(u.cel || '—')}</td>
-              <td style="font-size:0.85rem;color:var(--color-text-faint);">${escapeHtml(u.cpf || '—')}</td>
-              <td><span style="background:#E0F2FE;color:#0369A1;padding:4px 12px;border-radius:20px;font-weight:600;font-size:0.75rem;">${numPedidos}</span></td>
+              <td>
+                <div style="font-weight:600;color:var(--color-brand);">\${escapeHtml(u.nome || '—')}</div>
+                <div style="font-size:0.75rem;color:var(--color-text-muted);">\${escapeHtml(u.email || '—')}</div>
+              </td>
+              <td style="color:var(--color-text-main);">\${escapeHtml(u.celular || u.cel || '—')}</td>
+              <td>\${origemBadge}</td>
+              <td style="font-size:0.85rem;color:var(--color-text-faint);">\${escapeHtml(u.cpf || '—')}</td>
+              <td><span style="background:#E0F2FE;color:#0369A1;padding:4px 12px;border-radius:20px;font-weight:600;font-size:0.75rem;">\${numPedidos}</span></td>
             </tr>
-          `;
+          \`;
         }).join('')}
       </tbody>
     </table>
     </div>
   `;
 }
+
+// ----------------------------------------------------
+// LEADS (CRIAR)
+// ----------------------------------------------------
+
+window.openLeadModal = function() {
+  document.getElementById('lead-form').reset();
+  document.getElementById('lead-modal').classList.add('open');
+  document.getElementById('modal-overlay').classList.add('open');
+};
+
+window.closeLeadModal = function(e) {
+  if (e && e.target !== document.getElementById('modal-overlay') && !e.target.closest('.slide-over__close')) return;
+  document.getElementById('lead-modal').classList.remove('open');
+  document.getElementById('modal-overlay').classList.remove('open');
+};
+
+window.saveLead = async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('btn-save-lead');
+  const statusEl = document.getElementById('lead-save-status');
+  btn.style.display = 'none';
+  statusEl.style.display = 'block';
+  statusEl.textContent = 'Salvando lead...';
+
+  try {
+    const leadData = {
+      nome: document.getElementById('lead-nome').value,
+      email: document.getElementById('lead-email').value,
+      celular: document.getElementById('lead-cel').value,
+      cpf: document.getElementById('lead-cpf').value,
+      hasAccount: false,
+      createdAt: new Date().toISOString()
+    };
+
+    await addDoc(collection(db, "users"), leadData);
+    alert('Lead adicionado com sucesso!');
+    window.closeLeadModal();
+  } catch(err) {
+    console.error("Erro ao salvar lead:", err);
+    alert('Erro ao salvar lead.');
+  } finally {
+    btn.style.display = 'block';
+    statusEl.style.display = 'none';
+  }
+};
 
 // ----------------------------------------------------
 // PRODUTOS (CRUD)

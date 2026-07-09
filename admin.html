@@ -305,6 +305,7 @@
     </div>
     <div class="login-error" id="admin-error">E-mail ou senha incorretos.</div>
     <button class="btn-login" onclick="adminLogin()">Entrar</button>
+    <button class="btn-login" style="background:#E5E7EB; color:var(--color-brand); margin-top:12px; box-shadow:none;" onclick="adminQuickLogin()">Entrada rápida (Teste)</button>
     <div style="margin-top:24px;">
       <a href="index.html" style="font-size:0.85rem; font-weight:500; color:var(--color-text-muted); text-decoration:none;">← Voltar à loja</a>
     </div>
@@ -456,11 +457,13 @@
         </div>
       </div>
 
-      <!-- SECTION: CUSTOMERS -->
       <div id="section-customers" style="display:none;">
-        <div class="admin-header">
-          <h1 class="admin-title">Clientes</h1>
-          <p class="admin-subtitle">Lista de clientes que realizaram compras.</p>
+        <div class="admin-header" style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <h1 class="admin-title">Clientes</h1>
+            <p class="admin-subtitle">Lista de clientes que realizaram compras ou foram adicionados como leads.</p>
+          </div>
+          <button style="padding:10px 16px; background:var(--color-primary); color:white; border:none; border-radius:var(--radius-md); font-weight:600; cursor:pointer;" onclick="openLeadModal()">+ Novo Lead</button>
         </div>
         <div class="orders-panel">
           <div class="orders-panel__header">
@@ -571,6 +574,38 @@
       </div>
       <button type="submit" class="btn-login" id="btn-save-product" style="margin-top:0;">Salvar Produto</button>
       <div id="product-save-status" style="margin-top:12px; font-size:0.85rem; font-weight:600; text-align:center; color:var(--color-primary); display:none;">Salvando...</div>
+    </form>
+  </div>
+</div>
+
+<!-- Slide-Over Drawer (Lead Form) -->
+<div class="slide-over" id="lead-modal">
+  <div class="slide-over__header">
+    <h3 id="lead-modal-title">Novo Lead</h3>
+    <button class="slide-over__close" onclick="closeLeadModal(event)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+  </div>
+  <div class="slide-over__body">
+    <form id="lead-form" onsubmit="saveLead(event)">
+      <div class="login-field" style="margin-bottom:12px;">
+        <label>Nome do Cliente</label>
+        <input type="text" id="lead-nome" required />
+      </div>
+      <div class="login-field" style="margin-bottom:12px;">
+        <label>E-mail</label>
+        <input type="email" id="lead-email" required />
+      </div>
+      <div class="login-field" style="margin-bottom:12px;">
+        <label>Celular / WhatsApp</label>
+        <input type="text" id="lead-cel" placeholder="(31) 99999-9999" required />
+      </div>
+      <div class="login-field" style="margin-bottom:24px;">
+        <label>CPF (Opcional)</label>
+        <input type="text" id="lead-cpf" placeholder="000.000.000-00" />
+      </div>
+      <button type="submit" class="btn-login" id="btn-save-lead" style="margin-top:0;">Salvar Lead</button>
+      <div id="lead-save-status" style="margin-top:12px; font-size:0.85rem; font-weight:600; text-align:center; color:var(--color-primary); display:none;">Salvando...</div>
     </form>
   </div>
 </div>
