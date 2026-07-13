@@ -1799,7 +1799,7 @@ section { padding: var(--section-padding); }
 /* ── CARRINHO LATERAL (Sidebar) e BOTÃO FLUTUANTE ── */
 .floating-cart-btn {
   position: fixed;
-  bottom: 24px;
+  bottom: 105px;
   right: 24px;
   width: 60px;
   height: 60px;
