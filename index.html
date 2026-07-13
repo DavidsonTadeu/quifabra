@@ -958,7 +958,7 @@
   
   async function loadProducts() {
     const productsGrid = document.getElementById('productsGrid');
-    if(!track) return;
+    if(!productsGrid) return;
     
     try {
       const q = query(collection(db, "products"), where("status", "==", "Ativo"));
