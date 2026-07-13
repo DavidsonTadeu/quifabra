@@ -428,6 +428,19 @@
       border-bottom: 1.5px solid var(--color-gray-light);
       padding: 28px 0;
     }
+    
+    @media (max-width: 600px) {
+      .trust-bar__grid {
+        gap: 16px !important;
+        flex-direction: column !important;
+        align-items: center !important;
+      }
+      .trust-item {
+        width: 100% !important;
+        max-width: 280px !important;
+      }
+    }
+
     .trust-bar__grid {
       display: flex;
       justify-content: center;

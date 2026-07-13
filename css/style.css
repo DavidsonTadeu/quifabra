@@ -1987,3 +1987,9 @@ section { padding: var(--section-padding); }
   transform: translateY(-8px);
   box-shadow: 0 12px 24px rgba(0,0,0,0.12);
 }
+
+@media (max-width: 600px) {
+  .floating-cart-btn {
+    bottom: 85px !important;
+  }
+}

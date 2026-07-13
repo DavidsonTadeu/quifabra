@@ -1,0 +1,35 @@
+526: <p>Equipamentos de construção com a qualidade Quifabra. Parcele em até 12x pelo Mercado Livre com Compra Garantida.</p>
+PREV:
+    <div class="store-hero__inner">
+      <div class="store-hero__text">
+        <h1>Compre com<br>Segurança Direto da Quifabra</h1>
+528: <div class="store-badge">🚚 Frete Grátis em selecionados</div>
+PREV:
+        <h1>Compre com<br>Segurança Direto da Quifabra</h1>
+        <p>Equipamentos de construção com a qualidade Quifabra. Parcele em até 12x pelo Mercado Livre com Compra Garantida.</p>
+        <div class="store-hero__badges">
+529: <div class="store-badge">🔒 Compra Garantida</div>
+PREV:
+        <p>Equipamentos de construção com a qualidade Quifabra. Parcele em até 12x pelo Mercado Livre com Compra Garantida.</p>
+        <div class="store-hero__badges">
+          <div class="store-badge">🚚 Frete Grátis em selecionados</div>
+552: <strong>Frete Grátis</strong>
+PREV:
+      <div class="trust-item">
+        <div class="trust-icon trust-icon--green">🚚</div>
+        <div class="trust-text">
+559: <strong>Compra Garantida</strong>
+PREV:
+      <div class="trust-item">
+        <div class="trust-icon trust-icon--blue">🔒</div>
+        <div class="trust-text">
+609: <span class="badge-tag badge-tag--frete">🚚 Frete Grátis</span>
+PREV:
+      <!-- PRODUTO 1: Andaime Tubular Kit 8 Peças -->
+      <article class="product-card reveal" data-category="andaimes" data-product="1">
+        <div class="product-card__badge">
+653: <span class="badge-tag badge-tag--frete">🚚 Frete Grátis</span>
+PREV:
+      <!-- PRODUTO 2: Sapata Regulável -->
+      <article class="product-card reveal delay-1" data-category="acessorios" data-product="2">
+        <div class="product-card__badge">
