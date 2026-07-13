@@ -1743,7 +1743,7 @@ section { padding: var(--section-padding); }
 
 /* Floating Cart Icon â€” button (fixed) */
 .floating-cart {
-  position: fixed; bottom: 90px; right: 24px;
+  position: fixed; bottom: 105px; right: 24px;
   width: 60px; height: 60px;
   background: var(--color-primary);
   color: white;
