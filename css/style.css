@@ -1960,3 +1960,30 @@ section { padding: var(--section-padding); }
   margin-bottom: 15px;
   font-size: 1.1rem;
 }
+
+/* GRID DE PRODUTOS */
+.products-grid-wrap {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  justify-content: center;
+}
+
+/* HOVER EFFECT NO CARD */
+.carousel-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+  border: 1px solid #EDEDED;
+}
+.carousel-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+}

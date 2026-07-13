@@ -227,8 +227,8 @@
     <p class="products-carousel__subtitle">Clique em qualquer produto para ver detalhes e especificações técnicas</p>
   </div>
 
-  <div class="carousel-track-wrap" id="carouselWrap">
-    <div class="carousel-track" id="carouselTrack">
+  <div class="products-grid-wrap">
+    <div class="products-grid" id="productsGrid">
 
       <!-- Produtos carregados dinamicamente via JS -->
       <div id="dynamic-products-loading" style="padding: 40px; color: #6b7280; text-align: center; font-size: 1.1rem;">
@@ -238,12 +238,7 @@
     </div>
   </div>
 
-  <!-- Indicador de rolagem -->
-  <p class="carousel-hint" aria-hidden="true">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-    Arraste ou deixe rolar automaticamente
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-  </p>
+  
 </section>
 
 <!-- ========================================================
@@ -962,7 +957,7 @@
   import { db, collection, getDocs, query, where } from './js/firebase-config.js';
   
   async function loadProducts() {
-    const track = document.getElementById('carouselTrack');
+    const productsGrid = document.getElementById('productsGrid');
     if(!track) return;
     
     try {
@@ -973,7 +968,7 @@
       if (loadingEl) loadingEl.remove();
 
       if (querySnapshot.empty) {
-        track.innerHTML = '<div style="padding:40px;width:100%;text-align:center;">Nenhum produto cadastrado no momento.</div>';
+        productsGrid.innerHTML = '<div style="padding:40px;width:100%;text-align:center;">Nenhum produto cadastrado no momento.</div>';
         return;
       }
 
@@ -1005,16 +1000,8 @@
         `;
       });
       
-      // A duplicação para efeito infinito é feita via JS em main.js
-      if (querySnapshot.size > 2) {
-        track.innerHTML = html;
-      } else {
-        track.innerHTML = html;
-        // Ajustando CSS local para não animar se houver poucos produtos
-        track.style.animation = 'none';
-        track.style.display = 'flex';
-        track.style.justifyContent = 'center';
-      }
+      // Apenas injeta os produtos na grid
+      productsGrid.innerHTML = html;
       
     } catch(e) {
       console.error("Erro ao carregar produtos:", e);
