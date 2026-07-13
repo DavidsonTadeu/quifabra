@@ -5,6 +5,7 @@
 
 'use strict';
 
+(function() {
 // ─── Navbar: scroll effect ───────────────────────────────────
 const navbar = document.getElementById('navbar');
 
@@ -269,7 +270,7 @@ document.querySelectorAll('img').forEach(img => {
 });
 
 console.log('%c🏗️ Quifabra — Site carregado com sucesso!', 'color:#1E96C8;font-weight:bold;font-size:14px;');
-
+})();
 
 
 // ─── Carrossel Infinito de Produtos ─────────────────────────
@@ -430,12 +431,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if (e.target === overlay) fecharPopup();
     });
 
-    // Dispara após 5 segundos
+    // Dispara após 15 segundos
     setTimeout(() => {
       overlay.style.opacity = '1';
       overlay.style.pointerEvents = 'all';
       modal.style.transform = 'scale(1)';
-    }, 5000);
+    }, 15000);
   }
 });
 
