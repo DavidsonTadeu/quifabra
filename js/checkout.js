@@ -169,10 +169,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const email = document.getElementById('reg-email').value;
     const nome = document.getElementById('reg-nome').value;
     const pass = document.getElementById('reg-senha').value;
+    const passConfirm = document.getElementById('reg-senha-confirm')?.value;
     const errEl = document.getElementById('reg-error');
     errEl.style.display = 'none';
 
-    if (!email || !nome || !pass) {
+    if (!email || !nome || !pass || !passConfirm) {
       errEl.textContent = 'Preencha todos os campos.';
       errEl.style.display = 'block';
       return;
@@ -180,6 +181,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (pass.length < 6) {
       errEl.textContent = 'A senha deve ter no mínimo 6 caracteres.';
+      errEl.style.display = 'block';
+      return;
+    }
+    
+    if (pass !== passConfirm) {
+      errEl.textContent = 'As senhas não coincidem.';
       errEl.style.display = 'block';
       return;
     }
