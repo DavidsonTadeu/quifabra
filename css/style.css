@@ -1,12 +1,12 @@
 /* =========================================================
    QUIFABRA â€” Design System
-   Escoramento Andaimes e AcessÃ³rios
+   Escoramento Andaimes e Acessórios
    ========================================================= */
 
 /* â”€â”€â”€ Google Fonts â”€â”€â”€ */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@600;700;800;900&display=swap');
 
-/* â”€â”€â”€ CSS Custom Properties (fÃ¡cil ediÃ§Ã£o) â”€â”€â”€ */
+/* â”€â”€â”€ CSS Custom Properties (fácil edição) â”€â”€â”€ */
 :root {
   /* Cores principais */
   --color-primary:       #1E96C8;
@@ -32,7 +32,7 @@
   --font-body:      'Inter', sans-serif;
   --font-heading:   'Montserrat', sans-serif;
 
-  /* EspaÃ§amentos */
+  /* Espaçamentos */
   --section-padding: 90px 0;
   --container-max:   1200px;
   --radius:          8px;
@@ -45,7 +45,7 @@
   --shadow-lg:  0 12px 40px rgba(0,0,0,.15);
   --shadow-xl:  0 20px 60px rgba(0,0,0,.20);
 
-  /* TransiÃ§Ãµes */
+  /* Transições */
   --transition: .3s cubic-bezier(.4,0,.2,1);
   --transition-slow: .6s cubic-bezier(.4,0,.2,1);
 }
@@ -75,7 +75,7 @@ button { border: none; cursor: pointer; font-family: inherit; }
   padding: 0 24px;
 }
 
-/* â”€â”€â”€ SeÃ§Ã£o â”€â”€â”€ */
+/* â”€â”€â”€ Seção â”€â”€â”€ */
 section { padding: var(--section-padding); }
 
 /* â”€â”€â”€ Headings decorativos â”€â”€â”€ */
@@ -110,7 +110,7 @@ section { padding: var(--section-padding); }
 
 .section-header { text-align: center; }
 
-/* â”€â”€â”€ BotÃµes â”€â”€â”€ */
+/* â”€â”€â”€ Botões â”€â”€â”€ */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -173,7 +173,7 @@ section { padding: var(--section-padding); }
   border-color: var(--color-white);
 }
 
-/* â”€â”€â”€ AnimaÃ§Ãµes de entrada â”€â”€â”€ */
+/* â”€â”€â”€ Animações de entrada â”€â”€â”€ */
 .reveal {
   opacity: 0;
   transform: translateY(40px);
@@ -292,13 +292,13 @@ section { padding: var(--section-padding); }
 
 .carousel-track-wrap:active { cursor: grabbing; }
 
-/* A track contÃ©m 2x os cards para o loop seamless */
+/* A track contém 2x os cards para o loop seamless */
 .carousel-track {
   display: flex;
   gap: 24px;
   width: max-content;
   animation: marquee-scroll 38s linear infinite;
-  padding: 12px 0 24px; /* espaÃ§o para sombras dos cards */
+  padding: 12px 0 24px; /* espaço para sombras dos cards */
 }
 
 /* Pausa ao hover (desktop) */
@@ -652,7 +652,7 @@ section { padding: var(--section-padding); }
   );
 }
 
-/* ConteÃºdo sobre a imagem */
+/* Conteúdo sobre a imagem */
 .hero__content {
   position: absolute;
   bottom: 0;
@@ -1001,7 +1001,7 @@ section { padding: var(--section-padding); }
 .stat-block--accent .stat-block__label { color: rgba(29,37,51,.7); }
 
 /* =========================================================
-   PRODUTOS (Andaimes, Escoramento, ServiÃ§os)
+   PRODUTOS (Andaimes, Escoramento, Serviços)
    ========================================================= */
 .products {
   background: var(--color-white);
@@ -1292,7 +1292,7 @@ section { padding: var(--section-padding); }
 .blog-card__link:hover { gap: 10px; }
 
 /* =========================================================
-   CONTACT / FORMULÃRIO
+   CONTACT / FORMULÁRIO
    ========================================================= */
 .contact {
   background: var(--color-bg);
@@ -1348,7 +1348,7 @@ section { padding: var(--section-padding); }
   margin-bottom: 28px;
 }
 
-/* FormulÃ¡rio */
+/* Formulário */
 .contact__form { position: relative; z-index: 1; }
 
 .form-row {
@@ -1403,7 +1403,7 @@ section { padding: var(--section-padding); }
 .form-select-wrap { position: relative; }
 
 .form-select-wrap::after {
-  content: 'â–¾';
+  content: '▾';
   position: absolute;
   right: 14px;
   top: 50%;
@@ -1796,7 +1796,7 @@ section { padding: var(--section-padding); }
 .empty-state { text-align: center; padding: 40px 0; color: #6b7280; }
 .empty-state svg { color: #d1d5db; margin-bottom: 16px; }
 
-/* ── CARRINHO LATERAL (Sidebar) e BOTÃO FLUTUANTE ── */
+/* ── CARRINHO LATERAL (Sidebar) e BOTÁO FLUTUANTE ── */
 .floating-cart-btn {
   position: fixed;
   bottom: 105px;

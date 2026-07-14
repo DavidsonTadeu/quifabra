@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Política de Privacidade — Quifabra</title>
+
+  <meta name="description" content="Artigos técnicos sobre escoramento, andaimes, travamento de pilares e construção civil. Conteúdo especializado pela equipe Quifabra." />
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%231E96C8'/><text y='24' x='4' font-size='22' font-family='Arial Black' font-weight='900' fill='white'>Q</text></svg>" />
+
+  <link rel="stylesheet" href="css/style.css" />
+
+  <style>
+
+    .page-hero { padding-top:80px;min-height:340px;background:linear-gradient(135deg,#1D2533 0%,#1677A0 60%,#1E96C8 100%);display:flex;align-items:center;position:relative;overflow:hidden; }
+
+    .page-hero::after { content:'';position:absolute;inset:0;background:url('assets/images/blog-andaimes.jpg') center/cover no-repeat;opacity:.15; }
+
+    .page-hero__content { position:relative;z-index:1;padding:60px 0;text-align:center; }
+
+    .page-hero__title { font-family:var(--font-heading);font-size:clamp(2rem,4vw,3rem);font-weight:900;color:white;line-height:1.15;margin-bottom:12px; }
+
+    .page-hero__desc { font-size:1.05rem;color:rgba(255,255,255,.85);max-width:560px;line-height:1.7;margin:0 auto; }
+
+    .blog-page { padding:80px 0; }
+
+    .blog-filters { display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px;justify-content:center; }
+
+    .filter-btn { padding:8px 20px;border-radius:20px;font-size:.85rem;font-weight:600;cursor:pointer;transition:var(--transition);border:1.5px solid var(--color-gray-light);background:white;color:var(--color-text-muted); }
+
+    .filter-btn.active, .filter-btn:hover { background:var(--color-primary);color:white;border-color:var(--color-primary); }
+
+    .blog-grid-full { display:grid;grid-template-columns:repeat(3,1fr);gap:28px; }
+
+    @media(max-width:900px){ .blog-grid-full{grid-template-columns:repeat(2,1fr);} }
+
+    @media(max-width:600px){ .blog-grid-full{grid-template-columns:1fr;} }
+
+  </style>
+
+</head>
+
+<body>
+
+
+
+<header class="navbar" id="navbar">
+
+  <div class="container">
+
+    <nav class="navbar__inner">
+
+      <a href="index.html" class="navbar__logo">
+
+        <svg viewBox="0 0 140 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+          <rect x="2" y="2" width="38" height="38" rx="8" fill="#1E96C8"/>
+
+          <text x="7" y="30" font-family="Arial Black" font-size="26" font-weight="900" fill="white">Q</text>
+
+          <text x="44" y="24" font-family="Arial Black" font-size="20" font-weight="900" fill="#1E96C8">UIFABRA</text>
+
+          <text x="44" y="38" font-family="Arial" font-size="8" fill="#6B7280">Escoramento Andaimes e Acessórios</text>
+
+        </svg>
+
+      </a>
+
+      <ul class="navbar__menu">
+
+        <li class="navbar__item"><a href="index.html#andaimes" class="navbar__link">Andaimes <span class="chevron">▾</span></a>
+
+          <div class="dropdown">
+
+            <a href="andaime-tubular.html" class="dropdown__link"><span class="icon">ðŸ—ï¸</span>Andaime Tubular</a>
+
+            <a href="andaime-fachadeiro.html" class="dropdown__link"><span class="icon">ðŸ”§</span>Andaime Fachadeiro</a>
+
+          </div>
+
+        </li>
+
+        <li class="navbar__item"><a href="index.html#escoramento" class="navbar__link">Escoramento <span class="chevron">▾</span></a>
+
+          <div class="dropdown">
+
+            <a href="escoras-metalicas.html" class="dropdown__link"><span class="icon">âš™ï¸</span>Escoras Metálicas</a>
+
+            <a href="acessorios-para-escoramento.html" class="dropdown__link"><span class="icon">ðŸ”©</span>Acessórios</a>
+
+            <a href="torres-de-escoramento.html" class="dropdown__link"><span class="icon">ðŸ›ï¸</span>Torres de Escoramento</a>
+
+          </div>
+
+        </li>
+
+        <li class="navbar__item"><a href="vigas.html" class="navbar__link">Vigas</a></li>
+
+        <li class="navbar__item"><a href="travamento-de-pilares.html" class="navbar__link">Travamento de Pilares</a></li>
+
+        <li class="navbar__item"><a href="loja.html" class="navbar__link">🛒 Loja</a></li>
+        <li class="navbar__item"><a href="minha-conta.html" class="navbar__link" id="nav-conta" style="color: var(--color-primary); font-weight: 700;">Minha Conta</a></li>
+        <li class="navbar__item"><a href="blog.html" class="navbar__link">Blog</a></li>
+
+        <li class="navbar__item"><a href="index.html#contato" class="btn btn--primary">Fale Conosco</a></li>
+
+      </ul>
+
+      <button class="navbar__toggle" id="menuToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+
+    </nav>
+
+  </div>
+
+</header>
+
+
+
+<div class="mobile-menu" id="mobileMenu">
+
+  <a href="andaime-tubular.html" class="mobile-nav-link">Andaime Tubular</a>
+
+  <a href="andaime-fachadeiro.html" class="mobile-nav-link">Andaime Fachadeiro</a>
+
+  <a href="escoras-metalicas.html" class="mobile-nav-link">Escoras Metálicas</a>
+
+  <a href="torres-de-escoramento.html" class="mobile-nav-link">Torres de Escoramento</a>
+
+  <a href="vigas.html" class="mobile-nav-link">Vigas</a>
+
+  <a href="travamento-de-pilares.html" class="mobile-nav-link">Travamento de Pilares</a>
+
+  <a href="loja.html" class="mobile-nav-link">🛒 Loja</a>
+  <a href="minha-conta.html" class="mobile-nav-link" style="color:var(--color-primary);font-weight:700;">Minha Conta</a>
+  <a href="blog.html" class="mobile-nav-link" style="color:var(--color-primary);">Blog</a>
+
+  <a href="index.html#contato" class="mobile-nav-link" style="color:var(--color-primary);font-weight:700;">Fale Conosco</a>
+
+</div>
+
+<style>
+  .policy-page {
+    padding: 120px 0 80px;
+    background: #f9f9f9;
+  }
+  .policy-card {
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .policy-title {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--color-dark);
+    margin-bottom: 24px;
+    text-align: center;
+  }
+  .policy-date {
+    text-align: center;
+    color: #666;
+    margin-bottom: 40px;
+    font-size: 0.9rem;
+  }
+  .policy-content h2 {
+    font-size: 1.4rem;
+    color: var(--color-primary);
+    margin: 32px 0 16px;
+  }
+  .policy-content p {
+    font-size: 1rem;
+    color: #444;
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+  .policy-content ul {
+    margin-bottom: 16px;
+    padding-left: 20px;
+  }
+  .policy-content li {
+    font-size: 1rem;
+    color: #444;
+    line-height: 1.7;
+    margin-bottom: 8px;
+  }
+</style>
+
+<section class="policy-page">
+  <div class="container">
+    <div class="policy-card">
+      <h1 class="policy-title">Política de Privacidade</h1>
+      <div class="policy-date">Última atualização: Julho de 2025</div>
+      
+      <div class="policy-content">
+        <p>A <strong>Quifabra</strong> valoriza a privacidade dos seus usuários e criou esta Política de Privacidade para demonstrar o seu compromisso com a proteção de seus dados pessoais, nos termos da Lei Geral de Proteção de Dados (LGPD) - Lei nº 13.709/2018.</p>
+        
+        <h2>1. Quais dados coletamos</h2>
+        <p>Durante sua interação com o nosso site, podemos coletar os seguintes dados:</p>
+        <ul>
+          <li><strong>Dados de cadastro:</strong> Nome completo, CPF, e-mail e número de celular, fornecidos no momento da criação da conta.</li>
+          <li><strong>Dados de navegação:</strong> Endereço IP, cookies, páginas visitadas, tempo de permanência e informações do dispositivo.</li>
+          <li><strong>Dados de compra:</strong> Histórico de pedidos e produtos visualizados. (Os dados de pagamento são processados de forma segura pelo Mercado Livre/Mercado Pago).</li>
+        </ul>
+
+        <h2>2. Como utilizamos os seus dados</h2>
+        <p>As informações coletadas são utilizadas para as seguintes finalidades:</p>
+        <ul>
+          <li>Processar pedidos e solicitações de orçamento.</li>
+          <li>Manter seu cadastro atualizado para contato telefônico, e-mail ou WhatsApp.</li>
+          <li>Enviar informações sobre o status de pedidos e comunicados importantes.</li>
+          <li>Melhorar a experiência de navegação e personalizar o conteúdo da loja.</li>
+          <li>Cumprir obrigações legais e regulatórias.</li>
+        </ul>
+
+        <h2>3. Compartilhamento de Dados</h2>
+        <p>A Quifabra não comercializa seus dados pessoais. Compartilhamos suas informações apenas com:</p>
+        <ul>
+          <li><strong>Parceiros de pagamento e logística:</strong> (como Mercado Livre) estritamente para o processamento e entrega de pedidos.</li>
+          <li><strong>Autoridades legais:</strong> mediante ordem judicial ou para cumprir obrigações legais.</li>
+        </ul>
+
+        <h2>4. Armazenamento e Segurança</h2>
+        <p>Adotamos medidas técnicas e administrativas aptas a proteger os dados pessoais de acessos não autorizados, utilizando criptografia e servidores seguros via infraestrutura Google Cloud/Firebase.</p>
+
+        <h2>5. Cookies</h2>
+        <p>Utilizamos cookies para otimizar e personalizar sua navegação. Você pode alterar as configurações do seu navegador para bloquear cookies, porém, algumas funcionalidades do site poderão ser limitadas.</p>
+
+        <h2>6. Direitos do Titular</h2>
+        <p>De acordo com a LGPD, você tem o direito de:</p>
+        <ul>
+          <li>Confirmar a existência de tratamento de dados.</li>
+          <li>Acessar, corrigir ou atualizar seus dados.</li>
+          <li>Solicitar a exclusão dos seus dados (exceto quando a retenção for obrigatória por lei).</li>
+        </ul>
+        <p>Para exercer seus direitos, acesse a página "Minha Conta" ou entre em contato conosco.</p>
+
+        <h2>7. Contato</h2>
+        <p>Se você tiver dúvidas sobre esta Política de Privacidade ou sobre o tratamento dos seus dados, entre em contato através do e-mail: <strong>contato@quifabra.com.br</strong> ou pelo nosso WhatsApp.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer role="contentinfo">
+  <div class="footer-info">
+    <div class="container">
+      <div class="footer-info__grid">
+
+        <div class="footer-contact reveal">
+          <div class="footer-contact__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1E96C8" stroke-width="2" aria-hidden="true">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
+          <h4>Escritório Central Savassi</h4>
+          <p>Av. Getúlio Vargas, 1420. 14° andar.<br>CEP 30112-021 – Belo Horizonte, MG.</p>
+        </div>
+
+        <div class="footer-contact reveal delay-2">
+          <div class="footer-contact__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1E96C8" stroke-width="2" aria-hidden="true">
+              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 12a19.79 19.79 0 01-3.07-8.67A2 2 0 012 1.18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.57a16 16 0 006.29 6.29l1.46-1.34a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+            </svg>
+          </div>
+          <h4>Unidade Santa Luzia</h4>
+          <p><a href="tel:+553136911702">(31) 3691 1702</a></p>
+        </div>
+
+        <div class="footer-contact reveal delay-4">
+          <div class="footer-contact__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="#1E96C8" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+          </div>
+          <h4>WhatsApp</h4>
+          <a href="https://wa.me/5531991790838" target="_blank" rel="noopener">(31) 9917-90838</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer bar -->
+  <div class="footer-bar">
+    <div class="container">
+      <div class="footer-bar__inner">
+        <div class="footer-bar__logo">
+          <span class="footer-bar__logo-name">Quifabra</span>
+        </div>
+        <p class="footer-bar__copy">© 2025 Quifabra. Todos os direitos reservados.</p>
+        <div class="footer-bar__links">
+          <a href="politica-de-privacidade.html">Política de Privacidade</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const menuToggle = document.getElementById('menuToggle');
+  const mobileMenu = document.getElementById('mobileMenu');
+  if(menuToggle && mobileMenu) {
+    menuToggle.addEventListener('click', () => {
+      mobileMenu.classList.toggle('active');
+    });
+  }
+</script>
+</body>
+</html>
