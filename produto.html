@@ -47,6 +47,81 @@
       .product-container { grid-template-columns: 1fr; }
       .product-gallery { border-right: none; border-bottom: 1px solid #EDEDED; }
     }
+
+    .product-gallery {
+      display: flex;
+      gap: 16px;
+    }
+    .gallery-thumbnails {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 70px;
+    }
+    .gallery-thumb {
+      width: 60px;
+      height: 60px;
+      border: 2px solid transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      object-fit: cover;
+      transition: var(--transition);
+      background: #f4f4f4;
+    }
+    .gallery-thumb:hover, .gallery-thumb.active {
+      border-color: var(--color-primary);
+    }
+    .gallery-thumb-video {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: var(--color-primary);
+      background: #f4f4f4;
+      border: 2px solid transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 60px;
+      height: 60px;
+      transition: var(--transition);
+    }
+    .gallery-thumb-video:hover, .gallery-thumb-video.active {
+      border-color: var(--color-primary);
+    }
+    .gallery-main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f9f9f9;
+      border-radius: 12px;
+      overflow: hidden;
+      min-height: 400px;
+      padding: 20px;
+    }
+    .gallery-main img {
+      max-width: 100%;
+      max-height: 500px;
+      object-fit: contain;
+    }
+    .gallery-main video {
+      max-width: 100%;
+      max-height: 500px;
+      border-radius: 8px;
+    }
+    @media (max-width: 768px) {
+      .product-gallery {
+        flex-direction: column-reverse;
+      }
+      .gallery-thumbnails {
+        flex-direction: row;
+        width: 100%;
+        overflow-x: auto;
+      }
+      .gallery-main {
+        min-height: 300px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -90,7 +165,13 @@
     <div class="product-container">
       <!-- Imagem -->
       <div class="product-gallery">
-        <img id="prod-img" src="" alt="Imagem do produto" />
+        <div class="gallery-thumbnails" id="gallery-thumbnails">
+          <!-- Miniaturas injetadas via JS -->
+        </div>
+        <div class="gallery-main">
+          <img id="prod-img" src="" alt="Imagem do produto" />
+          <video id="prod-video" src="" controls style="display:none;"></video>
+        </div>
       </div>
       
       <!-- Detalhes e Compra -->
@@ -164,7 +245,60 @@
 
         // Renderizar dados
         document.getElementById('prod-title').textContent = p.title;
-        document.getElementById('prod-img').src = p.image_url;
+        
+        // Galeria de imagens
+        const thumbsContainer = document.getElementById('gallery-thumbnails');
+        const mainImg = document.getElementById('prod-img');
+        const mainVideo = document.getElementById('prod-video');
+        thumbsContainer.innerHTML = '';
+        
+        let images = p.images || [p.image_url];
+        
+        // Define a primeira mídia
+        mainImg.src = images[0] || p.image_url;
+        mainImg.style.display = 'block';
+        mainVideo.style.display = 'none';
+
+        // Thumb de video se existir
+        if (p.video_url) {
+            const btnVideo = document.createElement('div');
+            btnVideo.className = 'gallery-thumb-video';
+            btnVideo.innerHTML = '▶';
+            btnVideo.onclick = () => {
+                document.querySelectorAll('.gallery-thumb, .gallery-thumb-video').forEach(el => el.classList.remove('active'));
+                btnVideo.classList.add('active');
+                mainImg.style.display = 'none';
+                mainVideo.src = p.video_url;
+                mainVideo.style.display = 'block';
+                mainVideo.play();
+            };
+            thumbsContainer.appendChild(btnVideo);
+        }
+
+        // Thumbs de imagens
+        images.forEach((imgUrl, index) => {
+            const imgEl = document.createElement('img');
+            imgEl.src = imgUrl;
+            imgEl.className = 'gallery-thumb';
+            if (index === 0 && !p.video_url) imgEl.classList.add('active'); // primeira imagem ativa por padrao se nao houver video ativo
+            
+            imgEl.onmouseenter = () => {
+                document.querySelectorAll('.gallery-thumb, .gallery-thumb-video').forEach(el => el.classList.remove('active'));
+                imgEl.classList.add('active');
+                mainVideo.style.display = 'none';
+                mainVideo.pause();
+                mainImg.src = imgUrl;
+                mainImg.style.display = 'block';
+            };
+            thumbsContainer.appendChild(imgEl);
+        });
+        
+        // Adiciona classe active na primeira imagem por padrao, se existir images
+        if (!p.video_url && images.length > 0) {
+            const firstImg = thumbsContainer.querySelector('.gallery-thumb');
+            if (firstImg) firstImg.classList.add('active');
+        }
+
         document.getElementById('prod-category').textContent = p.category || '';
         document.getElementById('prod-desc-short').textContent = p.desc_short || '';
         document.getElementById('prod-desc-long').innerHTML = p.desc_long || '';

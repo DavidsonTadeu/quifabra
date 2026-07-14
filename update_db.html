@@ -9,24 +9,21 @@
   <script type="module">
     import { db, collection, getDocs, updateDoc, doc } from './js/firebase-config.js';
 
+    const sapataImgs = ['https://http2.mlstatic.com/D_NQ_NP_2X_626184-MLA114258898603_072026-F-sapata-regulavel-para-andaime-quifabra-45cm-1-peca.webp', 'https://http2.mlstatic.com/D_NQ_NP_2X_758394-MLA114258437327_072026-F-sapata-regulavel-para-andaime-quifabra-45cm-1-peca.webp', 'https://http2.mlstatic.com/D_NQ_NP_2X_825264-MLA114258897495_072026-F-sapata-regulavel-para-andaime-quifabra-45cm-1-peca.webp', 'https://http2.mlstatic.com/D_NQ_NP_2X_792645-MLA114258899037_072026-F-sapata-regulavel-para-andaime-quifabra-45cm-1-peca.webp'];
+    const andaimeImgs = ['https://http2.mlstatic.com/D_NQ_NP_2X_765998-MLB77577154882_072024-F.webp', 'https://http2.mlstatic.com/D_NQ_NP_2X_972904-MLA113039428658_072026-F-andaime-tubular-quifabra-100m-kit-4-pecas-ate-4m.webp', 'https://http2.mlstatic.com/D_NQ_NP_2X_995804-MLA113039227792_072026-F-andaime-tubular-quifabra-100m-kit-4-pecas-ate-4m.webp', 'https://http2.mlstatic.com/D_NQ_NP_2X_666751-MLA114259274983_072026-F-andaime-tubular-quifabra-100m-kit-4-pecas-ate-4m.webp', 'https://http2.mlstatic.com/D_NQ_NP_2X_981772-MLA114259508613_072026-F-andaime-tubular-quifabra-100m-kit-4-pecas-ate-4m.webp', 'https://http2.mlstatic.com/D_NQ_NP_2X_766943-MLA113052310449_062026-F.webp', 'https://http2.mlstatic.com/D_NQ_NP_2X_614230-MLA113052310465_062026-F.webp'];
+
     const updates = [
       {
-        url: "https://produto.mercadolivre.com.br/MLB-4862033073-sapata-regulavel-para-andaime-quifabra-45cm-1-peca-_JM?pdp_filters=seller_id%3A3474891867#polycard_client=search-desktop&be_origin=backend&search_layout=grid&position=3&type=item&tracking_id=26860898-ab6c-4d33-b861-5c44c104e102&wid=MLB4862033073&sid=search",
-        title: "Sapata Regulável Para Andaime Quifabra 45cm 1 Peça",
-        price: 61.75,
-        description: "A Sapata Regulável para Andaime Quifabra 50cm é indicada para apoio, nivelamento e ajuste de estruturas de andaime em obras, reformas, pinturas, manutenções prediais e serviços em altura.Fabricada em aço resistente, possui base quadrada de 10 x 10 cm, altura total de 50 cm e sistema regulável que facilita o ajuste da estrutura em diferentes tipos de piso. É uma peça prática, robusta e essencial para proporcionar maior estabilidade na montagem do andaime.Características do produto:Marca: QuifabraProduto: Sapata regulável para andaimeAltura total: 50 cmBase: 10 x 10 cmMaterial: AçoAcabamento: Preto ou Azul escuroQuantidade: 1 peçaUso indicado: Andaimes tubulares, obras, reformas e manutençãoImportante:Antes da utilização, verifique se a montagem está correta e compatível com o tipo de andaime utilizado. A instalação deve seguir critérios técnicos e de segurança da obra."
+        images: sapataImgs,
+        video: "assets/videos/sapata.mp4"
       },
       {
-        url: "https://produto.mercadolivre.com.br/MLB-4862007997-andaime-tubular-quifabra-100m-kit-4-pecas-ate-4m-_JM?pdp_filters=seller_id%3A3474891867",
-        title: "Andaime Tubular Quifabra 1,00m Kit 4 Peças Até 4m",
-        price: 600.0,
-        description: "O Andaime Tubular Quifabra 1,00m Kit com 8 Peças é uma solução prática e resistente para montagem de estrutura de trabalho em obras, reformas, pinturas, manutenção predial, instalações e serviços em altura.Fabricado em aço, o kit foi desenvolvido para oferecer praticidade na montagem, boa estabilidade e facilidade de transporte. É indicado para uso profissional em atividades que exigem acesso seguro e organizado em diferentes alturas.Com este kit, é possível montar estrutura de andaime de até 4 metros, conforme a configuração e montagem adequada das peças.Características do produto:Marca: QuifabraProduto: Andaime tubularModelo: Kit 8 peçasAltura de montagem: até 4 metrosLargura: 1,00 mProfundidade: 1,00 mMaterial: AçoQuantidade: 1 kit com 8 peçasUso indicado: Obras, reformas, pinturas, manutenções e serviços em alturaImportante:A montagem deve ser feita em local firme, nivelado e por pessoa capacitada. Recomenda-se sempre utilizar os equipamentos de segurança adequados e seguir as normas aplicáveis à atividade."
+        images: andaimeImgs,
+        video: "assets/videos/andaime.mp4"
       },
       {
-        url: "https://www.mercadolivre.com.br/andaime-tubular-100m-kit-8-pecas-p-montagem-ate-4-metros/p/MLB73113818?pdp_filters=seller_id%3A3474891867",
-        title: "Andaime Tubular 1,00m Kit 8 Peças P/ Montagem Até 4 Metros",
-        price: 1309.5,
-        description: "Altura total: 1 m. | Quantidade de andaimes: 8. | Estrutura fabricada em aço que suporta a carga de trabalho necessária para atividades de manutenção em altura. | Largura total de 1 m que proporciona a área de apoio necessária para a movimentação de ferramentas durante o uso."
+        images: andaimeImgs,
+        video: "assets/videos/andaime.mp4"
       }
     ];
 
@@ -38,22 +35,16 @@
           products.push({ id: doc.id, ...doc.data() });
         });
         
-        // Sort products by title so it's consistent
         products.sort((a,b) => a.title.localeCompare(b.title));
-        // Current titles: 
-        // Andaime Tubular 1,00 x 1,00m
-        // Kit 10 Escoras Metálicas Quifabra 2,00 a 3,10m
-        // Sapata Regulável Para Andaime 45 cm
         
-        // We will map updates as:
-        // Andaime Tubular 1,00 x 1,00m -> Andaime Tubular 1,00m Kit 4 Peças Até 4m
-        // Kit 10 Escoras -> Andaime Tubular 1,00m Kit 8 Peças
-        // Sapata -> Sapata Regulável Para Andaime Quifabra 45cm 1 Peça
+        // 0: Andaime 4 peças
+        // 1: Andaime 8 peças
+        // 2: Sapata
         
         const updatesMapped = [
-            updates[1], // Andaime kit 4 (index 1) maps to "Andaime Tubular 1,00 x 1,00m" (which is index 0 when sorted)
-            updates[2], // Andaime kit 8 (index 2) maps to "Kit 10 Escoras" (index 1 when sorted)
-            updates[0]  // Sapata (index 0) maps to "Sapata Regulável" (index 2 when sorted)
+            updates[1],
+            updates[2],
+            updates[0]
         ];
 
         if(products.length >= 3) {
@@ -61,15 +52,13 @@
                 const p = products[i];
                 const update = updatesMapped[i];
                 await updateDoc(doc(db, "products", p.id), {
-                    title: update.title,
-                    price: update.price,
-                    desc_long: update.description,
-                    desc_short: update.description.substring(0, 100) + '...',
-                    ml_link: update.url,
+                    images: update.images,
+                    image_url: update.images[0], // Set main image as the first in the array
+                    video_url: update.video,
                     updatedAt: new Date().toISOString()
                 });
             }
-            document.getElementById('output').innerText = 'Success! Updated 3 products.';
+            document.getElementById('output').innerText = 'Success! Updated 3 products with images and video url.';
         } else {
             document.getElementById('output').innerText = 'Error: Found less than 3 products.';
         }
@@ -77,6 +66,7 @@
         document.getElementById('output').innerText = 'Error: ' + err.message;
       }
     }
+
     run();
   </script>
 </body>
