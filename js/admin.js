@@ -21,7 +21,7 @@ function initAdmin() {
       allOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       renderOrders();
       updateStats();
-      loadCustomers(); // Recarrega clientes a cada atualizaÃ§Ã£o de pedidos (para contagem)
+      loadCustomers(); // Recarrega clientes a cada atualização de pedidos (para contagem)
     }, (error) => {
       console.error("Erro ao carregar pedidos do Firebase", error);
     });
@@ -73,7 +73,7 @@ window.adminLogin = async function() {
     const pass  = document.getElementById('admin-pass').value.trim();
     const err   = document.getElementById('admin-error');
 
-    // Rate limiting: bloqueia apÃ³s 5 tentativas por 2 minutos
+    // Rate limiting: bloqueia após 5 tentativas por 2 minutos
     if (Date.now() < lockUntil) {
       const secsLeft = Math.ceil((lockUntil - Date.now()) / 1000);
       err.textContent = `Muitas tentativas. Aguarde ${secsLeft}s.`;
@@ -146,7 +146,7 @@ function renderOrders(filterStatus = 'all') {
     wrap.innerHTML = `<div class="empty-state">
       <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
       <h3>Nenhum pedido encontrado</h3>
-      <p>NÃ£o hÃ¡ transaÃ§Ãµes que correspondam a esse filtro.</p>
+      <p>Não há transações que correspondam a esse filtro.</p>
     </div>`;
     return;
   }
@@ -156,18 +156,18 @@ function renderOrders(filterStatus = 'all') {
     <table class="orders-table">
       <thead>
         <tr>
-          <th>ID TransaÃ§Ã£o</th>
+          <th>ID Transação</th>
           <th>Data</th>
           <th>Cliente</th>
           <th>Valor</th>
           <th>Status</th>
-          <th>AÃ§Ãµes</th>
+          <th>Ações</th>
         </tr>
       </thead>
       <tbody>
         ${filtered.map(o => {
           let badgeClass = 'status-badge--pendente';
-          if(o.status === 'Em SeparaÃ§Ã£o') badgeClass = 'status-badge--separacao';
+          if(o.status === 'Em Separação') badgeClass = 'status-badge--separacao';
           if(o.status === 'Enviado') badgeClass = 'status-badge--enviado';
           if(o.status === 'Entregue') badgeClass = 'status-badge--entregue';
           if(o.status === 'Cancelado') badgeClass = 'status-badge--cancelado';
@@ -178,7 +178,7 @@ function renderOrders(filterStatus = 'all') {
             <td style="font-size:0.8rem;color:var(--color-text-muted);">${escapeHtml(o.date)}</td>
             <td>
               <div class="customer-info">
-                <span class="customer-name">${escapeHtml(o.customer?.nome || 'â€”')}</span>
+                <span class="customer-name">${escapeHtml(o.customer?.nome || '—')}</span>
                 <span class="customer-email">${escapeHtml(o.customer?.email || '')}</span>
               </div>
             </td>
@@ -189,7 +189,7 @@ function renderOrders(filterStatus = 'all') {
                 <select class="status-select" style="padding:4px; font-size:0.75rem;" onchange="updateStatus('${escapeHtml(o.id)}', this.value)">
                   <option value="Pendente" ${o.status === 'Pendente' ? 'selected' : ''}>Pendente</option>
                   <option value="Pago" ${o.status === 'Pago' ? 'selected' : ''}>Pago</option>
-                  <option value="Em SeparaÃ§Ã£o" ${o.status === 'Em SeparaÃ§Ã£o' ? 'selected' : ''}>SeparaÃ§Ã£o</option>
+                  <option value="Em Separação" ${o.status === 'Em Separação' ? 'selected' : ''}>Separação</option>
                   <option value="Enviado" ${o.status === 'Enviado' ? 'selected' : ''}>Enviado</option>
                   <option value="Entregue" ${o.status === 'Entregue' ? 'selected' : ''}>Entregue</option>
                   <option value="Cancelado" ${o.status === 'Cancelado' ? 'selected' : ''}>Cancelado</option>
@@ -216,7 +216,7 @@ window.updateStatus = async function(orderId, newStatus) {
     // onSnapshot vai atualizar a UI automaticamente
   } catch(e) {
     console.error("Erro ao atualizar status", e);
-    alert("Erro ao atualizar status. Verifique sua conexÃ£o e as permissÃµes do Firestore.");
+    alert("Erro ao atualizar status. Verifique sua conexão e as permissões do Firestore.");
   }
 };
 
@@ -231,20 +231,20 @@ window.viewOrder = function(orderId) {
     <div class="slide-section">
       <h4>Detalhes do Cliente</h4>
       <div class="info-grid">
-        <div class="info-item"><span class="key">Nome</span><span class="val">${escapeHtml(order.customer?.nome || 'â€”')}</span></div>
-        <div class="info-item"><span class="key">CPF</span><span class="val">${escapeHtml(order.customer?.cpf || 'â€”')}</span></div>
-        <div class="info-item"><span class="key">E-mail</span><span class="val">${escapeHtml(order.customer?.email || 'â€”')}</span></div>
-        <div class="info-item"><span class="key">Celular</span><span class="val">${escapeHtml(order.customer?.cel || 'â€”')}</span></div>
+        <div class="info-item"><span class="key">Nome</span><span class="val">${escapeHtml(order.customer?.nome || '—')}</span></div>
+        <div class="info-item"><span class="key">CPF</span><span class="val">${escapeHtml(order.customer?.cpf || '—')}</span></div>
+        <div class="info-item"><span class="key">E-mail</span><span class="val">${escapeHtml(order.customer?.email || '—')}</span></div>
+        <div class="info-item"><span class="key">Celular</span><span class="val">${escapeHtml(order.customer?.cel || '—')}</span></div>
       </div>
     </div>
     
     <div class="slide-section">
-      <h4>EndereÃ§o de Entrega</h4>
+      <h4>Endereço de Entrega</h4>
       <div class="info-grid">
-        <div class="info-item full"><span class="key">Logradouro</span><span class="val">${escapeHtml(addr.rua || 'â€”')}, ${escapeHtml(addr.numero || '')} ${addr.comp ? '(' + escapeHtml(addr.comp) + ')' : ''}</span></div>
-        <div class="info-item"><span class="key">Bairro</span><span class="val">${escapeHtml(addr.bairro || 'â€”')}</span></div>
-        <div class="info-item"><span class="key">Cidade/UF</span><span class="val">${escapeHtml(addr.cidade || 'â€”')} / ${escapeHtml(addr.estado || 'â€”')}</span></div>
-        <div class="info-item"><span class="key">CEP</span><span class="val">${escapeHtml(addr.cep || 'â€”')}</span></div>
+        <div class="info-item full"><span class="key">Logradouro</span><span class="val">${escapeHtml(addr.rua || '—')}, ${escapeHtml(addr.numero || '')} ${addr.comp ? '(' + escapeHtml(addr.comp) + ')' : ''}</span></div>
+        <div class="info-item"><span class="key">Bairro</span><span class="val">${escapeHtml(addr.bairro || '—')}</span></div>
+        <div class="info-item"><span class="key">Cidade/UF</span><span class="val">${escapeHtml(addr.cidade || '—')} / ${escapeHtml(addr.estado || '—')}</span></div>
+        <div class="info-item"><span class="key">CEP</span><span class="val">${escapeHtml(addr.cep || '—')}</span></div>
         <div class="info-item"><span class="key">Custo de Frete</span><span class="val" style="color:#10B981;">Gratuito</span></div>
       </div>
     </div>
@@ -257,7 +257,7 @@ window.viewOrder = function(orderId) {
             <div class="item-img"></div>
             <div class="item-details">
               <div class="item-name">${escapeHtml(i.title)}</div>
-              <div class="item-qtd">Qtd: ${Number(i.qty)} Ã— R$ ${Number(i.price).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+              <div class="item-qtd">Qtd: ${Number(i.qty)} × R$ ${Number(i.price).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
             </div>
             <div class="item-price">
               R$ ${(Number(i.price) * Number(i.qty)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
@@ -314,12 +314,12 @@ function loadCustomers() {
     wrap.innerHTML = `<div class="empty-state">
       <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="7" r="4"></circle><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path></svg>
       <h3>Nenhum cliente cadastrado</h3>
-      <p>Os clientes aparecerÃ£o aqui apÃ³s fazerem uma compra ou serem adicionados como leads.</p>
+      <p>Os clientes aparecerão aqui após fazerem uma compra ou serem adicionados como leads.</p>
     </div>`;
     return;
   }
 
-  // Ordenar usuÃ¡rios por data de criaÃ§Ã£o (mais recentes primeiro)
+  // Ordenar usuários por data de criação (mais recentes primeiro)
   const sortedUsers = [...allUsers].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
   wrap.innerHTML = `
@@ -345,12 +345,12 @@ function loadCustomers() {
           return `
             <tr>
               <td>
-                <div style="font-weight:600;color:var(--color-brand);">${escapeHtml(u.nome || 'â€”')}</div>
-                <div style="font-size:0.75rem;color:var(--color-text-muted);">${escapeHtml(u.email || 'â€”')}</div>
+                <div style="font-weight:600;color:var(--color-brand);">${escapeHtml(u.nome || '—')}</div>
+                <div style="font-size:0.75rem;color:var(--color-text-muted);">${escapeHtml(u.email || '—')}</div>
               </td>
-              <td style="color:var(--color-text-main);">${escapeHtml(u.celular || u.cel || 'â€”')}</td>
+              <td style="color:var(--color-text-main);">${escapeHtml(u.celular || u.cel || '—')}</td>
               <td>${origemBadge}</td>
-              <td style="font-size:0.85rem;color:var(--color-text-faint);">${escapeHtml(u.cpf || 'â€”')}</td>
+              <td style="font-size:0.85rem;color:var(--color-text-faint);">${escapeHtml(u.cpf || '—')}</td>
               <td><span style="background:#E0F2FE;color:#0369A1;padding:4px 12px;border-radius:20px;font-weight:600;font-size:0.75rem;">${numPedidos}</span></td>
             </tr>
           `;
@@ -419,8 +419,8 @@ function renderProducts() {
     wrap.innerHTML = `<div class="empty-state">
       <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
       <h3>Nenhum produto cadastrado</h3>
-      <p>VocÃª ainda nÃ£o tem nenhum produto Ã  venda na loja.</p>
-      <button class="btn btn--primary" style="margin-top: 16px;" onclick="seedDefaultProducts()">Carregar Produtos PadrÃ£o</button>
+      <p>Você ainda não tem nenhum produto à venda na loja.</p>
+      <button class="btn btn--primary" style="margin-top: 16px;" onclick="seedDefaultProducts()">Carregar Produtos Padrão</button>
     </div>`;
     return;
   }
@@ -432,9 +432,9 @@ function renderProducts() {
         <tr>
           <th>Produto</th>
           <th>Categoria</th>
-          <th>PreÃ§o</th>
+          <th>Preço</th>
           <th>Status</th>
-          <th>AÃ§Ãµes</th>
+          <th>Ações</th>
         </tr>
       </thead>
       <tbody>
@@ -526,7 +526,7 @@ window.saveProduct = async function(e) {
       await uploadBytes(storageRef, file);
       imageUrl = await getDownloadURL(storageRef);
     } else if (!imageUrl) {
-      throw new Error("VocÃª deve enviar uma imagem ou colar uma URL.");
+      throw new Error("Você deve enviar uma imagem ou colar uma URL.");
     }
 
     statusEl.textContent = 'Salvando produto...';
@@ -556,7 +556,7 @@ window.saveProduct = async function(e) {
     window.closeProductModal();
   } catch (error) {
     console.error("Erro ao salvar produto:", error);
-    alert(error.message || 'Erro ao salvar produto. Verifique sua conexÃ£o e regras do Firestore.');
+    alert(error.message || 'Erro ao salvar produto. Verifique sua conexão e regras do Firestore.');
   } finally {
     btn.style.display = 'block';
     statusEl.style.display = 'none';
@@ -581,50 +581,50 @@ window.seedDefaultProducts = async function() {
 
   const defaultProducts = [
     {
-      title: "Sapata RegulÃ¡vel Para Andaime 45 cm",
+      title: "Sapata Regulável Para Andaime 45 cm",
       price: 65.00,
       promo_price: null,
       image_url: "assets/images/prod-sapata-regulavel.jpg",
-      category: "AcessÃ³rios",
+      category: "Acessórios",
       status: "Ativo",
-      desc_short: "Base 10x10cm, rosca ajustÃ¡vel, aÃ§o galvanizado. Suporta atÃ© 800 kg. Altura total 50cm.",
-      desc_long: "Base 10x10cm, rosca ajustÃ¡vel, aÃ§o galvanizado. Suporta atÃ© 800 kg. Altura total 50cm.",
+      desc_short: "Base 10x10cm, rosca ajustável, aço galvanizado. Suporta até 800 kg. Altura total 50cm.",
+      desc_long: "Base 10x10cm, rosca ajustável, aço galvanizado. Suporta até 800 kg. Altura total 50cm.",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     },
     {
-      title: "Kit 10 Escoras MetÃ¡licas Quifabra 2,00 a 3,10m",
+      title: "Kit 10 Escoras Metálicas Quifabra 2,00 a 3,10m",
       price: 1900.00,
       promo_price: null,
       image_url: "assets/images/prod-escoras-kit.jpg",
       category: "Escoramento",
       status: "Ativo",
-      desc_short: "Capacidade de carga atÃ© 1.500 kg. Tubo externo 48mm. Regulagem milimÃ©trica com pino de seguranÃ§a.",
-      desc_long: "Capacidade de carga atÃ© 1.500 kg. Tubo externo 48mm. Regulagem milimÃ©trica com pino de seguranÃ§a.",
+      desc_short: "Capacidade de carga até 1.500 kg. Tubo externo 48mm. Regulagem milimétrica com pino de segurança.",
+      desc_long: "Capacidade de carga até 1.500 kg. Tubo externo 48mm. Regulagem milimétrica com pino de segurança.",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     },
     {
-      title: "Andaime Tubular 1,00m â€“ Kit para atÃ© 4m altura",
+      title: "Andaime Tubular 1,00m – Kit para até 3,10m altura",
       price: 600.00,
       promo_price: null,
       image_url: "assets/images/prod-andaime-tubular-kit.jpg",
       category: "Andaimes",
       status: "Ativo",
-      desc_short: "Painel em aÃ§o carbono SAE 1010, tubo de 42,40mm. Kit completo para montagem.",
-      desc_long: "Painel em aÃ§o carbono SAE 1010, tubo de 42,40mm. Kit completo para montagem de andaime de atÃ© 4 metros de altura.",
+      desc_short: "Painel em aço carbono SAE 1010, tubo de 42,40mm. Kit completo para montagem.",
+      desc_long: "Painel em aço carbono SAE 1010, tubo de 42,40mm. Kit completo para montagem de andaime de até 3,10m de altura.",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     },
     {
-      title: "Andaime Tubular 1,00m â€“ Kit 8 PeÃ§as",
+      title: "Andaime Tubular 1,00m – Kit 8 Peças",
       price: 1580.00,
       promo_price: null,
       image_url: "assets/images/prod-andaime-tubular-kit.jpg",
       category: "Andaimes",
       status: "Ativo",
-      desc_short: "AÃ§o carbono SAE 1010, tubo Ã˜ 42,40mm. Alta resistÃªncia para sua obra.",
-      desc_long: "AÃ§o carbono SAE 1010, tubo Ã˜ 42,40mm. Alta resistÃªncia para sua obra.",
+      desc_short: "Aço carbono SAE 1010, tubo 42,40mm. Alta resistência para sua obra.",
+      desc_long: "Aço carbono SAE 1010, tubo 42,40mm. Alta resistência para sua obra.",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     }
@@ -634,7 +634,7 @@ window.seedDefaultProducts = async function() {
     for (const p of defaultProducts) {
       await addDoc(collection(db, "products"), p);
     }
-    alert('Produtos padrÃ£o carregados com sucesso!');
+    alert('Produtos padrão carregados com sucesso!');
   } catch (err) {
     console.error(err);
     alert('Erro ao carregar produtos padrão. Verifique suas permissões.');
@@ -642,6 +642,7 @@ window.seedDefaultProducts = async function() {
     if (btn) btn.textContent = 'Carregar Produtos Padrão';
   }
 };
+
 
 // ─────────────────────────────────────────────────
 // RELATÓRIOS

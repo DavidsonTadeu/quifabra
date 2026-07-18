@@ -477,21 +477,23 @@ section { padding: var(--section-padding); }
 
 /* Logo real (imagem PNG) */
 .navbar__logo-img {
-  height: 60px;
-  width: auto;
+  width: 167.94px;
+  height: 54.16px;
   display: block;
   object-fit: contain;
 }
 
 @media (max-width: 768px) {
   .navbar__logo-img {
-    height: 44px;
+    width: 136px;
+    height: auto;
   }
 }
 
 @media (max-width: 480px) {
   .navbar__logo-img {
-    height: 36px;
+    width: 112px;
+    height: auto;
   }
 }
 
