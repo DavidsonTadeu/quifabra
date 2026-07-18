@@ -73,21 +73,28 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const userCred = await createUserWithEmailAndPassword(auth, email, pass);
       await updateProfile(userCred.user, { displayName: nome });
-      // Salva no firestore
+      // Salva no Firestore - isso fará o cliente aparecer no painel Admin
       await setDoc(doc(db, 'users', userCred.user.uid), {
         nome: nome,
         email: email,
         cpf: cpf,
         celular: cel,
+        hasAccount: true,
         createdAt: new Date().toISOString()
       });
       location.reload();
     } catch (error) {
-      console.error(error);
+      console.error('Erro ao criar conta:', error.code, error.message);
       if (error.code === 'auth/email-already-in-use') {
         errEl.textContent = 'Este e-mail já está em uso.';
+      } else if (error.code === 'auth/invalid-email') {
+        errEl.textContent = 'E-mail inválido.';
+      } else if (error.code === 'auth/weak-password') {
+        errEl.textContent = 'Senha muito fraca. Use pelo menos 6 caracteres.';
+      } else if (error.code === 'permission-denied') {
+        errEl.textContent = 'Erro de permissão. Contate o suporte.';
       } else {
-        errEl.textContent = 'Erro ao criar conta. Tente novamente.';
+        errEl.textContent = 'Erro ao criar conta: ' + (error.message || 'Tente novamente.');
       }
       errEl.style.display = 'block';
     }
@@ -113,11 +120,12 @@ document.addEventListener('DOMContentLoaded', () => {
         email: user.email,
         cpf: cpf,
         celular: cel,
+        hasAccount: true,
         createdAt: new Date().toISOString()
       });
       location.reload();
     } catch(err) {
-      console.error(err);
+      console.error('Erro ao salvar perfil Google:', err.code, err.message);
       errEl.textContent = 'Erro ao salvar dados. Tente novamente.';
       errEl.style.display = 'block';
     }
