@@ -3,6 +3,12 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // Produtos: leitura pública, escrita liberada para o painel admin (MVP)
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
     // Pedidos: qualquer pessoa pode criar (checkout sem auth), leitura pública para MVP
     match /orders/{orderId} {
       allow read: if true;
@@ -29,10 +35,17 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    // Produtos: leitura pública, escrita liberada para o painel admin (MVP)
-    match /products/{productId} {
+    // Mensagens do formulário de contato: qualquer visitante pode criar,
+    // leitura apenas pelo admin (pública para MVP)
+    match /messages/{msgId} {
       allow read: if true;
-      allow write: if true;
+      allow create: if true;
+      allow update, delete: if false;
+    }
+
+    // Configurações da loja: leitura e escrita liberadas para o painel admin (MVP)
+    match /settings/{docId} {
+      allow read, write: if true;
     }
 
     // Bloqueio padrão: qualquer outra coleção é bloqueada
