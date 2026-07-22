@@ -13,17 +13,6 @@ import { db, doc, setDoc, getDoc, getDocs, updateDoc, collection, auth, googlePr
 const MP_PUBLIC_KEY = 'APP_USR-46665582-ebe2-4655-8fc1-bb0256c82f4b';
 const mp = typeof MercadoPago !== 'undefined' ? new MercadoPago(MP_PUBLIC_KEY) : null;
 
-// Para ativar os emails:
-// 1. Acesse emailjs.com e crie conta grátis com ecal7450@gmail.com
-// 2. Crie um Email Service (Gmail) e um Template
-// 3. Substitua os valores abaixo pelos seus reais
-// ══════════════════════════════════════════════════════════════
-const EMAILJS_CONFIG = {
-  publicKey:  'YOUR_EMAILJS_PUBLIC_KEY',   // Settings > API Keys
-  serviceId:  'YOUR_EMAILJS_SERVICE_ID',   // Email Services > Service ID
-  templateId: 'YOUR_EMAILJS_TEMPLATE_ID',  // Email Templates > Template ID
-};
-
 // Email do admin que recebe os pedidos
 const ADMIN_EMAIL = 'ecal7450@gmail.com';
 
@@ -31,11 +20,6 @@ const ADMIN_EMAIL = 'ecal7450@gmail.com';
 let currentUser  = null;
 let currentStep  = 1;
 let orderAddress = {};
-
-// ── Inicialização EmailJS ────────────────────────────────────
-if (typeof emailjs !== 'undefined' && EMAILJS_CONFIG.publicKey !== 'YOUR_EMAILJS_PUBLIC_KEY') {
-  emailjs.init(EMAILJS_CONFIG.publicKey);
-}
 
 // ══════════════════════════════════════════════════════════════
 // CARRINHO (também usado no index.html via localStorage)
@@ -455,21 +439,31 @@ function sendEmailConfirm(orderNum, orderDate, cart, total) {
   const itemsText = cart.map(i => `• ${i.qty}× ${i.title} — ${formatBRL(i.price * i.qty)}`).join('\n');
   const addrText  = `${orderAddress.rua}, ${orderAddress.numero}${orderAddress.comp ? ', '+orderAddress.comp : ''}, ${orderAddress.bairro} — ${orderAddress.cidade}/${orderAddress.estado} — CEP ${orderAddress.cep}`;
 
-  if (typeof emailjs !== 'undefined' && EMAILJS_CONFIG.publicKey !== 'YOUR_EMAILJS_PUBLIC_KEY') {
-    emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, {
-      to_email:     ADMIN_EMAIL,
-      client_email: currentUser.email,
-      order_id:     orderNum,
-      order_date:   orderDate,
-      client_name:  currentUser.nome,
-      client_phone: currentUser.cel || 'Não informado',
-      client_cpf:   currentUser.cpf || 'Não informado',
-      address:      addrText,
-      items:        itemsText,
-      total:        formatBRL(total),
-      shipping:     'GRÁTIS',
-    }).catch(console.warn);
-  }
+  const emailData = {
+    _subject: `NOVO PEDIDO na Loja Quifabra - ${orderNum}`,
+    "Número do Pedido": orderNum,
+    "Data": orderDate,
+    "Cliente": currentUser.nome,
+    "Email": currentUser.email,
+    "Telefone": currentUser.cel || 'Não informado',
+    "CPF/CNPJ": currentUser.cpf || 'Não informado',
+    "Endereço de Entrega": addrText,
+    "Produtos": itemsText,
+    "Frete": "GRÁTIS",
+    "Total da Compra": formatBRL(total),
+    "_template": "table"
+  };
+
+  fetch(`https://formsubmit.co/ajax/${ADMIN_EMAIL}`, {
+    method: "POST",
+    headers: { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+    },
+    body: JSON.stringify(emailData)
+  }).then(response => response.json())
+    .then(data => console.log("FormSubmit Success:", data))
+    .catch(error => console.log("FormSubmit Error:", error));
 }
 
 // ══════════════════════════════════════════════════════════════
