@@ -424,7 +424,6 @@
             </div>
             <div class="stat-value" id="stat-receita" style="font-size:1.75rem;">—</div>
             <div class="stat-trend"><span class="trend-up">↑ Receita processada</span></div>
-            <div class="stat-trend"><span class="trend-up">↑ Receita processada</span></div>
           </div>
           <div class="stat-card">
             <div class="stat-header">
@@ -450,14 +449,40 @@
 
         <!-- Orders Table Panel -->
         <div class="orders-panel">
-          <div class="orders-panel__header">
+          <div class="orders-panel__header" style="flex-wrap: wrap; gap: 16px;">
             <h2>Transações Recentes</h2>
-            <div class="filter-bar">
-              <button class="filter-pill active" onclick="filterOrders('all', this)">Todos</button>
-              <button class="filter-pill" onclick="filterOrders('pendente', this)">Pendente</button>
-              <button class="filter-pill" onclick="filterOrders('separacao', this)">Separação</button>
-              <button class="filter-pill" onclick="filterOrders('enviado', this)">Enviado</button>
-              <button class="filter-pill" onclick="filterOrders('entregue', this)">Entregue</button>
+            
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center; width: 100%; margin-top: 8px;">
+              <select id="filter-year" onchange="window.applyAdvancedFilters()" style="padding:6px; font-size:0.85rem; border:1px solid var(--border-color); border-radius:var(--radius-md); background: white;">
+                <option value="">Ano (Todos)</option>
+                <option value="2026">2026</option>
+                <option value="2025">2025</option>
+                <option value="2024">2024</option>
+              </select>
+              <select id="filter-month" onchange="window.applyAdvancedFilters()" style="padding:6px; font-size:0.85rem; border:1px solid var(--border-color); border-radius:var(--radius-md); background: white;">
+                <option value="">Mês (Todos)</option>
+                <option value="01">Janeiro</option>
+                <option value="02">Fevereiro</option>
+                <option value="03">Março</option>
+                <option value="04">Abril</option>
+                <option value="05">Maio</option>
+                <option value="06">Junho</option>
+                <option value="07">Julho</option>
+                <option value="08">Agosto</option>
+                <option value="09">Setembro</option>
+                <option value="10">Outubro</option>
+                <option value="11">Novembro</option>
+                <option value="12">Dezembro</option>
+              </select>
+              <input type="number" id="filter-total" oninput="window.applyAdvancedFilters()" placeholder="Total (R$)" style="padding:6px; font-size:0.85rem; width:120px; border:1px solid var(--border-color); border-radius:var(--radius-md);" />
+            </div>
+
+            <div class="filter-bar" id="status-filter-bar">
+              <button class="filter-pill active" data-status="all" onclick="filterOrders('all', this)">Todos</button>
+              <button class="filter-pill" data-status="pendente" onclick="filterOrders('pendente', this)">Pendente</button>
+              <button class="filter-pill" data-status="separacao" onclick="filterOrders('separacao', this)">Separação</button>
+              <button class="filter-pill" data-status="enviado" onclick="filterOrders('enviado', this)">Enviado</button>
+              <button class="filter-pill" data-status="entregue" onclick="filterOrders('entregue', this)">Entregue</button>
             </div>
           </div>
 

@@ -108,16 +108,28 @@ window.adminLogout = function() {
   window.location.reload();
 };
 
+window.currentOrderStatus = 'all';
+
 window.filterOrders = function(status, btn) {
   document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderOrders(status);
+  if(btn) btn.classList.add('active');
+  window.currentOrderStatus = status;
+  window.applyAdvancedFilters();
+};
+
+window.applyAdvancedFilters = function() {
+  const year = document.getElementById('filter-year')?.value;
+  const month = document.getElementById('filter-month')?.value;
+  const totalVal = document.getElementById('filter-total')?.value;
+  const status = window.currentOrderStatus || 'all';
+  
+  renderOrders(status, year, month, totalVal);
 };
 
 function updateStats() {
   const pendentes = allOrders.filter(o => o.status === 'Pendente').length;
   const enviados  = allOrders.filter(o => o.status === 'Enviado' || o.status === 'Entregue').length;
-  const totalGeral = allOrders.reduce((acc, o) => acc + (Number(o.total) || 0), 0);
+  const totalGeral = allOrders.filter(o => o.status !== 'Cancelado').reduce((acc, o) => acc + (Number(o.total) || 0), 0);
 
   const statTotal    = document.getElementById('stat-total');
   const statPendente = document.getElementById('stat-pendente');
@@ -134,13 +146,36 @@ function updateStats() {
   if (statClientes) statClientes.textContent = allUsers.length;
 }
 
-function renderOrders(filterStatus = 'all') {
+function renderOrders(filterStatus = 'all', filterYear = '', filterMonth = '', filterTotal = '') {
   const wrap = document.getElementById('orders-table-wrap');
   if (!wrap) return;
 
-  const filtered = filterStatus === 'all' 
+  let filtered = filterStatus === 'all' 
     ? allOrders 
     : allOrders.filter(o => o.status?.toLowerCase() === filterStatus.toLowerCase());
+    
+  if (filterYear || filterMonth) {
+    filtered = filtered.filter(o => {
+      if (!o.createdAt) return false;
+      const d = new Date(o.createdAt);
+      const y = d.getFullYear().toString();
+      const m = (d.getMonth() + 1).toString().padStart(2, '0');
+      
+      let match = true;
+      if (filterYear && y !== filterYear) match = false;
+      if (filterMonth && m !== filterMonth) match = false;
+      return match;
+    });
+  }
+  
+  if (filterTotal) {
+    const searchTotal = Number(filterTotal);
+    filtered = filtered.filter(o => {
+      const orderTotal = Number(o.total) || 0;
+      // Aceita variações de 1 real para facilitar a busca (ou valor exato)
+      return Math.abs(orderTotal - searchTotal) < 1;
+    });
+  }
 
   if (filtered.length === 0) {
     wrap.innerHTML = `<div class="empty-state">
