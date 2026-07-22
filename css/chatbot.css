@@ -11,7 +11,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 0;
+}
+
+/* WhatsApp button sits separately on the LEFT side */
+.qf-phone-wrap {
+  position: fixed;
+  bottom: 28px;
+  left: 28px;
+  z-index: 9999;
 }
 
 /* ── Phone Button ── */
