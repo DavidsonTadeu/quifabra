@@ -83,8 +83,9 @@ window.adminLogin = async function() {
 
     const ADMIN_EMAIL = 'ecal7450@gmail.com';
     const ADMIN_PASS  = 'Quifabra@2024!';
+    const ADMIN_PASS_2 = 'Renacer@2025';
 
-    if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
+    if (email === ADMIN_EMAIL && (pass === ADMIN_PASS || pass === ADMIN_PASS_2)) {
       sessionStorage.setItem('qf_admin_logged', 'true');
       window.location.reload();
     } else {
