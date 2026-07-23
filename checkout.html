@@ -531,9 +531,9 @@
         <div class="checkout-panel__body">
           <div class="form-grid">
             <div class="field-group">
-              <label class="field-label" for="addr-cpf">CPF <span>*</span></label>
-              <input class="field-input" type="text" id="addr-cpf" placeholder="000.000.000-00" maxlength="14" oninput="maskCPF(this)" />
-              <span class="field-error" id="err-cpf">CPF inválido</span>
+              <label class="field-label" id="label-addr-cpf" for="addr-cpf">CPF <span>*</span></label>
+              <input class="field-input" type="text" id="addr-cpf" placeholder="000.000.000-00" maxlength="18" />
+              <span class="field-error" id="err-cpf">CPF/CNPJ inválido</span>
             </div>
             <div class="field-group">
               <label class="field-label" for="addr-celular">Celular <span>*</span></label>

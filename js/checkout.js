@@ -78,13 +78,38 @@ document.addEventListener('DOMContentLoaded', () => {
         uid: user.uid
       };
       
-      // Busca dados complementares do usuário se existirem
+      // Busca dados complementares do usuário e pré-preenche os campos
       try {
         const userDoc = await getDoc(doc(db, 'users', user.uid));
         if (userDoc.exists()) {
           const data = userDoc.data();
-          if (data.cpf) document.getElementById('addr-cpf').value = data.cpf;
-          if (data.celular) document.getElementById('addr-celular').value = data.celular;
+          const isPJ = data.tipoConta === 'pj';
+
+          // Adapta o campo CPF/CNPJ conforme o tipo de conta
+          const cpfLabel = document.getElementById('label-addr-cpf');
+          const cpfInput = document.getElementById('addr-cpf');
+          if (cpfLabel && cpfInput) {
+            if (isPJ) {
+              cpfLabel.innerHTML = 'CNPJ <span>*</span>';
+              cpfInput.placeholder = '00.000.000/0001-00';
+              cpfInput.maxLength = 18;
+              cpfInput.addEventListener('input', function() { if(window.maskCNPJ) window.maskCNPJ(this); });
+              if (data.cnpj) cpfInput.value = data.cnpj;
+            } else {
+              cpfLabel.innerHTML = 'CPF <span>*</span>';
+              cpfInput.placeholder = '000.000.000-00';
+              cpfInput.maxLength = 14;
+              cpfInput.addEventListener('input', function() { if(window.maskCPF) window.maskCPF(this); });
+              if (data.cpf) cpfInput.value = data.cpf;
+            }
+          }
+
+          // Pré-preenche celular
+          if (data.celular) setField('addr-celular', data.celular);
+
+          // Guarda tipoConta no currentUser para validação posterior
+          currentUser.tipoConta = data.tipoConta || 'pf';
+          currentUser.isPJ = isPJ;
         }
       } catch (e) {
         console.error('Erro ao buscar dados do usuário:', e);
@@ -269,17 +294,20 @@ async function fetchCep(cep) {
 }
 
 window.proceedStep2 = async function () {
-  const cpf    = val('addr-cpf').replace(/\D/g, '');
+  const isPJ   = currentUser?.isPJ === true;
+  const docNum = val('addr-cpf').replace(/\D/g, '');
   const cel    = val('addr-celular').replace(/\D/g, '');
   const cep    = val('addr-cep').replace(/\D/g, '');
   const rua    = val('addr-rua');
   const numero = val('addr-numero');
   const bairro = val('addr-bairro');
   const cidade = val('addr-cidade');
-  
+
   let valid = true;
-  
-  if (cpf.length < 11) { showErr('err-cpf', true); valid = false; } else { showErr('err-cpf', false); }
+
+  // Valida CPF (11 dígitos) ou CNPJ (14 dígitos)
+  const minDocLen = isPJ ? 14 : 11;
+  if (docNum.length < minDocLen) { showErr('err-cpf', true); valid = false; } else { showErr('err-cpf', false); }
   if (cel.length < 10) { showErr('err-cel', true); valid = false; } else { showErr('err-cel', false); }
 
   if (cep.length < 8 || !rua || !numero || !bairro || !cidade) {
@@ -287,11 +315,11 @@ window.proceedStep2 = async function () {
     alert('Por favor, preencha todos os campos obrigatórios do endereço.');
     valid = false;
   }
-  
+
   if (!valid) return;
 
   showErr('err-cep', false);
-  
+
   orderAddress = {
     cep:    val('addr-cep'),
     rua, numero,
@@ -299,9 +327,13 @@ window.proceedStep2 = async function () {
     bairro, cidade,
     estado: val('addr-estado'),
   };
-  
-  // Adiciona CPF e Celular ao currentUser para enviar ao Firebase e Mercado Pago
-  currentUser.cpf = val('addr-cpf');
+
+  // Salva CPF ou CNPJ e celular no currentUser
+  if (isPJ) {
+    currentUser.cnpj = val('addr-cpf');
+  } else {
+    currentUser.cpf = val('addr-cpf');
+  }
   currentUser.cel = val('addr-celular');
 
   // Salva no banco para futuras compras
