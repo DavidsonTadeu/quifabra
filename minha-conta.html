@@ -116,26 +116,61 @@
 
   <!-- Formulário de Cadastro -->
   <div class="ml-card" id="form-register" style="display:none;">
-    <div class="ml-title">Complete seus dados</div>
+    <div class="ml-title">Criar sua conta</div>
+
+    <!-- Toggle PF / PJ -->
+    <div style="display:flex; gap:8px; margin-bottom:20px; background:#f3f4f6; border-radius:10px; padding:4px;">
+      <button id="btn-pf" onclick="switchTipoConta('pf')"
+        style="flex:1; padding:10px; border:none; border-radius:8px; font-weight:700; font-size:.9rem; cursor:pointer; transition:all .2s; background:#1E96C8; color:white;">
+        🧑 Pessoa Física
+      </button>
+      <button id="btn-pj" onclick="switchTipoConta('pj')"
+        style="flex:1; padding:10px; border:none; border-radius:8px; font-weight:700; font-size:.9rem; cursor:pointer; transition:all .2s; background:transparent; color:#666;">
+        🏢 Pessoa Jurídica
+      </button>
+    </div>
+    <input type="hidden" id="reg-tipo-conta" value="pf" />
+
     <div class="ml-field">
       <label class="ml-label" for="reg-email">E-mail</label>
       <input class="ml-input" type="email" id="reg-email" placeholder="exemplo@email.com" />
     </div>
-    <div class="ml-field">
+
+    <!-- Campo: Nome (PF) -->
+    <div class="ml-field" id="campo-nome-pf">
       <label class="ml-label" for="reg-nome">Nome completo</label>
-      <input class="ml-input" type="text" id="reg-nome" placeholder="Seu nome" />
+      <input class="ml-input" type="text" id="reg-nome" placeholder="Seu nome completo" />
     </div>
+
+    <!-- Campos exclusivos PJ -->
+    <div id="campos-pj" style="display:none;">
+      <div class="ml-field">
+        <label class="ml-label" for="reg-razao-social">Razão Social</label>
+        <input class="ml-input" type="text" id="reg-razao-social" placeholder="Nome da empresa (como no contrato)" />
+      </div>
+      <div class="ml-field">
+        <label class="ml-label" for="reg-nome-fantasia">Nome Fantasia (opcional)</label>
+        <input class="ml-input" type="text" id="reg-nome-fantasia" placeholder="Como é conhecida a empresa" />
+      </div>
+    </div>
+
     <div class="ml-field" style="display:flex; gap:10px;">
-      <div style="flex:1;">
+      <!-- CPF (PF) -->
+      <div style="flex:1;" id="campo-cpf-pf">
         <label class="ml-label" for="reg-cpf">CPF</label>
         <input class="ml-input" type="text" id="reg-cpf" placeholder="000.000.000-00" maxlength="14" oninput="if(window.maskCPF) window.maskCPF(this);" />
       </div>
+      <!-- CNPJ (PJ) -->
+      <div style="flex:1; display:none;" id="campo-cnpj-pj">
+        <label class="ml-label" for="reg-cnpj">CNPJ</label>
+        <input class="ml-input" type="text" id="reg-cnpj" placeholder="00.000.000/0001-00" maxlength="18" oninput="if(window.maskCNPJ) window.maskCNPJ(this);" />
+      </div>
       <div style="flex:1;">
-        <label class="ml-label" for="reg-celular">Celular</label>
+        <label class="ml-label" for="reg-celular">Celular / WhatsApp</label>
         <input class="ml-input" type="text" id="reg-celular" placeholder="(00) 00000-0000" maxlength="15" oninput="if(window.maskCel) window.maskCel(this);" />
       </div>
     </div>
-    
+
     <div class="ml-field" style="position: relative;">
       <label class="ml-label" for="reg-senha">Senha</label>
       <input class="ml-input" type="password" id="reg-senha" placeholder="Mínimo 6 caracteres" style="padding-right: 40px;" />
@@ -160,6 +195,7 @@
     <button class="ml-btn ml-btn-primary" style="margin-top: 16px;" onclick="doRegister()">Continuar</button>
     <a class="ml-link" onclick="toggleAuthForm('login')">Já tenho conta</a>
   </div>
+
 
   <!-- Completar Cadastro Google -->
   <div class="ml-card" id="form-complete-google" style="display:none;">

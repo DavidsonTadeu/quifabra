@@ -42,28 +42,72 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  // ── Toggle Pessoa Física / Pessoa Jurídica ─────────────────────
+  window.switchTipoConta = function(tipo) {
+    const isPJ = tipo === 'pj';
+    document.getElementById('reg-tipo-conta').value = tipo;
+
+    // Botões
+    document.getElementById('btn-pf').style.background = isPJ ? 'transparent' : '#1E96C8';
+    document.getElementById('btn-pf').style.color       = isPJ ? '#666' : 'white';
+    document.getElementById('btn-pj').style.background = isPJ ? '#1E96C8' : 'transparent';
+    document.getElementById('btn-pj').style.color       = isPJ ? 'white' : '#666';
+
+    // Campos visíveis
+    document.getElementById('campo-nome-pf').style.display  = isPJ ? 'none' : 'block';
+    document.getElementById('campos-pj').style.display      = isPJ ? 'block' : 'none';
+    document.getElementById('campo-cpf-pf').style.display   = isPJ ? 'none' : 'block';
+    document.getElementById('campo-cnpj-pj').style.display  = isPJ ? 'block' : 'none';
+  };
+
+  // ── Máscara CNPJ ───────────────────────────────────────────────
+  window.maskCNPJ = function(input) {
+    let v = input.value.replace(/\D/g, '').slice(0, 14);
+    v = v.replace(/^(\d{2})(\d)/, '$1.$2');
+    v = v.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+    v = v.replace(/\.(\d{3})(\d)/, '.$1/$2');
+    v = v.replace(/(\d{4})(\d)/, '$1-$2');
+    input.value = v;
+  };
+
   window.doRegister = async function() {
-    const email = document.getElementById('reg-email').value;
-    const nome = document.getElementById('reg-nome').value;
-    const pass = document.getElementById('reg-senha').value;
+    const tipoConta = document.getElementById('reg-tipo-conta')?.value || 'pf';
+    const isPJ = tipoConta === 'pj';
+
+    const email = document.getElementById('reg-email').value.trim();
+    const pass  = document.getElementById('reg-senha').value;
     const passConfirm = document.getElementById('reg-senha-confirm')?.value;
-    const cpf = document.getElementById('reg-cpf')?.value || '';
-    const cel = document.getElementById('reg-celular')?.value || '';
+    const cel   = document.getElementById('reg-celular')?.value || '';
     const errEl = document.getElementById('reg-error');
     errEl.style.display = 'none';
 
-    if (!email || !nome || !pass || !passConfirm || !cpf || !cel) {
-      errEl.textContent = 'Preencha todos os campos.';
+    // Dados específicos PF ou PJ
+    const nome        = isPJ ? (document.getElementById('reg-razao-social')?.value.trim() || '') : (document.getElementById('reg-nome')?.value.trim() || '');
+    const nomeFantasia = isPJ ? (document.getElementById('reg-nome-fantasia')?.value.trim() || '') : '';
+    const cpf         = !isPJ ? (document.getElementById('reg-cpf')?.value || '') : '';
+    const cnpj        = isPJ  ? (document.getElementById('reg-cnpj')?.value || '') : '';
+
+    // Validações
+    if (!email || !nome || !pass || !passConfirm || !cel) {
+      errEl.textContent = 'Preencha todos os campos obrigatórios.';
       errEl.style.display = 'block';
       return;
     }
-    
+    if (!isPJ && !cpf) {
+      errEl.textContent = 'Informe seu CPF.';
+      errEl.style.display = 'block';
+      return;
+    }
+    if (isPJ && !cnpj) {
+      errEl.textContent = 'Informe o CNPJ da empresa.';
+      errEl.style.display = 'block';
+      return;
+    }
     if (pass.length < 6) {
       errEl.textContent = 'A senha deve ter no mínimo 6 caracteres.';
       errEl.style.display = 'block';
       return;
     }
-    
     if (pass !== passConfirm) {
       errEl.textContent = 'As senhas não coincidem.';
       errEl.style.display = 'block';
@@ -73,15 +117,25 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const userCred = await createUserWithEmailAndPassword(auth, email, pass);
       await updateProfile(userCred.user, { displayName: nome });
-      // Salva no Firestore - isso fará o cliente aparecer no painel Admin
-      await setDoc(doc(db, 'users', userCred.user.uid), {
-        nome: nome,
-        email: email,
-        cpf: cpf,
+
+      // Salva no Firestore com tipo de conta
+      const userData = {
+        nome,
+        email,
         celular: cel,
+        tipoConta,
         hasAccount: true,
         createdAt: new Date().toISOString()
-      });
+      };
+      if (isPJ) {
+        userData.cnpj = cnpj;
+        userData.nomeFantasia = nomeFantasia;
+        userData.razaoSocial = nome;
+      } else {
+        userData.cpf = cpf;
+      }
+
+      await setDoc(doc(db, 'users', userCred.user.uid), userData);
       location.reload();
     } catch (error) {
       console.error('Erro ao criar conta:', error.code, error.message);
@@ -91,14 +145,13 @@ document.addEventListener('DOMContentLoaded', () => {
         errEl.textContent = 'E-mail inválido.';
       } else if (error.code === 'auth/weak-password') {
         errEl.textContent = 'Senha muito fraca. Use pelo menos 6 caracteres.';
-      } else if (error.code === 'permission-denied') {
-        errEl.textContent = 'Erro de permissão. Contate o suporte.';
       } else {
         errEl.textContent = 'Erro ao criar conta: ' + (error.message || 'Tente novamente.');
       }
       errEl.style.display = 'block';
     }
   };
+
 
   window.saveGoogleProfile = async function() {
     const user = auth.currentUser;
