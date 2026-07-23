@@ -194,8 +194,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Check if user has complete profile
     try {
       const userDoc = await getDoc(doc(db, 'users', user.uid));
-      if(!userDoc.exists() || !userDoc.data().cpf) {
-        // Needs completion
+      // Considera perfil completo se hasAccount=true (salvo para PF e PJ)
+      // ou se tiver cpf (contas legadas)
+      const data = userDoc.exists() ? userDoc.data() : null;
+      const profileComplete = data && (data.hasAccount === true || data.cpf || data.cnpj);
+
+      if (!profileComplete) {
+        // Precisa completar — exclusivo para login via Google sem dados extras
         document.getElementById('unauth-view').style.display = 'flex';
         document.getElementById('auth-view').style.display = 'none';
         
@@ -207,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
            document.getElementById('google-email-display').value = user.email;
            document.getElementById('google-nome-display').value = user.displayName || '';
         }
-        return; // Don't show auth view yet
+        return; // Ainda não mostra a área logada
       }
     } catch(e) {
       console.error(e);
