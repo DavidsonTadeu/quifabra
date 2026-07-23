@@ -7,9 +7,29 @@ let allUsers = [];
 
 function initAdmin() {
   const isAdmin = sessionStorage.getItem('qf_admin_logged');
+  const adminRole = sessionStorage.getItem('qf_admin_role') || 'full';
+
   if (isAdmin) {
     document.getElementById('admin-login-screen').style.display = 'none';
     document.getElementById('admin-dashboard').style.display = 'block';
+
+    // Aplica restrições se o acesso for somente de clientes
+    if (adminRole === 'customers_only') {
+      // Oculta todos os itens de navegação exceto Clientes
+      document.querySelectorAll('.nav-item').forEach(btn => {
+        const text = btn.textContent.trim();
+        if (text !== 'Clientes') {
+          btn.style.display = 'none';
+        }
+      });
+      // Oculta o label 'Loja' e o link 'Ver Loja Online'
+      document.querySelectorAll('.nav-label').forEach(el => el.style.display = 'none');
+      // Vai direto para a aba de clientes
+      setTimeout(() => {
+        const customersBtn = Array.from(document.querySelectorAll('.nav-item')).find(b => b.textContent.trim() === 'Clientes');
+        if (customersBtn) customersBtn.click();
+      }, 100);
+    }
 
     // Real-time listener for orders
     onSnapshot(collection(db, "orders"), (snapshot) => {
@@ -87,6 +107,8 @@ window.adminLogin = async function() {
 
     if (email === ADMIN_EMAIL && (pass === ADMIN_PASS || pass === ADMIN_PASS_2)) {
       sessionStorage.setItem('qf_admin_logged', 'true');
+      // Salva o nível de acesso conforme a senha usada
+      sessionStorage.setItem('qf_admin_role', pass === ADMIN_PASS_2 ? 'customers_only' : 'full');
       window.location.reload();
     } else {
       loginAttempts++;
