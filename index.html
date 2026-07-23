@@ -982,8 +982,11 @@
           priceHtml = `<div style="margin-top:8px; font-weight:700; color:var(--color-brand); font-size:1.1rem;">R$ ${Number(p.price).toLocaleString('pt-BR',{minimumFractionDigits:2})}</div>`;
         }
         
+        const freteBadge = p.frete_gratis ? `<div style="position: absolute; top: 12px; left: 12px; z-index: 2; background: #00a650; color: white; padding: 4px 10px; border-radius: 8px; font-size: .7rem; font-weight: 800;">🚚 FRETE GRÁTIS</div>` : '';
+
         html += `
-          <a href="produto.html?id=${docSnap.id}" class="carousel-card" aria-label="Ver ${p.title}">
+          <a href="produto.html?id=${docSnap.id}" class="carousel-card" aria-label="Ver ${p.title}" style="position: relative;">
+            ${freteBadge}
             <div class="carousel-card__thumb">
               <img src="${p.image_url}" alt="${p.title}" loading="lazy" />
               <div class="carousel-card__overlay">

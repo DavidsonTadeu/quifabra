@@ -551,6 +551,7 @@ window.editProduct = function(id) {
   document.getElementById('prod-image').value = p.image_url;
   document.getElementById('prod-category').value = p.category || 'Andaimes';
   document.getElementById('prod-status').value = p.status || 'Ativo';
+  document.getElementById('prod-frete').value = p.frete_gratis ? "true" : "false";
   document.getElementById('prod-desc-short').value = p.desc_short || '';
   document.getElementById('prod-desc-long').value = p.desc_long || '';
 
@@ -596,6 +597,7 @@ window.saveProduct = async function(e) {
       image_url: imageUrl,
       category: document.getElementById('prod-category').value,
       status: document.getElementById('prod-status').value,
+      frete_gratis: document.getElementById('prod-frete').value === 'true',
       desc_short: document.getElementById('prod-desc-short').value,
       desc_long: document.getElementById('prod-desc-long').value,
       updatedAt: new Date().toISOString()
