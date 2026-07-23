@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Update WhatsApp link
-    const QF_WHATSAPP = '5531991790838';
+    const QF_WHATSAPP = '553173335573';
     let msg = `Olá! Fiz o cálculo no site para um andaime de ${H}m de altura e ${W}m de largura.\n\n`;
     msg += `Preciso do seguinte material:\n`;
     msg += `- ${totalPaineis} Painéis\n`;

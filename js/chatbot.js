@@ -5,7 +5,7 @@
 import { db, collection, addDoc } from './firebase-config.js';
 
 // Número do WhatsApp da Quifabra (sem o +)
-const QF_WHATSAPP = '5531991790838';
+const QF_WHATSAPP = '553173335573';
 
 // ── Fluxo de conversa ──────────────────────────────────────────────
 // Cada nó define o que o bot fala e o que fazer a seguir
