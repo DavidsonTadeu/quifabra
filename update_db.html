@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Update DB</title>
+</head>
+<body>
+  <div id="output">Running...</div>
+  <script type="module">
+    import { db, collection, getDocs, updateDoc, doc } from './js/firebase-config.js';
+
+    const sapataImgs = ['https://http2.mlstatic.com/D_NQ_NP_2X_960958-MLA99989999861_112025-F.webp', 'https://http2.mlstatic.com/D_NQ_NP_2X_626184-MLA114258898603_072026-F-sapata-regulavel-para-andaime-quifabra-45cm-1-peca.webp', 'https://http2.mlstatic.com/D_NQ_NP_2X_758394-MLA114258437327_072026-F-sapata-regulavel-para-andaime-quifabra-45cm-1-peca.webp', 'https://http2.mlstatic.com/D_NQ_NP_2X_825264-MLA114258897495_072026-F-sapata-regulavel-para-andaime-quifabra-45cm-1-peca.webp', 'https://http2.mlstatic.com/D_NQ_NP_2X_792645-MLA114258899037_072026-F-sapata-regulavel-para-andaime-quifabra-45cm-1-peca.webp'];
+    const andaimeImgs = ['https://http2.mlstatic.com/D_NQ_NP_2X_765998-MLB77577154882_072024-F.webp', 'https://http2.mlstatic.com/D_NQ_NP_2X_972904-MLA113039428658_072026-F-andaime-tubular-quifabra-100m-kit-4-pecas-ate-4m.webp', 'https://http2.mlstatic.com/D_NQ_NP_2X_995804-MLA113039227792_072026-F-andaime-tubular-quifabra-100m-kit-4-pecas-ate-4m.webp', 'https://http2.mlstatic.com/D_NQ_NP_2X_666751-MLA114259274983_072026-F-andaime-tubular-quifabra-100m-kit-4-pecas-ate-4m.webp', 'https://http2.mlstatic.com/D_NQ_NP_2X_981772-MLA114259508613_072026-F-andaime-tubular-quifabra-100m-kit-4-pecas-ate-4m.webp', 'https://http2.mlstatic.com/D_NQ_NP_2X_766943-MLA113052310449_062026-F.webp', 'https://http2.mlstatic.com/D_NQ_NP_2X_614230-MLA113052310465_062026-F.webp'];
+
+    const updates = [
+      {
+        images: sapataImgs,
+        video: "assets/videos/sapata.mp4"
+      },
+      {
+        images: andaimeImgs,
+        video: "assets/videos/andaime.mp4"
+      },
+      {
+        images: andaimeImgs,
+        video: "assets/videos/andaime.mp4"
+      }
+    ];
+
+    async function run() {
+      try {
+        const querySnapshot = await getDocs(collection(db, "products"));
+        let products = [];
+        querySnapshot.forEach((doc) => {
+          products.push({ id: doc.id, ...doc.data() });
+        });
+        
+        products.sort((a,b) => a.title.localeCompare(b.title));
+        
+        // 0: Andaime 4 peças
+        // 1: Andaime 8 peças
+        // 2: Sapata
+        
+        const updatesMapped = [
+            updates[1],
+            updates[2],
+            updates[0]
+        ];
+
+        if(products.length >= 3) {
+            for(let i=0; i<3; i++) {
+                const p = products[i];
+                const update = updatesMapped[i];
+                await updateDoc(doc(db, "products", p.id), {
+                    images: update.images,
+                    image_url: update.images[0], // Set main image as the first in the array
+                    video_url: update.video,
+                    updatedAt: new Date().toISOString()
+                });
+            }
+            document.getElementById('output').innerText = 'Success! Updated 3 products with images and video url.';
+        } else {
+            document.getElementById('output').innerText = 'Error: Found less than 3 products.';
+        }
+      } catch (err) {
+        document.getElementById('output').innerText = 'Error: ' + err.message;
+      }
+    }
+
+    run();
+  </script>
+</body>
+</html>

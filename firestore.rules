@@ -1,0 +1,56 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Produtos: leitura pública, escrita liberada para o painel admin (MVP)
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Pedidos: qualquer pessoa pode criar (checkout sem auth), leitura pública para MVP
+    match /orders/{orderId} {
+      allow read: if true;
+      allow create: if
+        request.resource.data.keys().hasAll(['id', 'customer', 'items', 'total', 'status', 'createdAt']) &&
+        request.resource.data.total is number &&
+        request.resource.data.total > 0 &&
+        request.resource.data.total < 1000000 &&
+        request.resource.data.status == 'Pendente' &&
+        request.resource.data.items.size() > 0 &&
+        request.resource.data.items.size() <= 50;
+      allow update: if
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']) &&
+        request.resource.data.status in ['Pendente', 'Pago', 'Em Separação', 'Enviado', 'Entregue', 'Cancelado'];
+      allow delete: if false;
+    }
+
+    // Usuários/Leads: leitura pública (admin precisa ver lista de clientes),
+    // criação liberada para permitir cadastro e adição de leads pelo admin.
+    match /users/{userId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if request.auth != null && request.auth.uid == userId;
+      allow delete: if false;
+    }
+
+    // Mensagens do formulário de contato: qualquer visitante pode criar,
+    // leitura apenas pelo admin (pública para MVP)
+    match /messages/{msgId} {
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if false;
+    }
+
+    // Configurações da loja: leitura e escrita liberadas para o painel admin (MVP)
+    match /settings/{docId} {
+      allow read, write: if true;
+    }
+
+    // Bloqueio padrão: qualquer outra coleção é bloqueada
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
