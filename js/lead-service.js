@@ -55,7 +55,7 @@ export async function saveLeadCentralized(data) {
       await updateDoc(doc(db, 'users', existingDocId), updatedFields);
       console.log('Lead atualizado com sucesso no Admin (sem duplicar):', existingDocId);
     } else {
-      // 4. Se não existe, cria novo registro no Firestore
+      // 4. Se não existe, cria novo registro no Firestore na coleção users
       const newDoc = await addDoc(usersRef, {
         nome,
         celular: celular || '',
@@ -70,6 +70,20 @@ export async function saveLeadCentralized(data) {
         createdAt: new Date().toISOString()
       });
       console.log('Novo lead criado no Admin:', newDoc.id);
+    }
+
+    // 5. Salva na coleção "messages" para alimentar a aba Mensagens do Admin
+    try {
+      await addDoc(collection(db, 'messages'), {
+        nome,
+        email: cleanEmail || celular || 'Sem e-mail',
+        celular: celular || '',
+        mensagem: mensagem || (interesse ? `Interesse: ${interesse}` : `Origem: ${origem}`),
+        origem: origem || 'Site Quifabra',
+        createdAt: new Date().toISOString()
+      });
+    } catch (msgErr) {
+      console.warn('Erro ao salvar na coleção messages:', msgErr);
     }
 
     // 5. Envia notificação por e-mail para a equipe Quifabra

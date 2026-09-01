@@ -13,12 +13,12 @@ function initAdmin() {
     document.getElementById('admin-login-screen').style.display = 'none';
     document.getElementById('admin-dashboard').style.display = 'block';
 
-    // Aplica restrições se o acesso for somente de clientes
+    // Aplica restrições se o acesso for restrito (ecal7450@gmail.com)
     if (adminRole === 'customers_only') {
-      // Oculta todos os itens de navegação exceto Clientes
+      // Exibe apenas as abas Clientes e Mensagens
       document.querySelectorAll('.nav-item').forEach(btn => {
         const text = btn.textContent.trim();
-        if (text !== 'Clientes') {
+        if (text !== 'Clientes' && text !== 'Mensagens') {
           btn.style.display = 'none';
         }
       });
