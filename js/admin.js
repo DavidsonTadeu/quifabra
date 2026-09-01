@@ -82,10 +82,7 @@ let loginAttempts = 0;
 const MAX_ATTEMPTS = 5;
 let lockUntil = 0;
 
-window.adminQuickLogin = function() {
-  sessionStorage.setItem('qf_admin_logged', 'true');
-  window.location.reload();
-};
+
 
 window.adminLogin = async function() {
   try {

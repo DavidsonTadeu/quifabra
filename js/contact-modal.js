@@ -127,6 +127,8 @@ function setupEvents() {
 
 // Vincula o clique dos botões da página ao popup
 export function bindContactButtons() {
+  if (window.location.pathname.includes('admin')) return;
+
   injectContactModal();
 
   document.querySelectorAll('a[href="#contato"], .btn--primary:not([type="submit"])').forEach(btn => {
