@@ -8,6 +8,7 @@
     "start": "echo \"Servido via Vercel ou local static server\""
   },
   "dependencies": {
-    "mercadopago": "^2.0.1"
+    "mercadopago": "^2.0.1",
+    "nodemailer": "^9.1.0"
   }
 }

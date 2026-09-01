@@ -34,8 +34,14 @@ const FLOW = {
   ask_whatsapp: {
     msgs: (state) => [`Prazer, **${state.nome}**! 👋`, 'Qual é o seu WhatsApp? (com DDD)'],
     input: true,
-    next: () => 'finalize',
+    next: () => 'ask_email',
     saveAs: 'whatsapp'
+  },
+  ask_email: {
+    msgs: () => ['Excelente! E qual é o seu **e-mail** para enviarmos a proposta?'],
+    input: true,
+    next: () => 'finalize',
+    saveAs: 'email'
   },
   finalize: {
     msgs: (state) => [
@@ -121,6 +127,7 @@ let chatState = {
   currentNode: 'start',
   nome: '',
   whatsapp: '',
+  email: '',
   category: '',
   started: false
 };
@@ -303,8 +310,8 @@ async function handleUserInput() {
   // Salva no estado
   if (node.saveAs) chatState[node.saveAs] = value;
 
-  // Se chegou no WhatsApp, salva o lead no Firestore
-  if (node.saveAs === 'whatsapp') {
+  // Se chegou no final (após responder e-mail), salva o lead no Firestore e dispara notificação
+  if (node.saveAs === 'email') {
     await saveLead();
   }
 
@@ -326,15 +333,27 @@ async function saveLead() {
     await addDoc(collection(db, 'users'), {
       nome: chatState.nome,
       celular: chatState.whatsapp,
-      email: '',
+      email: chatState.email || '',
       hasAccount: false,
       origem: 'Chatbot do Site',
       interesse: categoryClean,
       createdAt: new Date().toISOString()
     });
+
+    // Envia notificação por e-mail para a equipe
+    await fetch('/api/send-notification', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        tipo: 'Chatbot do Site',
+        nome: chatState.nome,
+        celular: chatState.whatsapp,
+        email: chatState.email,
+        interesse: categoryClean
+      })
+    });
   } catch (e) {
-    // Silencioso — não interrompe a conversa se falhar
-    console.warn('Chatbot: erro ao salvar lead', e);
+    console.warn('Chatbot: erro ao salvar lead ou enviar notificação', e);
   }
 }
 

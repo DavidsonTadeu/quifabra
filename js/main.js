@@ -194,12 +194,17 @@ const contactForm = document.getElementById('contactForm');
 const formFeedback = document.getElementById('form-feedback');
 const formSubmit = document.getElementById('form-submit');
 
-contactForm?.addEventListener('submit', (e) => {
+contactForm?.addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const nome = document.getElementById('field-nome')?.value.trim();
   const email = document.getElementById('field-email')?.value.trim();
   const celular = document.getElementById('field-celular')?.value.trim();
+  const empresa = document.getElementById('field-empresa')?.value.trim();
+  const cep = document.getElementById('field-cep')?.value.trim();
+  const estado = document.getElementById('field-estado')?.value;
+  const atuacao = document.getElementById('field-atuacao')?.value;
+  const mensagem = document.getElementById('field-mensagem')?.value.trim();
 
   if (!nome || !email || !celular) {
     showFeedback('❌ Por favor, preencha os campos obrigatórios: Nome, E-mail e Celular.', 'error');
@@ -211,16 +216,39 @@ contactForm?.addEventListener('submit', (e) => {
     return;
   }
 
-  // Simular envio
   formSubmit.textContent = 'Enviando...';
   formSubmit.disabled = true;
 
-  setTimeout(() => {
-    showFeedback('✅ Mensagem enviada! Entraremos em contato em breve pelo WhatsApp ou e-mail.', 'success');
-    contactForm.reset();
+  try {
+    const response = await fetch('/api/send-notification', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        tipo: 'Formulário de Contato',
+        nome,
+        email,
+        celular,
+        empresa,
+        cep,
+        estado,
+        atuacao,
+        mensagem
+      })
+    });
+
+    if (response.ok) {
+      showFeedback('✅ Mensagem enviada com sucesso! Nossa equipe entrará em contato em breve.', 'success');
+      contactForm.reset();
+    } else {
+      showFeedback('⚠️ Ocorreu um erro ao enviar. Por favor, tente novamente ou entre em contato pelo WhatsApp.', 'error');
+    }
+  } catch (err) {
+    console.error('Erro no envio do formulário:', err);
+    showFeedback('⚠️ Erro de conexão. Tente pelo WhatsApp ou tente novamente em instantes.', 'error');
+  } finally {
     formSubmit.textContent = 'Converse com um consultor';
     formSubmit.disabled = false;
-  }, 1500);
+  }
 });
 
 function showFeedback(msg, type) {
