@@ -100,26 +100,33 @@ window.adminLogin = async function() {
       err.style.display = 'block';
       return;
     }
+    const emailLower = email.toLowerCase();
 
-    const ADMIN_EMAIL = 'ecal7450@gmail.com';
-    const ADMIN_PASS  = 'Quifabra@2024!';
-    const ADMIN_PASS_2 = 'Renacer@2025';
-
-    if (email === ADMIN_EMAIL && (pass === ADMIN_PASS || pass === ADMIN_PASS_2)) {
+    // 1. Acesso Limitado (Somente Clientes)
+    if (emailLower === 'ecal7450@gmail.com' && pass === '1234') {
       sessionStorage.setItem('qf_admin_logged', 'true');
-      // Salva o nível de acesso conforme a senha usada
-      sessionStorage.setItem('qf_admin_role', pass === ADMIN_PASS_2 ? 'customers_only' : 'full');
+      sessionStorage.setItem('qf_admin_role', 'customers_only');
       window.location.reload();
-    } else {
-      loginAttempts++;
-      if (loginAttempts >= MAX_ATTEMPTS) {
-        lockUntil = Date.now() + 120000; // Bloqueia por 2 min
-        err.textContent = 'Muitas tentativas. Bloqueado por 2 minutos.';
-      } else {
-        err.textContent = `E-mail ou senha incorretos. Tentativas restantes: ${MAX_ATTEMPTS - loginAttempts}`;
-      }
-      err.style.display = 'block';
+      return;
     }
+
+    // 2. Acesso Total (Admin Completo)
+    if (emailLower === 'quifabra@gmail.com' && pass === '@reviver') {
+      sessionStorage.setItem('qf_admin_logged', 'true');
+      sessionStorage.setItem('qf_admin_role', 'full');
+      window.location.reload();
+      return;
+    }
+
+    // Se incorreto
+    loginAttempts++;
+    if (loginAttempts >= MAX_ATTEMPTS) {
+      lockUntil = Date.now() + 120000; // Bloqueia por 2 min
+      err.textContent = 'Muitas tentativas. Bloqueado por 2 minutos.';
+    } else {
+      err.textContent = `E-mail ou senha incorretos. Tentativas restantes: ${MAX_ATTEMPTS - loginAttempts}`;
+    }
+    err.style.display = 'block';
   } catch (e) {
     console.error(e);
     alert("Erro interno: " + e.message);
