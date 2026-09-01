@@ -220,17 +220,6 @@ contactForm?.addEventListener('submit', async (e) => {
   formSubmit.disabled = true;
 
   try {
-    const response = await fetch('/api/send-notification', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        tipo: 'Formulário de Contato',
-        nome,
-        email,
-        celular,
-        empresa,
-        cep,
-        estado,
         atuacao,
         mensagem
       })

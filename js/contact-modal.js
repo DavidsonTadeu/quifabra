@@ -2,6 +2,7 @@
  * Quifabra - Modal de Atendimento via WhatsApp
  */
 import { db, collection, addDoc } from './firebase-config.js';
+import { saveLeadCentralized } from './lead-service.js';
 
 const QF_WHATSAPP = '553173335573';
 
@@ -101,37 +102,16 @@ function setupEvents() {
     submitBtn.textContent = 'Enviando...';
     submitBtn.disabled = true;
 
-    // 1. Salvar Lead no Firestore
-    try {
-      await addDoc(collection(db, 'users'), {
-        nome,
-        celular: whatsapp,
-        email,
-        hasAccount: false,
-        origem: 'Popup de Contato',
-        createdAt: new Date().toISOString()
-      });
-    } catch (err) {
-      console.warn('Erro ao salvar lead no Firestore:', err);
-    }
+    // Salva lead no Firestore (sem duplicar) e dispara notificação por e-mail
+    await saveLeadCentralized({
+      tipo: 'Popup de Contato / WhatsApp',
+      origem: 'Popup Fale Conosco',
+      nome,
+      celular: whatsapp,
+      email
+    });
 
-    // 2. Disparar notificação por e-mail
-    try {
-      await fetch('/api/send-notification', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          tipo: 'Popup de Contato / WhatsApp',
-          nome,
-          celular: whatsapp,
-          email
-        })
-      });
-    } catch (err) {
-      console.warn('Erro ao enviar e-mail de notificação:', err);
-    }
-
-    // 3. Abrir o WhatsApp
+    // Abrir o WhatsApp
     const cleanPhone = whatsapp.replace(/\D/g, '');
     const msg = encodeURIComponent(`Olá! Meu nome é ${nome} (E-mail: ${email}). Gostaria de atendimento e orçamentos.`);
     const waUrl = `https://wa.me/${QF_WHATSAPP}?text=${msg}`;

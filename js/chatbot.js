@@ -3,6 +3,7 @@
 //  Fluxo: Saudação → Categoria → Nome → WhatsApp → Lead + WhatsApp
 // ─────────────────────────────────────────────────────────────────
 import { db, collection, addDoc } from './firebase-config.js';
+import { saveLeadCentralized } from './lead-service.js';
 
 // Número do WhatsApp da Quifabra (sem o +)
 const QF_WHATSAPP = '553173335573';
@@ -330,27 +331,13 @@ async function saveLead() {
       ? chatState.category.replace(/^[^\s]+\s/, '')
       : 'Chat';
 
-    await addDoc(collection(db, 'users'), {
+    await saveLeadCentralized({
+      tipo: 'Chatbot do Site',
+      origem: 'Chatbot do Site',
       nome: chatState.nome,
       celular: chatState.whatsapp,
-      email: chatState.email || '',
-      hasAccount: false,
-      origem: 'Chatbot do Site',
-      interesse: categoryClean,
-      createdAt: new Date().toISOString()
-    });
-
-    // Envia notificação por e-mail para a equipe
-    await fetch('/api/send-notification', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        tipo: 'Chatbot do Site',
-        nome: chatState.nome,
-        celular: chatState.whatsapp,
-        email: chatState.email,
-        interesse: categoryClean
-      })
+      email: chatState.email,
+      interesse: categoryClean
     });
   } catch (e) {
     console.warn('Chatbot: erro ao salvar lead ou enviar notificação', e);
