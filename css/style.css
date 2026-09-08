@@ -2030,99 +2030,116 @@ section { padding: var(--section-padding); }
 /* ========================================================
    SEÇÃO DÚVIDAS / SUPORTE WHATSAPP (Referência Imagem 1)
    ======================================================== */
+/* ===== SEÇÃO DÚVIDAS — Identidade Quifabra ===== */
 .duvidas-section {
-  padding: 80px 20px;
-  background: #fdfefe;
+  padding: 70px 20px;
+  background: var(--color-bg);
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .duvidas-card {
-  background: #ffffff;
+  background: var(--color-white);
   width: 100%;
   max-width: 720px;
-  border-radius: 20px;
-  border: 1.5px solid #fed7aa;
-  padding: 48px 32px;
+  border-radius: var(--radius-xl);
+  border: 2px solid rgba(30, 150, 200, 0.18);
+  padding: 52px 40px 44px;
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: var(--shadow-md);
+  transition: transform 0.25s var(--transition), box-shadow 0.25s var(--transition);
+  position: relative;
+}
+
+.duvidas-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, rgba(30,150,200,0.04) 0%, rgba(240,165,0,0.04) 100%);
+  pointer-events: none;
 }
 
 .duvidas-card:hover {
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
 }
 
+/* Badge — losangos Quifabra (azul + dourado) */
 .duvidas-badge {
   position: relative;
-  width: 44px;
-  height: 44px;
-  margin: 0 auto 16px;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 20px;
 }
 
 .duvidas-badge-back {
   position: absolute;
-  top: 4px;
-  left: 2px;
-  width: 36px;
-  height: 36px;
-  background: #111827;
-  border-radius: 4px;
-  transform: rotate(20deg);
+  top: 5px;
+  left: 3px;
+  width: 38px;
+  height: 38px;
+  background: var(--color-dark);
+  border-radius: 5px;
+  transform: rotate(18deg);
 }
 
 .duvidas-badge-front {
   position: absolute;
   top: 0;
   left: 0;
-  width: 36px;
-  height: 36px;
-  background: #E67E22;
-  border-radius: 4px;
+  width: 38px;
+  height: 38px;
+  background: var(--color-primary);
+  border-radius: 5px;
   transform: rotate(32deg);
-  box-shadow: 0 4px 12px rgba(230, 126, 34, 0.35);
+  box-shadow: 0 4px 14px rgba(30, 150, 200, 0.4);
 }
 
 .duvidas-title {
-  font-family: var(--font-heading, 'Inter', sans-serif);
-  font-size: 1.95rem;
-  font-weight: 800;
-  color: #111827;
-  margin-bottom: 8px;
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--color-dark);
+  margin-bottom: 10px;
   letter-spacing: -0.5px;
+  line-height: 1.2;
 }
 
 .duvidas-subtitle {
   font-size: 1.05rem;
-  color: #4b5563;
-  margin-bottom: 26px;
+  color: var(--color-text-muted);
+  margin-bottom: 28px;
+  line-height: 1.5;
 }
 
+/* Botão com cor primária Quifabra */
 .duvidas-btn-whatsapp {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  background: #00a650;
-  color: #ffffff;
-  font-size: 1.05rem;
+  background: var(--color-primary);
+  color: var(--color-white);
+  font-family: var(--font-heading);
+  font-size: 1rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  padding: 15px 34px;
-  border-radius: 8px;
+  letter-spacing: 0.8px;
+  padding: 16px 40px;
+  border-radius: var(--radius);
   border: none;
   cursor: pointer;
   text-decoration: none;
-  box-shadow: 0 4px 14px rgba(0, 166, 80, 0.35);
-  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+  box-shadow: 0 4px 16px rgba(30, 150, 200, 0.38);
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
 }
 
 .duvidas-btn-whatsapp:hover {
-  background: #008f45;
-  box-shadow: 0 6px 20px rgba(0, 166, 80, 0.45);
-  transform: translateY(-1px);
+  background: var(--color-primary-dark);
+  box-shadow: 0 6px 22px rgba(30, 150, 200, 0.50);
+  transform: translateY(-2px);
 }
 
 .duvidas-btn-whatsapp:active {
@@ -2130,21 +2147,22 @@ section { padding: var(--section-padding); }
 }
 
 .duvidas-btn-whatsapp svg {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   fill: currentColor;
+  flex-shrink: 0;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .duvidas-section {
     padding: 50px 16px;
   }
   .duvidas-card {
-    padding: 36px 20px;
-    border-radius: 16px;
+    padding: 40px 24px 32px;
+    border-radius: var(--radius-lg);
   }
   .duvidas-title {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
   }
   .duvidas-subtitle {
     font-size: 0.95rem;
@@ -2153,6 +2171,6 @@ section { padding: var(--section-padding); }
   .duvidas-btn-whatsapp {
     width: 100%;
     padding: 14px 20px;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
   }
 }
