@@ -256,4 +256,3 @@ if (!js.includes('function loadReports()')) {
   fs.writeFileSync(adminJsPath, js + '\n' + jsAppend, 'utf8');
   console.log('js/admin.js updated');
 }
-
