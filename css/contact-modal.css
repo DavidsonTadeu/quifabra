@@ -1,9 +1,9 @@
-/* Modal de Contato Pré-WhatsApp estilo Quifabra */
+/* Modal de Contato Pré-WhatsApp estilo Quifabra (Tamanho ampliado conforme Imagem 2) */
 .qf-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(4px);
+  background: rgba(10, 15, 30, 0.72);
+  backdrop-filter: blur(6px);
   z-index: 99999;
   display: flex;
   align-items: center;
@@ -11,7 +11,7 @@
   padding: 20px;
   opacity: 0;
   visibility: hidden;
-  transition: all 0.3s ease;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .qf-modal-overlay.active {
@@ -22,13 +22,13 @@
 .qf-modal-card {
   background: #ffffff;
   width: 100%;
-  max-width: 440px;
+  max-width: 620px;
   border-radius: 24px;
-  padding: 32px 28px 28px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  padding: 44px 48px 36px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
   position: relative;
-  transform: translateY(20px) scale(0.95);
-  transition: transform 0.3s ease;
+  transform: translateY(20px) scale(0.96);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   text-align: center;
 }
 
@@ -38,114 +38,179 @@
 
 .qf-modal-close {
   position: absolute;
-  top: 16px;
-  right: 16px;
-  background: #f0f4f8;
+  top: 18px;
+  right: 20px;
+  background: #f1f5f9;
   border: none;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  font-size: 18px;
-  color: #666;
+  font-size: 20px;
+  color: #64748b;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s;
+  transition: background 0.2s, color 0.2s;
+  z-index: 2;
 }
 
 .qf-modal-close:hover {
   background: #e2e8f0;
-  color: #111;
+  color: #0f172a;
 }
 
-.qf-modal-logo-badge {
-  width: 56px;
-  height: 56px;
-  background: #1E96C8;
-  border-radius: 16px;
+/* Badge protuberante superior (estilo referência Imagem 2) */
+.qf-modal-badge-holder {
+  position: absolute;
+  top: -36px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 72px;
+  height: 72px;
+  background: #ffffff;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: -60px auto 16px;
-  box-shadow: 0 8px 16px rgba(30, 150, 200, 0.3);
-  color: white;
-  font-size: 28px;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.qf-badge-shapes {
+  position: relative;
+  width: 42px;
+  height: 42px;
+}
+
+.qf-badge-back {
+  position: absolute;
+  top: 4px;
+  left: 2px;
+  width: 34px;
+  height: 34px;
+  background: #1e293b;
+  border-radius: 4px;
+  transform: rotate(20deg);
+}
+
+.qf-badge-front {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 34px;
+  height: 34px;
+  background: #E67E22;
+  border-radius: 4px;
+  transform: rotate(32deg);
+  box-shadow: 0 4px 10px rgba(230, 126, 34, 0.35);
 }
 
 .qf-modal-title {
   font-family: var(--font-heading, 'Inter', sans-serif);
-  font-size: 1.25rem;
+  font-size: 1.45rem;
   font-weight: 800;
-  color: #1A202C;
+  color: #111827;
+  margin-top: 8px;
   margin-bottom: 6px;
+  line-height: 1.3;
 }
 
 .qf-modal-subtitle {
-  font-size: 0.875rem;
-  color: #718096;
-  margin-bottom: 24px;
+  font-size: 0.95rem;
+  color: #4b5563;
+  margin-bottom: 28px;
   line-height: 1.4;
 }
 
 .qf-modal-field {
   position: relative;
-  margin-bottom: 16px;
+  margin-bottom: 22px;
   text-align: left;
 }
 
 .qf-modal-field label {
   position: absolute;
-  top: -9px;
-  left: 14px;
+  top: -10px;
+  left: 18px;
   background: #ffffff;
-  padding: 0 6px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #4A5568;
+  padding: 0 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+  z-index: 1;
 }
 
 .qf-modal-field input {
   width: 100%;
-  height: 48px;
-  border: 1.5px solid #E2E8F0;
+  height: 56px;
+  border: 1.5px solid #94a3b8;
   border-radius: 12px;
-  padding: 0 16px;
-  font-size: 0.95rem;
-  color: #2D3748;
+  padding: 0 18px;
+  font-size: 1rem;
+  color: #1e293b;
   outline: none;
-  transition: border-color 0.2s;
+  background: #ffffff;
+  transition: border-color 0.2s, box-shadow 0.2s;
   box-sizing: border-box;
+}
+
+.qf-modal-field input::placeholder {
+  color: #94a3b8;
 }
 
 .qf-modal-field input:focus {
   border-color: #1E96C8;
-  box-shadow: 0 0 0 3px rgba(30, 150, 200, 0.15);
+  box-shadow: 0 0 0 3px rgba(30, 150, 200, 0.18);
 }
 
 .qf-modal-btn {
   width: 100%;
-  height: 50px;
-  background: #25D366;
-  color: white;
+  height: 54px;
+  background: #16a34a;
+  color: #ffffff;
   border: none;
-  border-radius: 12px;
-  font-size: 1rem;
+  border-radius: 10px;
+  font-size: 1.05rem;
   font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  box-shadow: 0 6px 16px rgba(37, 211, 102, 0.3);
-  transition: background 0.2s, transform 0.1s;
-  margin-top: 8px;
+  gap: 10px;
+  box-shadow: 0 6px 18px rgba(22, 163, 74, 0.35);
+  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+  margin-top: 10px;
 }
 
 .qf-modal-btn:hover {
-  background: #20bd5a;
+  background: #15803d;
+  box-shadow: 0 8px 22px rgba(22, 163, 74, 0.45);
 }
 
 .qf-modal-btn:active {
   transform: scale(0.98);
+}
+
+@media (max-width: 600px) {
+  .qf-modal-card {
+    padding: 36px 20px 24px;
+    border-radius: 18px;
+  }
+  .qf-modal-title {
+    font-size: 1.25rem;
+  }
+  .qf-modal-subtitle {
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+  }
+  .qf-modal-field input {
+    height: 50px;
+    font-size: 0.95rem;
+  }
+  .qf-modal-btn {
+    height: 50px;
+    font-size: 0.95rem;
+  }
 }

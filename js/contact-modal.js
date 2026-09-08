@@ -19,12 +19,15 @@ function injectContactModal() {
       <div class="qf-modal-card">
         <button class="qf-modal-close" id="qfCloseModal" aria-label="Fechar">&times;</button>
         
-        <div class="qf-modal-logo-badge">
-          💬
+        <div class="qf-modal-badge-holder">
+          <div class="qf-badge-shapes">
+            <div class="qf-badge-back"></div>
+            <div class="qf-badge-front"></div>
+          </div>
         </div>
 
-        <h3 class="qf-modal-title">Você será encaminhado para nosso WhatsApp</h3>
-        <p class="qf-modal-subtitle">Precisamos dessas informações para continuar com seu atendimento</p>
+        <h3 class="qf-modal-title">Você será encaminhado para nosso Whatsapp</h3>
+        <p class="qf-modal-subtitle">precisamos dessas informações para continuar com seu atendimento</p>
 
         <form id="qfModalForm">
           <div class="qf-modal-field">
@@ -57,14 +60,26 @@ function injectContactModal() {
   setupEvents();
 }
 
-function openModal() {
+export function openModal() {
+  // Garante que o modal foi injetado antes de abri-lo
+  if (!document.getElementById('qfContactModal')) {
+    injectContactModal();
+  }
   const modal = document.getElementById('qfContactModal');
-  if (modal) modal.classList.add('active');
+  if (modal) {
+    // Forçar reflow para garantir transição CSS
+    requestAnimationFrame(() => modal.classList.add('active'));
+  }
 }
 
-function closeModal() {
+export function closeModal() {
   const modal = document.getElementById('qfContactModal');
   if (modal) modal.classList.remove('active');
+}
+
+if (typeof window !== 'undefined') {
+  window.openContactModal = openModal;
+  window.closeContactModal = closeModal;
 }
 
 function setupEvents() {

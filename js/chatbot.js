@@ -349,8 +349,12 @@ function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+// Flag para habilitar/desabilitar chatbot com facilidade e reversibilidade
+const CHATBOT_ENABLED = false;
+
 // ── Init ──────────────────────────────────────────────────────────
 function initChatbot() {
+  if (!CHATBOT_ENABLED) return;
   injectWidget();
 
   const btn = document.getElementById('qfChatBtn');
