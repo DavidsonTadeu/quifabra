@@ -220,11 +220,11 @@ contactForm?.addEventListener('submit', async (e) => {
   formSubmit.disabled = true;
 
   try {
-    const response = await fetch('/api/send-notification', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+    let success = false;
+    if (typeof window.saveLeadCentralized === 'function') {
+      const res = await window.saveLeadCentralized({
         tipo: 'Formulário de Contato',
+        origem: 'Formulário do Rodapé',
         nome,
         email,
         celular,
@@ -233,10 +233,29 @@ contactForm?.addEventListener('submit', async (e) => {
         estado,
         atuacao,
         mensagem
-      })
-    });
+      });
+      success = res && res.success;
+    } else {
+      const response = await fetch('/api/send-notification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tipo: 'Formulário de Contato',
+          origem: 'Formulário do Rodapé',
+          nome,
+          email,
+          celular,
+          empresa,
+          cep,
+          estado,
+          atuacao,
+          mensagem
+        })
+      });
+      success = response.ok;
+    }
 
-    if (response.ok) {
+    if (success) {
       showFeedback('✅ Mensagem enviada com sucesso! Nossa equipe entrará em contato em breve.', 'success');
       contactForm.reset();
     } else {
